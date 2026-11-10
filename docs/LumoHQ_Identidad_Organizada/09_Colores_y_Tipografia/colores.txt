@@ -1,0 +1,14 @@
+LUMO HQ — COLORES
+
+Noche        #1B2130   RGB 27, 33, 48     Textos, fondos oscuros
+Ámbar Lumo   #F2A33A   RGB 242, 163, 58   El punto, botones, acentos
+Brillo       #FFD27A   RGB 255, 210, 122  Destellos sobre fondo oscuro
+Arena        #FFF7EC   RGB 255, 247, 236  Fondos claros
+Pizarra      #5B6375   RGB 91, 99, 117    Texto secundario
+Niebla       #E6E8EE   RGB 230, 232, 238  Líneas y bordes
+
+TIPOGRAFÍA
+Títulos: Bricolage Grotesque (ExtraBold 800 / Bold 700)
+Texto:   Figtree (Regular 400 / SemiBold 600 / Bold 700)
+Ambas gratis en fonts.google.com (ahí se descargan también en .ttf para instalar en la computadora).
+Los .woff2 de esta carpeta son para la página web.

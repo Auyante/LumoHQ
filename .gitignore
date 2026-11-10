@@ -1,0 +1,55 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Next.js build and outputs
+/.next/
+/out/
+/build
+dist
+
+# Production and local environment files
+.env
+.env*.local
+!.env.example
+
+# Debug and runtime logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Testing & Coverage
+/coverage
+/playwright-report
+/test-results
+/blob-report
+/playwright/.cache
+
+# Vercel & Turbopack
+.vercel
+.turbo
+
+# TypeScript cache
+*.tsbuildinfo
+next-env.d.ts
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Antigravity & Scratch Artifacts
+.system_generated/

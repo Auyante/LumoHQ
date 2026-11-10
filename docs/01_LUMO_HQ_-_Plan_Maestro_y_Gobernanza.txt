@@ -1,0 +1,260 @@
+lumo
+N E G O C I O S L O C A L E S , V I S I B L E S
+CÓDIGO: LUMO-PMP-001 · Versión 2
+TITULAR LEGAL: Luis Barbera, haciendo negocio como "Lumo HQ" (DBA)
+REPARTO OPERATIVO: Luis Barbera 50% · Carlos Gómez 50%
+HORIZONTE: 3 meses (noviembre 2026 – enero 2027)
+ESTADO: Gate 0 — Decisiones de arranque
+PLAN MAESTRO Y GOBERNANZA (3 MESES)
+Documento 01 · Mapa de documentos, paquetes de trabajo, responsables (RACI) y Gate 0
+Objetivo de los 90 días: lanzar Lumo HQ, un servicio para negocios latinos de Midland-Odessa, Texas,
+que los hace visibles en Google y fáciles de contactar: perfil de Google completo, página web en inglés
+y español, contacto en un clic (llamada, texto, reservas, Instagram/Facebook o WhatsApp, según el
+negocio) y sistema de reseñas. Se trabaja en 6 sprints de 2 semanas: 2 clientes fundadores ($250) en el
+Sprint 1, 5 clientes al cierre del Mes 1, 15 en el Mes 2 y 30 en el Mes 3 ($3,000 al mes en
+mensualidades).
+Qué cambió frente a la versión anterior: (1) el nombre es Lumo HQ y no tiene relación con AICOM; (2)
+no se forma LLC ni se contrata abogado por ahora: el negocio va a nombre de Luis como dueño único
+con el nombre comercial "Lumo HQ"; (3) Carlos y Bárbara viven fuera de EE. UU. y trabajan como
+colaboradores (formulario W-8BEN, no W-9 ni 1099); (4) Bárbara cobra $500 en total por los 3 meses;
+(5) el producto ya no gira alrededor de WhatsApp sino del contacto fácil multicanal y bilingüe.
+1. MAPA DE DOCUMENTOS DEL PROYECTO
+Estos son los documentos de trabajo de Lumo HQ. Si cambia un precio, un porcentaje o un pago, se cambia
+en todos a la vez.
+Documento
+Para qué sirve
+Quién lo usa
+01. Plan Maestro y
+Gobernanza (este)
+Objetivo, paquetes de trabajo, responsables y decisiones
+del Gate 0.
+Luis y Carlos
+02. Cronograma de 3 meses
+Qué se hace cada día del Sprint 1 y cada sprint hasta enero.
+Todos, cada semana
+03. Manual de Operaciones
+Prospección, guiones, objeciones, línea de entrega en 5
+días, checklists y mantenimiento.
+Bárbara, Luis y Carlos, a
+diario
+04. Finanzas, Riesgos y
+Control
+Cómo entra y se reparte el dinero, impuestos de Luis,
+riesgos y tablero de métricas.
+Luis y Carlos
+Modelo de negocio
+Oferta, mercado, roles y reglas legales básicas.
+Todos
+Kit de ventas
+Textos listos para copiar: pitch, mensajes, diagnóstico,
+propuesta.
+Bárbara y Luis
+Borradores de contratos
+Contrato con el cliente, acuerdo con Carlos y acuerdo con
+Bárbara.
+Luis
+HQ
+lumo HQ • Documento 01: Plan Maestro y Gobernanza
+Página 1 de 4
+
+---PAGE_BREAK---
+2. PAQUETES DE TRABAJO (12 SEMANAS)
+WP 1.0 — Gate 0 (esta semana): nombre "Lumo HQ" confirmado y dominio comprado; pago de Bárbara
+fijado ($500 en total); tabla de horas reales firmada; acuerdo de colaboración Luis–Carlos aceptado.
+WP 2.0 — Presencia propia y demos (semanas 1 y 2): Carlos fija hosting, registrador y plantilla bilingüe
+con botones que se ponen o quitan (llamar, texto, reservar, WhatsApp, redes). Página de Lumo HQ, perfil
+de Google, Instagram/Facebook, correo y WhatsApp Business (eSIM Boost en el teléfono de Luis, Bárbara
+vinculada). Dos demos ficticias: barbería con reservas y taquería con menú.
+WP 3.0 — Papeles mínimos sin LLC (semanas 1 a 3): nombre comercial "Lumo HQ" (DBA) en el County
+Clerk de Midland; cuenta bancaria del negocio y cuenta de ahorro de impuestos; Stripe como dueño único;
+contrato de cliente listo; acuerdos firmados con Carlos y Bárbara, con sus W-8BEN; permiso de impuesto
+de ventas antes de la primera mensualidad. Sin abogado; contador opcional para dudas puntuales.
+WP 4.0 — Tracción inicial (Mes 1): lote 1 de 30 negocios; 2 clientes fundadores en el Sprint 1 y 3 clientes
+regulares ($500) en el Sprint 2. Cierre del Mes 1 con 5 clientes y revisión del balance de trabajo.
+WP 5.0 — Escalar y retener (Mes 2): lotes 2 y 3 (60 negocios más, sumando contratistas); portafolio
+"antes y después" y testimonios de fundadores; 10 clientes nuevos (15 en total); primer ciclo de reportes
+mensuales.
+WP 6.0 — Consolidar y cerrar el trimestre (Mes 3): lotes 4 y 5 y referidos; 15 clientes nuevos hasta llegar a
+30 ($3,000 al mes); pago final del tope de Bárbara; decidir renovación, LLC y paquete Premium (web de
+varias secciones y texto automático por llamada perdida).
+3. MATRIZ DE RESPONSABILIDADES (RACI)
+R = lo hace · A = responde por el resultado · C = se le consulta · I = se le informa.
+Proceso o entregable
+Luis
+(Midland)
+Carlos
+(remoto)
+Bárbara
+(remoto)
+Contador
+(opcional)
+Gate 0: nombre, pago de Bárbara, horas y acuerdo
+de colaboración
+R/A
+R/A
+I
+—
+Plantilla bilingüe, hosting y 2 demos
+C
+R/A
+I
+—
+Presencia de Lumo HQ: web, Google, redes,
+WhatsApp, correo
+R/A
+R
+I
+—
+Papeles: DBA, banco, Stripe, acuerdos, W-8BEN,
+impuesto de ventas
+R/A
+C
+I
+C
+Prospección: listas de 30, estudio de cada negocio
+A
+I
+R
+—
+Primer contacto y seguimiento por WhatsApp,
+Instagram y Facebook
+A
+I
+R
+—
+Visitas en persona en Midland-Odessa
+R/A
+—
+C
+—
+Diagnóstico en 24 h, demos y propuesta
+A
+C
+R
+—
+Cierre: firma del contrato y cobro del anticipo
+R/A
+I
+R
+—
+Recolección de datos del cliente (día 1)
+A
+I
+R
+—
+lumo HQ • Documento 01: Plan Maestro y Gobernanza
+Página 2 de 4
+
+---PAGE_BREAK---
+Entrega técnica (días 2 a 5) y mantenimiento
+C
+R/A
+I
+—
+Revisión de calidad y aprobación del cliente
+R/A
+R
+I
+—
+Pagos a Carlos y Bárbara, impuestos de Luis
+R/A
+I
+I
+C
+Bárbara lleva la relación con el cliente a distancia (estudio, contacto, demos por videollamada, cierre y
+seguimiento). Luis firma, cobra y visita en persona, porque es el titular legal y el único que está en EE. UU.
+4. GATE 0: DECISIONES DE LUIS Y CARLOS
+Nada del Mes 1 se cobra sin estas cuatro decisiones escritas y firmadas.
+4.1 Identidad y pago de Bárbara
+Decisión
+Criterio
+Decisión final
+Nombre y dominio
+Marca: Lumo HQ. Dominio: lumohq.com (precio normal).
+Mismo usuario en Instagram y Facebook: @lumohq.
+Dominio: lumohq.com ☐
+Comprado
+Línea del negocio
+eSIM Boost ($10 al mes por 6 meses) en el teléfono de Luis,
+con WhatsApp Business, PIN de seguridad y Bárbara
+vinculada. En el mes 6, portar el número a un plan más
+barato.
+☐ Activada
+Pago total de Bárbara (3
+meses)
+$500 en total, solo por clientes que ella abrió y que
+pagaron el montaje completo.
+☑ $500 (decidido)
+Pago por cliente
+Escalonado para que cobre algo que valga la pena desde el
+inicio: $25 por cliente del 1 al 5 ($125) y $15 del 6 al 30
+($375). Suma $500 al cliente 30. Alternativa plana: $17 por
+cliente.
+☐ Escalonado ☐ Plano $17
+4.2 Horas reales por semana (los 3 meses)
+El riesgo número uno es que no haya horas. Si entre todos suman menos de 18 a 24 horas por semana, se
+baja el ritmo de cierres por escrito.
+Persona
+Pide el plan
+Días y horas fijas
+Horas reales
+Firma
+Luis Barbera
+8 a 10 h/semana
+(turnos de Walmart: ____)
+Carlos Gómez
+6 a 8 h/semana (hasta 15–18 en el Mes 2–3)
+Bárbara
+4 a 6 h/semana
+4.3 Términos del acuerdo de colaboración Luis–Carlos
+Tema
+Término propuesto
+Decidido
+Titular legal
+Lumo HQ opera a nombre de Luis Barbera (dueño único con DBA). Carlos
+es colaborador, no socio legal; firma W-8BEN.
+☐ Sí ☐ Ajustar
+Reparto
+50% Luis · 50% Carlos de la ganancia, después de Stripe, Bárbara,
+herramientas, gastos y 8% de fondo del negocio.
+☐ Sí ☐ Ajustar
+lumo HQ • Documento 01: Plan Maestro y Gobernanza
+Página 3 de 4
+
+---PAGE_BREAK---
+Roles
+Luis: firma, cobros, visitas, administración e impuestos. Carlos: entrega
+técnica, plantillas, hosting y mantenimiento. Bárbara: ventas remotas y
+relación con clientes.
+☐ Sí ☐ Ajustar
+Impuestos
+Solo Luis paga impuestos en EE. UU., sobre su parte y el fondo. Carlos y
+Bárbara ven sus impuestos en su país.
+☐ Sí ☐ Ajustar
+Dinero
+Todo entra a la cuenta del negocio. Luis comparte cada mes un reporte de
+ingresos y gastos. Gastos de más de $100 los aprueban los dos.
+☐ Sí ☐ Ajustar
+Decisiones grandes
+Precios nuevos, sumar gente o cambiar el reparto: aprobación de los dos.
+Revisión del reparto después de los primeros 5 clientes.
+☐ Sí ☐ Ajustar
+Relación con AICOM
+Ninguna. Clientes y dinero no se mezclan. Si un cliente pide un desarrollo
+de IA grande, se le refiere a AICOM por aparte.
+☐ Sí ☐ Ajustar
+Salida
+30 días de aviso; se paga lo ganado y se entregan accesos y archivos.
+Tras 2 meses sin cumplir horas o tareas, se ajusta el porcentaje por
+escrito. Clientes y plantillas son de Lumo HQ.
+☐ Sí ☐ Ajustar
+LLC futura
+Se revisa en el Gate del Día 90 o al llegar a unos 5 clientes. Si Carlos entra
+como socio, con asesoría fiscal (socio extranjero tiene reglas especiales).
+☐ Sí ☐ Ajustar
+Conformidad Gate 0: Firma Luis Barbera: ______________________   Firma Carlos Gómez: ______________________  
+Fecha: ___/11/2026
+lumo HQ • Documento 01: Plan Maestro y Gobernanza
+Página 4 de 4
+
+---PAGE_BREAK---

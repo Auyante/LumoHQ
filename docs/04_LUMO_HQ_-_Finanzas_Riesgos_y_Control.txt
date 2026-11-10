@@ -1,0 +1,287 @@
+lumo
+N E G O C I O S L O C A L E S , V I S I B L E S
+CÓDIGO: LUMO-FIN-004 · Versión 2
+TITULAR: Luis Barbera (DBA "Lumo HQ") · sin LLC
+REPARTO: 8% fondo · 50% Luis / 50% Carlos · Bárbara $500
+HORIZONTE: Control mensual (meses 1, 2 y 3)
+FINANZAS, RIESGOS Y CONTROL (3 MESES)
+Documento 04 · Cómo entra y se reparte el dinero, impuestos, riesgos y revisiones de los días 14, 30,
+60 y 90
+Aviso: números estimados para planificar, no una promesa de ingresos. Los impuestos son una
+aproximación; si hay dudas, se confirman con un contador.
+1. REGLAS DEL DINERO
+Precios: clientes 1 y 2 = fundadores, $250 de montaje ($125 + $125) a cambio de testimonio y permiso
+para mostrar el trabajo. Del cliente 3 al 30: $500 ($250 al firmar + $250 al aprobar). Mensualidad: $100
+desde el mes siguiente a la entrega, más el impuesto de ventas del hosting (unos $6.60, lo paga el cliente
+y se le pasa a Texas).
+Sin LLC: todo se cobra a nombre de Luis con el nombre comercial "Lumo HQ", a una cuenta solo del
+negocio. Luis es el único que paga impuestos en EE. UU.
+Bárbara: $500 en total por los 3 meses, solo por clientes que ella abrió y que pagaron el montaje
+completo. Escalonado: $25 por cliente del 1 al 5 y $15 del 6 al 30. Se paga una vez al mes. Firma W-8BEN.
+Carlos: colaborador desde fuera; cobra el 50% de la ganancia. Para Luis su pago es un gasto del negocio.
+Firma W-8BEN.
+Orden del reparto (una vez al mes): ingresos − Stripe − Bárbara − herramientas y dominios − gastos =
+ganancia → 8% al fondo del negocio → el resto 50% Luis / 50% Carlos. De su parte, Luis aparta sus
+impuestos.
+1.1 Qué pasa con cada pago
+Concepto
+Fundador ($250)
+Regular, clientes 3–5
+Regular, clientes 6–30
+Montaje cobrado
+$250
+$500
+$500
+Stripe (tarjeta)
+−$8
+−$15
+−$15
+Bárbara
+−$25
+−$25
+−$15
+Herramientas y dominio
+−$20
+−$20
+−$20
+Fondo del negocio (8%)
+−$16
+−$35
+−$36
+Carlos (50%)
+≈ $90
+≈ $202
+≈ $207
+Luis (50%)
+≈ $90
+≈ $202
+≈ $207
+De la parte de Luis, a la cuenta de impuestos
+$25
+$60
+$60
+Mensualidades: por cada cliente activo, Luis aparta $11 al mes para impuestos. Los apartados se hacen el
+mismo día que entra el pago.
+HQ
+lumo HQ • Documento 04: Finanzas, Riesgos y Control
+Página 1 de 4
+
+---PAGE_BREAK---
+1.2 Proyección acumulada (meses 1, 2 y 3)
+Montajes acumulados
+Mes 1: 5 clientes
+(2 fund. + 3 reg.)
+Mes 2: 15 clientes
+(2 fund. + 13 reg.)
+Mes 3: 30 clientes
+(2 fund. + 28 reg.)
+Ingresos por montaje
+$2,000
+$7,000
+$14,500
+Stripe
+−$61
+−$211
+−$436
+Bárbara (escalonado, tope $500)
+−$125
+−$275
+−$500
+Herramientas y dominios ($20 por cliente)
+−$100
+−$300
+−$600
+Arranque (DBA, eSIM, dominio propio, impresiones; una
+vez)
+−$400
+−$400
+−$400
+Ganancia
+$1,314
+$5,814
+$12,564
+Fondo del negocio (8%)
+−$105
+−$465
+−$1,005
+Carlos (50%)
+≈ $604
+≈ $2,674
+≈ $5,779
+Luis (50%) antes de impuestos
+≈ $604
+≈ $2,674
+≈ $5,779
+Impuestos de Luis (autoempleo + federal, estimado)
+≈ −$164
+≈ −$724
+≈ −$1,564
+Luis después de impuestos
+≈ $441
+≈ $1,951
+≈ $4,216
+Mensualidades (cada mes)
+5 clientes
+15 clientes
+30 clientes
+Ingreso recurrente ($100 c/u)
+$500
+$1,500
+$3,000
+Stripe + hosting y herramientas
+−$70
+−$208
+−$417
+Fondo del negocio (8%)
+−$34
+−$103
+−$207
+Carlos / Luis (50% cada uno)
+≈ $198
+≈ $594
+≈ $1,188
+Luis después de impuestos
+≈ $144
+≈ $433
+≈ $867
+Los impuestos de Luis se calculan sobre su parte más el fondo, porque el fondo queda en su negocio. Texas
+no cobra impuesto sobre la renta. Con millas, teléfono y gastos bien anotados, los impuestos bajan alrededor
+de 25 centavos por cada dólar de gasto real.
+1.3 Calendario de impuestos de Luis
+Cuándo
+Qué se hace
+Cada pago
+Apartar $60 por regular, $25 por fundador y $11 por mensualidad en la cuenta de
+impuestos.
+Antes de la primera
+mensualidad
+Sacar el permiso de impuesto de ventas (gratis, Comptroller de Texas) y declararlo en la
+frecuencia que asignen.
+Enero 2027
+Cambiar el W-4 en Walmart para que retengan más impuesto durante 2027 (por ejemplo
+$25 a $40 extra por cheque).
+Antes del 15 de abril de 2027
+Declarar 2026 (formulario 1040 + Schedule C + Schedule SE) y pagar con lo apartado.
+lumo HQ • Documento 04: Finanzas, Riesgos y Control
+Página 2 de 4
+
+---PAGE_BREAK---
+Durante 2027
+Si se va a deber más de $1,000 y no alcanza la retención de Walmart, pagos trimestrales
+(15 abr, 15 jun, 15 sep, 15 ene).
+2. RIESGOS Y CÓMO SE CONTROLAN
+Riesgo
+Nivel
+Control
+1. Falta de horas reales (Luis
+con turnos, Carlos y Bárbara
+con otros trabajos)
+Crítico
+Agenda fija firmada en el Gate 0. Tras 2 meses sin cumplir horas o tareas,
+se ajusta el porcentaje por escrito. Si no se llega a 10 contactos en una
+semana, se baja el ritmo por escrito.
+2. Luis responde con sus
+bienes personales (sin LLC)
+Alto
+Contrato firmado con cada cliente (sin garantía de resultados, límite de
+responsabilidad, materiales del cliente). Cumplir las 4 reglas: nada de
+mensajes masivos, nada de reseñas falsas, solo fotos con permiso, nunca
+prometer resultados. Revisar la LLC en el Gate del Día 90.
+3. Bárbara pierde motivación
+al inicio
+Alto
+Pago escalonado: $25 por cliente del 1 al 5 para que cobre algo desde el
+primer mes, dentro del mismo tope de $500.
+4. Cuello de botella técnico
+en los meses 2 y 3
+Alto
+Una sola plantilla con botones que se ponen o quitan; recolección de datos
+100% completa el día 1 antes de arrancar el reloj; máximo 1 canal extra en el
+paquete Base.
+5. Multas por mensajes
+(TCPA) o reseñas (FTC)
+Medio
+Mensajes uno por uno, sin listas ni textos automáticos en frío. Las
+respuestas automáticas solo contestan a quien escribió primero. Nunca
+tocar reseñas.
+6. Perder el número del
+negocio
+Medio
+Pagar la eSIM cada mes, PIN de seguridad en WhatsApp, abrir la app en el
+teléfono de Luis al menos cada 2 semanas. En el mes 6, portar a un plan
+más barato sin cambiar el número.
+7. Cancelaciones de
+mensualidad
+Medio
+Reporte mensual de 1 página con datos reales en la primera semana de
+cada mes.
+8. Diciembre lento por las
+fiestas
+Medio
+Adelantar contactos y reuniones a la primera quincena de diciembre; usar la
+segunda para entregas y lote 3.
+3. TABLERO DE CONTROL (REVISIÓN DOMINICAL DE 15 MINUTOS)
+Métrica acumulada
+Sprint 1 (día 14)
+Meta / Real
+Mes 1 (día 30)
+Meta / Real
+Mes 2 (día 60)
+Meta / Real
+Mes 3 (día 90)
+Meta / Real
+Negocios en lista (4+ puntos)
+30 / ___
+60 / ___
+90 / ___
+150 / ___
+Negocios contactados
+20 / ___
+40 / ___
+90 / ___
+150 / ___
+Conversaciones reales
+10 / ___
+20 / ___
+45 / ___
+75 / ___
+Diagnósticos enviados
+8 / ___
+16 / ___
+38 / ___
+65 / ___
+Reuniones y propuestas
+3 / ___
+8 / ___
+24 / ___
+45 / ___
+Clientes cerrados
+2 fund. / ___
+5 / ___
+15 / ___
+30 / ___
+Mensualidades activas
+— / ___
+$500 / ___
+$1,500 / ___
+$3,000 / ___
+lumo HQ • Documento 04: Finanzas, Riesgos y Control
+Página 3 de 4
+
+---PAGE_BREAK---
+4. REVISIONES DE DECISIÓN (DÍAS 14, 30, 60 Y 90)
+Día 14 — Validar el arranque: si se cerraron los 2 fundadores, se sube a $500 desde el cliente 3. Si hubo
+reuniones pero 0 cierres, se pregunta a cada "no" la razón y se ajusta oferta o precio. Si hubo pocas
+respuestas, se cambia el mensaje o el rubro, o se revisan las horas.
+Día 30 — Cierre del Mes 1 (5 clientes): primer reparto: pago a Carlos y Bárbara, apartado de impuestos y
+reporte de ingresos y gastos. Revisión del balance entre ventas (Bárbara y Luis) y entregas (Carlos).
+Permiso de impuesto de ventas listo.
+Día 60 — Cierre del Mes 2 (15 clientes): revisión de cancelaciones tras el primer ciclo de reportes (meta: 0)
+y del cumplimiento de horas de los dos meses.
+Día 90 — Cierre del Mes 3 (30 clientes): con $3,000 al mes en mensualidades: pago final del tope de
+Bárbara y decisión de renovación; decisión de formar LLC; lanzamiento del paquete Premium (web de
+varias secciones + texto automático por llamada perdida) para los clientes más grandes.
+lumo HQ • Documento 04: Finanzas, Riesgos y Control
+Página 4 de 4
+
+---PAGE_BREAK---

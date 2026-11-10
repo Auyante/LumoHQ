@@ -1,0 +1,201 @@
+lumo
+N E G O C I O S L O C A L E S , V I S I B L E S
+CÓDIGO: LUMO-SCH-002 · Versión 2
+EQUIPO: Luis Barbera · Carlos Gómez · Bárbara
+HORIZONTE: 3 meses (12 semanas / 6 sprints)
+META 90 DÍAS: 30 clientes activos ($3,000 al mes)
+CRONOGRAMA DE EJECUCIÓN (3 MESES)
+Documento 02 · Hoja de ruta de 90 días, papeles mínimos sin LLC y escalamiento a 30 clientes
+Cómo está armado: 3 meses (noviembre 2026 – enero 2027) en 6 sprints de 14 días, alineados con el
+acuerdo de 3 meses de Bárbara. El Sprint 1 valida el modelo con 2 clientes fundadores ($250); el Sprint 2
+llega a 5 clientes; el Mes 2 escala a 15; el Mes 3 llega a 30.
+Regla de oro: las ventas no esperan a los papeles. Visitas, mensajes, diagnósticos y reuniones arrancan
+ya. Lo único que espera es cobrar: antes del primer anticipo debe estar listo el nombre comercial (DBA),
+la cuenta del negocio, Stripe y el contrato del cliente.
+1. MES 1 — SPRINT 1 (1 AL 15 DE NOVIEMBRE): ARRANQUE Y 2 FUNDADORES
+Día / fecha
+Quién
+Qué se hace
+Listo cuando
+Días 0 a 2
+Dom 1 – Mar 3
+nov
+Luis, Carlos,
+Bárbara
+Luis y Carlos: Gate 0 (Doc 01): nombre Lumo HQ, dominio,
+pago de Bárbara, horas, acuerdo de colaboración. Luis:
+eSIM Boost + WhatsApp Business con PIN; vincular a
+Bárbara; Gmail, Instagram y Facebook de Lumo HQ. Carlos:
+hosting, registrador y plantilla bilingüe. Bárbara: lote 1 de 30
+negocios con puntos y canales.
+☐ Gate 0 firmado
+☐ Dominio comprado
+☐ WhatsApp activo
+☐ Lote 1 listo
+Días 3 y 4
+Mié 4 – Jue 5
+nov
+Carlos, Luis,
+Bárbara
+Carlos: terminar las 2 demos ficticias (barbería con reservas
+y taquería con menú), en inglés y español, marcadas como
+"Ejemplo"; probarlas en el teléfono de Luis. Luis: perfil de
+Google de Lumo HQ; ensayar el pitch. Luis y Bárbara:
+primeros 7 contactos a negocios de 4+ puntos y 2
+diagnósticos en menos de 24 h.
+☐ 2 demos en el
+teléfono
+☐ 7 contactos
+☐ 2 diagnósticos
+Días 5 a 7
+Vie 6 – Dom 8
+nov
+Luis,
+Bárbara,
+Carlos
+Luis y Bárbara: llegar a 10 contactos y 5 diagnósticos;
+seguimiento 1 a las 48 h. Luis o Bárbara: 1.ª reunión de 15
+min (en persona o videollamada) con las demos y 1.ª
+propuesta fundador ($250). Domingo, 15 min: Luis y Carlos
+revisan los números de la semana 1.
+☐ 10 contactos
+☐ 5 diagnósticos
+☐ 1 reunión y 1
+propuesta
+Días 8 a 11
+Lun 9 – Jue 12
+nov
+Luis, Bárbara
+Luis (papeles): DBA "Lumo HQ" en el County Clerk de
+Midland; cuenta bancaria del negocio y cuenta de ahorro de
+impuestos; abrir Stripe como dueño único; firmar acuerdos
+con Carlos y Bárbara y recibir sus W-8BEN. Luis y Bárbara:
+10 contactos más (20 en total), 8 diagnósticos, reuniones #2
+y #3 con propuesta el mismo día; seguimientos 2 y 3.
+☐ DBA, banco y Stripe
+☐ Acuerdos y W-8BEN
+☐ 20 contactos
+☐ 3 reuniones
+HQ
+lumo HQ • Documento 02: Cronograma de Ejecución (3 meses)
+Página 1 de 3
+
+---PAGE_BREAK---
+Días 12 a 14
+Vie 13 – Dom
+15 nov
+Luis,
+Bárbara,
+Carlos
+Luis y Bárbara: cerrar los 2 clientes fundadores (contrato
+firmado con permiso de portafolio + anticipo de $125 cada
+uno). Crear sus carpetas y arrancar la recolección de datos.
+Domingo, Día 14: revisión Luis–Carlos. Se termina el precio
+fundador.
+☐ 2 fundadores
+cerrados ($250 en
+anticipos)
+2. SEMANAS 3 A 12: SPRINTS 2 AL 6
+Sprint
+Objetivos
+Metas
+Mes 1 — Sprint 2
+16 al 30 nov
+Entrega fundadores: Bárbara hace la recolección de datos (día 1) y
+Carlos entrega en 5 días hábiles (12 a 16 h técnicas en total). Cobro
+de los segundos $125 y suscripción de $100 + impuesto de ventas en
+Stripe.
+Precio normal ($500): sumar el "antes y después" y los testimonios
+al pitch.
+Ventas: los 10 negocios que quedan del lote 1 + lote 2 (30 nuevos).
+Cerrar y entregar 3 clientes regulares ($250 de anticipo).
+Gate Día 30: primer cierre del mes, pago a Carlos y Bárbara,
+apartado de impuestos y revisión del balance de trabajo. Sacar el
+permiso de impuesto de ventas antes de cobrar mensualidades.
+☐ 2 fundadores entregados
+☐ 3 regulares cerrados y
+entregados
+☐ 5 clientes ($500 al mes)
+☐ Permiso de impuesto de
+ventas
+Mes 2 — Sprint 3
+1 al 15 dic
+Retención: primer reporte mensual a los 5 clientes (10 min cada uno)
+y cobro de sus primeras mensualidades.
+Ventas: 25 contactos del lote 2, 12 diagnósticos, 8 reuniones y 5
+clientes regulares nuevos.
+Producción: Carlos entrega los 5 clientes en 5 días cada uno (15 a 18
+h por semana) y atiende cambios de horario por las fiestas.
+☐ 5 reportes enviados (0
+cancelaciones)
+☐ 5 regulares nuevos
+☐ 10 clientes ($1,000 al
+mes)
+Mes 2 — Sprint 4
+16 al 31 dic
+Lote 3: Bárbara suma contratistas (techos, construcción, talleres,
+servicios a domicilio).
+Ventas y entregas: 25 contactos, 12 diagnósticos, 8 reuniones y 5
+clientes nuevos. Ojo con Navidad: muchos negocios cierran o están
+ocupados; adelantar contactos a la primera semana.
+Gate Día 60: segundo cierre del mes y revisión de horas.
+☐ Lote 3 listo
+☐ 5 regulares nuevos
+☐ 15 clientes ($1,500 al
+mes)
+Mes 3 — Sprint 5
+1 al 15 ene
+Retención: reporte mensual a los 15 clientes (unas 2.5 h) y revisar
+cobros automáticos.
+Lote 4 y referidos: Luis pide referidos a los 15 clientes (los referidos
+no generan pago a Bárbara).
+Ventas: cerrar y entregar 7 clientes nuevos.
+Cambio de W-4 en Walmart para que retengan más impuesto
+durante 2027.
+☐ 15 reportes enviados
+☐ 7 regulares nuevos
+☐ 22 clientes ($2,200 al
+mes)
+Mes 3 — Sprint 6
+16 al 31 ene
+Empuje final (lote 5): cerrar y entregar los últimos 8 clientes.
+Cierre del acuerdo de Bárbara: al cliente 30 llega a su tope de $500.
+Decidir la renovación para el siguiente trimestre.
+Gate Día 90: tercer cierre; decidir LLC y lanzar el paquete Premium
+(web de varias secciones + texto automático por llamada perdida)
+para los clientes más grandes.
+☐ 8 regulares nuevos
+☐ META: 30 clientes
+($3,000 al mes)
+☐ Decisión de renovación y
+LLC
+lumo HQ • Documento 02: Cronograma de Ejecución (3 meses)
+Página 2 de 3
+
+---PAGE_BREAK---
+3. CHECKLIST DE PAPELES SIN ABOGADO
+No se contrata abogado. Los contratos ya están redactados en "Borradores de contratos" y se usan como
+plantilla. Esto es lo que Luis deja listo en las semanas 1 y 2:
+Antes del primer cobro
+☐ DBA "Lumo HQ" registrado en el County Clerk de
+Midland
+☐ Cuenta bancaria del negocio (a nombre de Luis o del
+DBA)
+☐ Cuenta de ahorro de impuestos
+☐ Stripe como dueño único con el nombre "Lumo HQ"
+☐ Contrato de cliente con corchetes llenos
+☐ Acuerdos firmados con Carlos y Bárbara + W-8BEN
+☐ App de millas y carpeta de recibos
+Preguntas para un contador (opcional)
+☐ ¿Los pagos a Carlos y Bárbara desde fuera, con W-
+8BEN, se descuentan como gasto y sin retención?
+☐ ¿$60 por cliente alcanza para mis impuestos?
+☐ ¿Cuánto subo la retención del W-4 en Walmart?
+☐ ¿Qué partes del servicio pagan impuesto de ventas en
+Texas (hosting sí; diseño y configuración)?
+☐ Revisar si mi trabajo actual tiene reglas sobre negocios
+paralelos.
+lumo HQ • Documento 02: Cronograma de Ejecución (3 meses)
+Página 3 de 3
+
+---PAGE_BREAK---

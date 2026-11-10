@@ -1,0 +1,205 @@
+{
+  "nav": {
+    "demos": "Demos Interactivas",
+    "barberia": "Barbería",
+    "taqueria": "Taquería",
+    "packages": "Paquetes y Precios",
+    "diagnosis": "Diagnóstico Gratis",
+    "faq": "Preguntas Frecuentes",
+    "contact": "Contacto",
+    "requestDiagnosis": "Solicitar Diagnóstico",
+    "login": "Acceso Clientes",
+    "tagline": "Negocios Locales, Visibles"
+  },
+  "hero": {
+    "badge": "MIDLAND-ODESSA, TEXAS · EXCLUSIVO PARA NEGOCIOS LOCALES",
+    "titleStart": "Que te encuentren en Google y te puedan ",
+    "titleHighlight": "llamar, escribir o reservar en un clic",
+    "titleEnd": ", sin que se te escape ningún cliente.",
+    "subtitle": "Ayudamos a barberías, salones, restaurantes, taquerías, talleres y contratistas latinos a tener presencia digital profesional completa: perfil de Google al 100%, web bilingüe ultra-rápida, botones de contacto directo y sistema de reseñas.",
+    "ctaPrimary": "Solicitar Diagnóstico Gratis (24h)",
+    "ctaSecondary": "Ver Demos en Vivo",
+    "guarantee1": "100% Bilingüe (Español / Inglés)",
+    "guarantee2": "Entrega en 5 días hábiles",
+    "guarantee3": "Sin contratos de permanencia forzosa"
+  },
+  "demoInteractive": {
+    "badge": "DEMOSTRADOR EN VIVO",
+    "title": "Prueba cómo te contactarán tus clientes",
+    "subtitle": "Tus clientes revisan todo desde su teléfono. Siempre incluimos los dos botones más rápidos, más el canal que mejor se adapte a tu forma de trabajar.",
+    "includedAlways": "Incluidos Siempre en Todo Paquete:",
+    "btnCall": "Llamar directo",
+    "btnSms": "Enviar mensaje de texto (SMS)",
+    "chooseExtra": "Elige 1 canal adicional según tu tipo de negocio:",
+    "channels": {
+      "booking": {
+        "title": "Reservas en Línea",
+        "desc": "Conexión directa con Square Appointments o Booksy. Tus clientes eligen servicio, barbero/estilista y hora disponible sin interrumpirte mientras trabajas.",
+        "bestFor": "Ideal para barberías, estéticas, spas y talleres con citas.",
+        "buttonText": "Reservar Cita en 1 Clic"
+      },
+      "meta": {
+        "title": "Respuestas en Instagram y Facebook",
+        "desc": "Automatización en Meta Business Suite con preguntas frecuentes y respuestas inmediatas cuando te escriben por DM.",
+        "bestFor": "Ideal para negocios con redes activas y menú fotográfico.",
+        "buttonText": "Escribir por Instagram / Messenger"
+      },
+      "whatsapp": {
+        "title": "WhatsApp Business Completo",
+        "desc": "Configuración completa en tu teléfono: mensaje de bienvenida, mensaje de ausencia, catálogo interactivo de servicios y respuestas rápidas.",
+        "bestFor": "Ideal para clientela latina que prefiere cotizar por chat.",
+        "buttonText": "Chatear por WhatsApp Business"
+      }
+    },
+    "previewTitle": "Vista previa en teléfono móvil:",
+    "previewNote": "* Toca los botones para probar la respuesta interactiva."
+  },
+  "packages": {
+    "badge": "PRECIOS TRANSPARENTES · SIN LETRAS CHIQUITAS",
+    "title": "Inversión clara diseñada para negocios locales",
+    "subtitle": "El montaje se paga en dos partes: 50% al firmar para iniciar y 50% al aprobar la entrega técnica en el Día 5.",
+    "founder": {
+      "tag": "OFERTA ESPECIAL SPRINT 1",
+      "slotsLeft": "Solo 2 cupos para Clientes Fundadores",
+      "title": "Paquete Fundador",
+      "price": "$250",
+      "priceDetail": "$125 al firmar + $125 al aprobar la entrega",
+      "monthly": "$100/mes de mantenimiento",
+      "desc": "Recibes el Paquete Base completo a mitad de precio, a cambio de tu testimonio honesto y permiso para mostrar el 'antes y después' en nuestro portafolio.",
+      "cta": "Aprovechar Cupo Fundador",
+      "features": [
+        "Todo lo incluido en el Paquete Base completo",
+        "Perfil de Google verificado y optimizado al 100%",
+        "Página web bilingüe (ES/EN) con dominio propio",
+        "Botones de Llamar + Texto + 1 Canal Extra",
+        "Sticker QR de mostrador para reseñas",
+        "Entrega garantizada en 5 días hábiles"
+      ]
+    },
+    "base": {
+      "tag": "MÁS POPULAR",
+      "title": "Paquete Base",
+      "price": "$500",
+      "priceDetail": "$250 al firmar + $250 al aprobar la entrega",
+      "monthly": "$100/mes (+ impuesto sobre ventas en hosting)",
+      "target": "Para barberías, salones de belleza, taquerías, restaurantes y talleres mecánicos.",
+      "cta": "Contratar Paquete Base",
+      "features": [
+        "Perfil de Google Business optimizado: fotos, horarios con feriados, descripción y servicios en inglés y español",
+        "Página web bilingüe de 1 sección, ultra-rápida, con mapa, horario y catálogo de servicios",
+        "Botones fijos de Llamar y Texto + 1 canal extra (Reservas Square/Booksy, Meta o WhatsApp Business)",
+        "Sticker QR imprimible (1200x1200px) para mostrador para facilitar reseñas de clientes reales",
+        "Dominio a tu nombre y hosting seguro con certificado SSL (HTTPS)",
+        "Reporte mensual de 1 página con llamadas y visitas reales",
+        "Hasta 2 cambios pequeños al mes incluidos (horario, precios, fotos)"
+      ]
+    },
+    "premium": {
+      "tag": "PARA CONTRATISTAS Y SERVICIOS",
+      "title": "Paquete Premium",
+      "price": "$1,000 – $1,500",
+      "priceDetail": "50% de anticipo + 50% al aprobar la entrega",
+      "monthly": "$150 – $200/mes",
+      "target": "Para contratistas de techos (roofing), construcción, jardinería, remodelación y limpieza comercial.",
+      "cta": "Consultar Paquete Premium",
+      "features": [
+        "Todo lo incluido en el Paquete Base completo",
+        "Página web de varias secciones con galería fotográfica de trabajos anteriores y formulario de cotizaciones",
+        "Texto automático por llamada perdida ('Estoy en un trabajo, ¿en qué te puedo ayudar?') registrado bajo A2P 10DLC",
+        "Optimización para zonas de servicio amplias en todo Midland-Odessa y condados vecinos",
+        "Soporte prioritario y reporte detallado de cotizaciones"
+      ]
+    }
+  },
+  "diagnosis": {
+    "badge": "SIN COSTO NI COMPROMISO",
+    "title": "Solicita tu Diagnóstico Gratuito de 1 Página en 24h",
+    "subtitle": "Analizamos cómo aparece tu negocio hoy en Google Maps y te mostramos con total transparencia qué te falta para que los clientes locales te encuentren y te elijan a ti.",
+    "fields": {
+      "ownerName": "Tu Nombre Completo",
+      "businessName": "Nombre de tu Negocio (exacto como sale en Google)",
+      "phone": "Teléfono Móvil (para enviarte el diagnóstico)",
+      "preferredChannel": "Canal preferido para recibirlo:",
+      "channelWhatsapp": "WhatsApp",
+      "channelSms": "Mensaje de Texto (SMS)",
+      "channelCall": "Llamada Telefónica",
+      "qSource": "¿Cómo te llegan hoy la mayoría de tus clientes nuevos?",
+      "qSourceOptions": [
+        "Recomendación de boca en boca",
+        "Búsquedas en Google Maps",
+        "Redes sociales (Facebook, Instagram)",
+        "Pasan por enfrente del local",
+        "Otros medios"
+      ],
+      "qContact": "¿Cómo te contactan habitualmente tus clientes?",
+      "qContactOptions": [
+        "Me llaman por teléfono",
+        "Me mandan mensaje de texto",
+        "Me escriben por WhatsApp",
+        "Me mandan mensaje por Instagram / Facebook",
+        "Llegan directo en persona"
+      ],
+      "tcpaConsent": "Acepto recibir mi diagnóstico gratuito de 1 página por mensaje o WhatsApp de Lumo HQ. No enviamos spam ni mensajes automáticos masivos (cumplimiento estricto TCPA).",
+      "submit": "Enviar Solicitud y Recibir Diagnóstico en 24h",
+      "sending": "Enviando solicitud segura...",
+      "successTitle": "¡Solicitud Recibida con Éxito!",
+      "successDesc": "Prepararemos tu diagnóstico personalizado de 1 página en menos de 24 horas hábiles y te lo enviaremos al teléfono indicado."
+    }
+  },
+  "faq": {
+    "badge": "RESPUESTAS CLARAS",
+    "title": "Preguntas Frecuentes y Dudas Habituales",
+    "subtitle": "Hablamos directo, sin rodeos ni tecnicismos confusos.",
+    "items": [
+      {
+        "q": "Está caro.",
+        "a": "¿Cuánto le deja un cliente nuevo? Si esto le trae uno o dos al mes, ya se pagó. Y el montaje se paga en dos partes."
+      },
+      {
+        "q": "No tengo tiempo.",
+        "a": "Por eso lo hacemos nosotros. Solo necesitamos fotos y 20 minutos para revisar al final."
+      },
+      {
+        "q": "Me llegan de boca en boca.",
+        "a": "Eso es lo mejor. Pero cuando alguien lo recomienda, lo primero que hacen es buscarlo en Google. Si no lo ven completo, se van con otro."
+      },
+      {
+        "q": "Mis clientes no usan WhatsApp.",
+        "a": "No hace falta. Le ponemos lo que sus clientes ya usan: que lo llamen, le manden texto o reserven en un clic."
+      },
+      {
+        "q": "Mis clientes hablan inglés.",
+        "a": "Por eso la página y el perfil van en inglés y español."
+      },
+      {
+        "q": "Mi sobrino me hace eso.",
+        "a": "Qué bueno. Le dejo el diagnóstico para que él lo use. Si algún día no tiene tiempo, aquí estamos."
+      },
+      {
+        "q": "Ya me vendieron eso y no sirvió.",
+        "a": "No prometemos primer lugar. Dejamos todo completo, mandamos un reporte cada mes y la mensualidad se cancela con 30 días de aviso."
+      },
+      {
+        "q": "No confío en pagar adelantado.",
+        "a": "Por eso es solo el 50%, con contrato firmado y factura. El resto lo paga cuando apruebe."
+      }
+    ]
+  },
+  "ftc": {
+    "title": "Compromiso de Honestidad y Cumplimiento Legal (FTC y TCPA)",
+    "text": "Lumo HQ opera bajo estricto cumplimiento de las directrices de la Comisión Federal de Comercio (FTC) y la Ley de Protección al Consumidor Telefónico (TCPA). No garantizamos el 'primer lugar en Google', no prometemos volúmenes inflados de ventas ni vendemos o fabricamos reseñas falsas de 5 estrellas. Toda opinión de cliente debe provenir de experiencias auténticas de clientes reales. No realizamos llamadas automáticas en frío ni envíos de mensajes masivos no solicitados."
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados. Lumo HQ opera bajo nombre comercial registrado (DBA) de Luis Barbera en Midland, Texas, EE. UU.",
+    "links": {
+      "terms": "Términos del Servicio",
+      "privacy": "Política de Privacidad",
+      "demos": "Demos en Vivo",
+      "portal": "Portal del Cliente"
+    }
+  },
+  "stickyCta": {
+    "call": "Llamar",
+    "diagnosis": "Diagnóstico Gratis"
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "nav": {
+    "demos": "Live Demos",
+    "barberia": "Barbershop",
+    "taqueria": "Taqueria",
+    "packages": "Packages & Pricing",
+    "diagnosis": "Free Audit",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "requestDiagnosis": "Request Audit",
+    "login": "Client Portal",
+    "tagline": "Local Businesses, Visible"
+  },
+  "hero": {
+    "badge": "MIDLAND-ODESSA, TEXAS · EXCLUSIVE FOR LOCAL BUSINESSES",
+    "titleStart": "Get found on Google and let customers ",
+    "titleHighlight": "call, text, or book in one click",
+    "titleEnd": " — never miss another customer.",
+    "subtitle": "We help Hispanic-owned barbershops, salons, restaurants, taquerias, auto repair shops, and contractors establish a complete digital presence: 100% verified Google profile, ultra-fast bilingual website, direct contact buttons, and a physical review system.",
+    "ctaPrimary": "Request Free 1-Page Audit (24h)",
+    "ctaSecondary": "View Live Demos",
+    "guarantee1": "100% Bilingual (Spanish / English)",
+    "guarantee2": "5-Business-Day Delivery",
+    "guarantee3": "No long-term contracts required"
+  },
+  "demoInteractive": {
+    "badge": "INTERACTIVE DEMO",
+    "title": "See how customers will contact you",
+    "subtitle": "Your customers do everything on their mobile phones. We always include the two fastest action buttons, plus the extra channel that best fits your workflow.",
+    "includedAlways": "Always Included in Every Package:",
+    "btnCall": "Direct Call",
+    "btnSms": "Send Text Message (SMS)",
+    "chooseExtra": "Choose 1 extra channel based on your business type:",
+    "channels": {
+      "booking": {
+        "title": "Online Booking",
+        "desc": "Direct integration with Square Appointments or Booksy. Clients pick the service, staff member, and available time without interrupting you while you work.",
+        "bestFor": "Best for barbershops, salons, spas, and appointment-based auto repair.",
+        "buttonText": "Book Appointment in 1 Click"
+      },
+      "meta": {
+        "title": "Instagram & Facebook Auto-Replies",
+        "desc": "Meta Business Suite automation answering common questions and responding instantly when leads DM your page.",
+        "bestFor": "Best for businesses with active social media and visual menus.",
+        "buttonText": "Chat on Instagram / Messenger"
+      },
+      "whatsapp": {
+        "title": "Full WhatsApp Business",
+        "desc": "Complete phone setup: custom welcome message, away message, interactive service catalog, and quick replies.",
+        "bestFor": "Best for Hispanic clientele who prefer pricing and chatting via WhatsApp.",
+        "buttonText": "Chat on WhatsApp Business"
+      }
+    },
+    "previewTitle": "Mobile Phone Live Preview:",
+    "previewNote": "* Tap the buttons to experience interactive behavior."
+  },
+  "packages": {
+    "badge": "TRANSPARENT PRICING · NO HIDDEN FEES",
+    "title": "Clear investment built for local business owners",
+    "subtitle": "Setup fee is paid 50% upfront to begin and 50% only upon written approval of final delivery on Day 5.",
+    "founder": {
+      "tag": "SPRINT 1 SPECIAL OFFER",
+      "slotsLeft": "Only 2 slots available for Founding Clients",
+      "title": "Founding Package",
+      "price": "$250",
+      "priceDetail": "$125 at signing + $125 upon final approval",
+      "monthly": "$100/mo maintenance",
+      "desc": "Get the complete Base Package at 50% off in exchange for an honest testimonial and permission to feature your 'before & after' in our portfolio.",
+      "cta": "Claim Founding Slot",
+      "features": [
+        "Everything included in the full Base Package",
+        "100% verified & optimized Google Business Profile",
+        "Bilingual website (EN/ES) on your own custom domain",
+        "Direct Call + Text buttons + 1 Extra Channel",
+        "Physical counter QR sticker for Google reviews",
+        "Guaranteed 5-business-day turnaround"
+      ]
+    },
+    "base": {
+      "tag": "MOST POPULAR",
+      "title": "Base Package",
+      "price": "$500",
+      "priceDetail": "$250 at signing + $250 upon final approval",
+      "monthly": "$100/mo (+ Texas sales tax on hosting)",
+      "target": "For barbershops, beauty salons, taquerias, restaurants, and auto repair shops.",
+      "cta": "Order Base Package",
+      "features": [
+        "Optimized Google Business Profile: photos, holiday hours, categories, description, and services in English & Spanish",
+        "Ultra-fast 1-section bilingual website with embedded map, operating hours, and service catalog",
+        "Sticky Call and Text buttons + 1 extra channel (Square/Booksy Booking, Meta, or WhatsApp Business)",
+        "Printable counter QR sticker (1200x1200px) making it effortless for real customers to leave reviews",
+        "Custom domain in your name and secure hosting with SSL (HTTPS)",
+        "Monthly 1-page report detailing real Google views and customer phone calls",
+        "Up to 2 small monthly updates included (hours, pricing, photos)"
+      ]
+    },
+    "premium": {
+      "tag": "FOR CONTRACTORS & TRADE SERVICES",
+      "title": "Premium Package",
+      "price": "$1,000 – $1,500",
+      "priceDetail": "50% upfront deposit + 50% upon final delivery",
+      "monthly": "$150 – $200/mo",
+      "target": "For roofing contractors, general construction, landscaping, remodeling, and commercial cleaning.",
+      "cta": "Inquire About Premium",
+      "features": [
+        "Everything included in the full Base Package",
+        "Multi-section website with project photo gallery and quote request forms",
+        "Missed-call automated text back ('I am on a job site, how can I help you?') registered under A2P 10DLC",
+        "Optimized service radius covering all of Midland-Odessa and surrounding counties",
+        "Priority technical support and detailed monthly lead reporting"
+      ]
+    }
+  },
+  "diagnosis": {
+    "badge": "100% FREE · NO OBLIGATION",
+    "title": "Request Your Free 1-Page Google Audit in 24 Hours",
+    "subtitle": "We analyze your exact presence on Google Maps and show you transparently what is missing so local customers find and choose your business over competitors.",
+    "fields": {
+      "ownerName": "Your Full Name",
+      "businessName": "Business Name (exactly as displayed on Google)",
+      "phone": "Mobile Phone (where we'll send the audit)",
+      "preferredChannel": "Preferred delivery method:",
+      "channelWhatsapp": "WhatsApp",
+      "channelSms": "Text Message (SMS)",
+      "channelCall": "Phone Call",
+      "qSource": "How do most of your new customers find you today?",
+      "qSourceOptions": [
+        "Word-of-mouth recommendations",
+        "Google Maps searches",
+        "Social media (Facebook, Instagram)",
+        "Drive-by / foot traffic",
+        "Other channels"
+      ],
+      "qContact": "How do customers usually contact you?",
+      "qContactOptions": [
+        "They call my phone directly",
+        "They text me",
+        "They message on WhatsApp",
+        "They DM on Instagram / Facebook",
+        "They walk in person"
+      ],
+      "tcpaConsent": "I agree to receive my free 1-page business audit via text message or WhatsApp from Lumo HQ. We never send spam or automated cold bulk messages (strict TCPA compliance).",
+      "submit": "Submit Request & Get Audit in 24h",
+      "sending": "Submitting secure request...",
+      "successTitle": "Audit Request Received!",
+      "successDesc": "We will craft your customized 1-page Google audit within 24 business hours and deliver it to your mobile phone."
+    }
+  },
+  "faq": {
+    "badge": "STRAIGHT ANSWERS",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Clear, honest information with no confusing agency jargon.",
+    "items": [
+      {
+        "q": "It's expensive.",
+        "a": "How much does a new customer bring you? If this brings in one or two a month, it has already paid for itself. And the setup fee is split into two halves."
+      },
+      {
+        "q": "I don't have time.",
+        "a": "That's why we handle everything. We only need photos and 20 minutes to review at the very end."
+      },
+      {
+        "q": "Clients come to me by word of mouth.",
+        "a": "That's the best way. But when someone recommends you, the first thing they do is search for you on Google. If your profile is incomplete, they go to someone else."
+      },
+      {
+        "q": "My clients don't use WhatsApp.",
+        "a": "No problem. We set up what your customers already use: direct phone calls, text messages, or 1-click booking."
+      },
+      {
+        "q": "My clients speak English.",
+        "a": "That's why both the website and Google profile are completely bilingual in English and Spanish."
+      },
+      {
+        "q": "My nephew does that for me.",
+        "a": "That's great. We leave the 1-page diagnosis for him to use. If he's ever too busy, we're right here."
+      },
+      {
+        "q": "Someone already sold me that and it didn't work.",
+        "a": "We don't promise #1 spot on Google. We set up everything complete, send a monthly report, and the subscription cancels with 30 days notice."
+      },
+      {
+        "q": "I don't trust paying upfront.",
+        "a": "That's why it's only 50%, with a signed legal contract and invoice. You pay the rest only after you approve."
+      }
+    ]
+  },
+  "ftc": {
+    "title": "Commitment to Honesty and Legal Compliance (FTC & TCPA)",
+    "text": "Lumo HQ operates in strict compliance with the Federal Trade Commission (FTC) guidelines and the Telephone Consumer Protection Act (TCPA). We do not promise 'number one ranking on Google', we do not guarantee inflated customer counts, and we never sell, buy, or generate fake 5-star reviews. All customer reviews must originate from genuine experiences with real patrons. We do not engage in automated cold-calling or unsolicited bulk messaging."
+  },
+  "footer": {
+    "rights": "All rights reserved. Lumo HQ operates under the registered Assumed Business Name (DBA) of Luis Barbera in Midland, Texas, USA.",
+    "links": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "demos": "Live Demos",
+      "portal": "Client Portal"
+    }
+  },
+  "stickyCta": {
+    "call": "Call Now",
+    "diagnosis": "Free Audit"
+  }
+}
+

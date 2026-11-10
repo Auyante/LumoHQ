@@ -1,0 +1,389 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN_LUIS
+  ADMIN_CARLOS
+  SALES_BARBARA
+  CLIENT
+}
+
+enum ProspectStage {
+  LISTED
+  CONTACTED
+  DIAGNOSED
+  MET
+  CLOSED
+  FOLLOW_UP
+}
+
+enum Priority {
+  P1
+  P2
+  DISCARD
+}
+
+enum ProspectSource {
+  BARBARA
+  LUIS
+  REFERRAL
+}
+
+enum PackageType {
+  FOUNDER
+  BASE
+  PREMIUM
+}
+
+enum ExtraChannelType {
+  BOOKING
+  IG_FB
+  WHATSAPP
+}
+
+enum ClientStatus {
+  ONBOARDING
+  DAY1_PENDING
+  IN_PRODUCTION
+  REVIEW
+  ACTIVE
+  CANCELLED
+}
+
+enum PaymentType {
+  DEPOSIT_50
+  FINAL_50
+  SUBSCRIPTION
+  EXTRA_CHANGE
+  MAJOR_WORK
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum ChangeTicketType {
+  SMALL_CHANGE
+  EXTRA_CHANGE
+  MAJOR_WORK
+}
+
+enum TicketStatus {
+  REQUESTED
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+enum ExpenseCategory {
+  DBA
+  ESIM
+  DOMAIN
+  PRINTS
+  TOOLS
+  MILEAGE
+  OTHER
+}
+
+model User {
+  id                    String            @id @default(uuid())
+  email                 String            @unique
+  passwordHash          String
+  role                  Role
+  fullName              String
+  isActive              Boolean           @default(true)
+  failedLoginAttempts   Int               @default(0)
+  lockedUntil           DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  client                Client?
+  prospectsCreated      Prospect[]        @relation("ProspectCreatedBy")
+  auditLogs             AuditLog[]
+  weeklyHours           WeeklyHoursLog[]
+  expenseApprovals      ExpenseApproval[]
+  deliveryTasksDone     DeliveryChecklist[]
+}
+
+model Batch {
+  id          String     @id @default(uuid())
+  batchNumber Int        @unique
+  targetSize  Int        @default(30)
+  createdAt   DateTime   @default(now())
+  prospects   Prospect[]
+}
+
+model Prospect {
+  id                   String         @id @default(uuid())
+  batchId              String?
+  batch                Batch?         @relation(fields: [batchId], references: [id])
+  createdByUserId      String?
+  createdByUser        User?          @relation("ProspectCreatedBy", fields: [createdByUserId], references: [id])
+  businessName         String
+  ownerName            String?
+  phone                String
+  googleMapsUrl        String?
+  instagram            String?
+  facebook             String?
+  whatsapp             String?
+  stage                ProspectStage  @default(LISTED)
+  
+  // 8 Signal Scoring System (1 point each)
+  scoreReviews         Int            @default(0) // <20 reviews or last >3mo
+  scoreWebsite         Int            @default(0) // no site, broken, outdated
+  scorePhotos          Int            @default(0) // few, old, or no photos
+  scoreHours           Int            @default(0) // empty or incomplete hours
+  scoreDescription     Int            @default(0) // no description/services or bad categories
+  scoreReviewResponse  Int            @default(0) // reviews with no owner reply
+  scoreBooking         Int            @default(0) // no booking button
+  scoreSpanish         Int            @default(0) // serves in Spanish
+  totalScore           Int            @default(0) // sum of 8
+  priority             Priority       @default(P2) // P1 (4+), P2 (2-3), DISCARD (<2)
+  source               ProspectSource @default(BARBARA)
+  followUpCount        Int            @default(0) // max 3 strictly enforced
+  contactNotes         Json?
+  lastContactedAt      DateTime?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  client               Client?
+}
+
+model Client {
+  id                    String              @id @default(uuid())
+  userId                String              @unique
+  user                  User                @relation(fields: [userId], references: [id])
+  prospectId            String?             @unique
+  prospect              Prospect?           @relation(fields: [prospectId], references: [id])
+  businessName          String
+  ownerName             String
+  address               String
+  phone                 String
+  whatsapp              String?
+  email                 String
+  hours                 Json                // Operating hours per day + holidays
+  services              Json                // List of services with prices
+  serviceArea           String?
+  descriptionEs         String?
+  descriptionEn         String?
+  language              String              @default("BOTH") // EN, ES, BOTH
+  extraChannel          ExtraChannelType    @default(BOOKING)
+  packageType           PackageType         @default(BASE)
+  setupPrice            Decimal             @db.Decimal(10, 2)
+  monthlyPrice          Decimal             @db.Decimal(10, 2) @default(100.00)
+  domain                String?
+  googleProfileUrl      String?
+  reviewShortLink       String?
+  reviewQrUrl           String?
+  status                ClientStatus        @default(ONBOARDING)
+  day1ChecklistComplete Boolean             @default(false)
+  deliveryApproved      Boolean             @default(false)
+  clockStartedAt        DateTime?
+  deliveredAt           DateTime?
+  subscriptionStartedAt DateTime?
+  cancelledAt           DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  contracts             Contract[]
+  payments              Payment[]
+  files                 ClientFile[]
+  monthlyReports        MonthlyReport[]
+  changeTickets         ChangeTicket[]
+  deliveryChecklist     DeliveryChecklist[]
+}
+
+model Contract {
+  id                             String      @id @default(uuid())
+  clientId                       String
+  client                         Client      @relation(fields: [clientId], references: [id])
+  contractType                   PackageType
+  contractHtml                   String      @db.Text
+  signerName                     String
+  signerIp                       String
+  signedAtUtc                    DateTime
+  documentHashSha256             String
+  includesPortfolioPermission    Boolean     @default(false)
+  includesTestimonialPermission  Boolean     @default(false)
+  createdAt                      DateTime    @default(now())
+  payments                       Payment[]
+}
+
+model Payment {
+  id                      String              @id @default(uuid())
+  clientId                String
+  client                  Client              @relation(fields: [clientId], references: [id])
+  contractId              String?
+  contract                Contract?           @relation(fields: [contractId], references: [id])
+  stripePaymentIntentId   String?             @unique
+  stripeCheckoutSessionId String?             @unique
+  stripeSubscriptionId    String?
+  paymentType             PaymentType
+  amount                  Decimal             @db.Decimal(10, 2)
+  stripeFee               Decimal             @db.Decimal(10, 2) @default(0.00)
+  texasSalesTax           Decimal             @db.Decimal(10, 2) @default(0.00)
+  status                  PaymentStatus       @default(PENDING)
+  idempotencyKey          String              @unique
+  paidAt                  DateTime?
+  createdAt               DateTime            @default(now())
+  waterfall               FinancialWaterfall?
+}
+
+model FinancialWaterfall {
+  id                       String    @id @default(uuid())
+  paymentId                String    @unique
+  payment                  Payment   @relation(fields: [paymentId], references: [id])
+  grossAmount              Decimal   @db.Decimal(10, 2)
+  stripeFee                Decimal   @db.Decimal(10, 2)
+  barbaraCommission        Decimal   @db.Decimal(10, 2)
+  toolsAndDomain           Decimal   @db.Decimal(10, 2)
+  businessFund8pct         Decimal   @db.Decimal(10, 2)
+  carlosShare              Decimal   @db.Decimal(10, 2)
+  luisShare                Decimal   @db.Decimal(10, 2)
+  luisTaxReserve           Decimal   @db.Decimal(10, 2)
+  texasSalesTaxCollected   Decimal   @db.Decimal(10, 2)
+  calculatedAt             DateTime  @default(now())
+}
+
+model BarbaraCommissionTracker {
+  id                 String   @id @default(uuid())
+  clients1To5Count   Int      @default(0)
+  clients6To30Count  Int      @default(0)
+  totalEarned        Decimal  @db.Decimal(10, 2) @default(0.00)
+  cap                Decimal  @db.Decimal(10, 2) @default(500.00)
+  capReached         Boolean  @default(false)
+  updatedAt          DateTime @updatedAt
+}
+
+model ClientFile {
+  id                   String   @id @default(uuid())
+  clientId             String
+  client               Client   @relation(fields: [clientId], references: [id])
+  filename             String
+  storagePath          String
+  mimeType             String
+  fileSize             Int
+  magicBytesVerified   String
+  rightsConfirmed      Boolean  @default(true)
+  uploadedAt           DateTime @default(now())
+}
+
+model DeliveryChecklist {
+  id              String    @id @default(uuid())
+  clientId        String
+  client          Client    @relation(fields: [clientId], references: [id])
+  dayNumber       Int       // 0 to 5
+  taskDescription String
+  completed       Boolean   @default(false)
+  completedByUserId String?
+  completedByUser User?     @relation(fields: [completedByUserId], references: [id])
+  completedAt     DateTime?
+}
+
+model MonthlyReport {
+  id                String   @id @default(uuid())
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id])
+  monthNumber       Int
+  year              Int
+  profileViews      Int      @default(0)
+  profileViewsPrev  Int      @default(0)
+  googleCalls       Int      @default(0)
+  directionsClicks  Int      @default(0)
+  websiteVisits     Int      @default(0)
+  channelMessages   Int      @default(0)
+  newReviews        Int      @default(0)
+  avgRating         Decimal  @db.Decimal(3, 2) @default(5.00)
+  summary           String   @db.Text
+  recommendation    String   @db.Text
+  generatedAt       DateTime @default(now())
+}
+
+model ChangeTicket {
+  id                String           @id @default(uuid())
+  clientId          String
+  client            Client           @relation(fields: [clientId], references: [id])
+  description       String           @db.Text
+  ticketType        ChangeTicketType @default(SMALL_CHANGE)
+  estimatedMinutes  Int              @default(30)
+  chargeAmount      Decimal          @db.Decimal(10, 2) @default(0.00)
+  stripePaymentLink String?
+  status            TicketStatus     @default(REQUESTED)
+  monthChangeCount  Int              @default(1) // 1, 2 = free; 3+ = charged
+  createdAt         DateTime         @default(now())
+  completedAt       DateTime?
+}
+
+model Expense {
+  id                   String            @id @default(uuid())
+  description          String
+  amount               Decimal           @db.Decimal(10, 2)
+  category             ExpenseCategory
+  receiptPath          String?
+  requiresDualApproval Boolean           @default(false)
+  createdAt            DateTime          @default(now())
+  approvals            ExpenseApproval[]
+}
+
+model ExpenseApproval {
+  id          String    @id @default(uuid())
+  expenseId   String
+  expense     Expense   @relation(fields: [expenseId], references: [id])
+  approvedByUserId String
+  approvedByUser   User @relation(fields: [approvedByUserId], references: [id])
+  approved    Boolean
+  decidedAt   DateTime  @default(now())
+}
+
+model WeeklyHoursLog {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  weekNumber    Int
+  year          Int
+  hoursLogged   Decimal  @db.Decimal(5, 2)
+  contactsMade  Int      @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model KPIDashboard {
+  id                        String   @id @default(uuid())
+  dayCheckpoint             Int      // 14, 30, 60, 90
+  businessesListedTarget    Int
+  businessesListedActual    Int      @default(0)
+  businessesContactedTarget Int
+  businessesContactedActual Int      @default(0)
+  realConversationsTarget   Int
+  realConversationsActual   Int      @default(0)
+  diagnosesSentTarget       Int
+  diagnosesSentActual       Int      @default(0)
+  meetingsProposalsTarget   Int
+  meetingsProposalsActual   Int      @default(0)
+  clientsClosedTarget       Int
+  clientsClosedActual       Int      @default(0)
+  mrrTarget                 Decimal  @db.Decimal(10, 2)
+  mrrActual                 Decimal  @db.Decimal(10, 2) @default(0.00)
+  snapshotAt                DateTime @default(now())
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  action       String
+  resourceType String
+  resourceId   String?
+  oldValues    Json?
+  newValues    Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+}
+
