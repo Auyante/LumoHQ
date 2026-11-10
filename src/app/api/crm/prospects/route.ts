@@ -1,99 +1,126 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { crmStore, calculateProspectSignals } from '@/lib/crm';
+import { z } from 'zod';
+import { crmStore, type ProspectItem } from '@/lib/crm';
+import { SIGNAL_KEYS, STAGES, SOURCES, rowsFromCsv } from '@/lib/crm-engine';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { STAFF_ROLES, ADMIN_ROLES } from '@/lib/auth';
+import { requireSession, isGuardResponse } from '@/lib/security/guard';
+import { audit } from '@/lib/security/store';
+
+/** Staff only (middleware + this second check). Every body is validated; unknown fields are dropped. */
+
+const text = (max: number) => z.string().trim().max(max);
+const phone = z.string().trim().min(10).max(20).regex(/^[+0-9\s().-]+$/, 'Teléfono no válido');
+const signals = z.object(Object.fromEntries(SIGNAL_KEYS.map((k) => [k, z.boolean()])) as Record<(typeof SIGNAL_KEYS)[number], z.ZodBoolean>);
+const city = z.enum(['Midland', 'Odessa']);
+const source = z.enum(SOURCES as [ProspectItem['source'], ...ProspectItem['source'][]]);
+const batch = z.number().int().min(1).max(5);
+
+const CreateSchema = z.object({
+  businessName: text(100).min(2),
+  ownerName: text(80).optional(),
+  phone,
+  address: text(120).optional(),
+  city: city.default('Midland'),
+  category: text(60).default('Servicios Locales'),
+  source: source.default('BARBARA'),
+  batchNumber: batch.default(1),
+  signals: signals.optional(),
+});
+
+const DetailsSchema = z.object({
+  businessName: text(100).min(2), ownerName: text(80), phone, address: text(120), city,
+  googleMapsUrl: z.string().url().max(300).refine((u) => /^https:\/\//.test(u), 'Solo enlaces https'),
+  category: text(60), source, batchNumber: batch,
+  preferredChannel: z.enum(['WhatsApp', 'Llamada', 'Presencial']),
+  questionSource: text(200), questionMissedCalls: text(200),
+}).partial().strict();
+
+const PatchSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('update_stage'), id: z.string(), stage: z.enum(STAGES as [ProspectItem['stage'], ...ProspectItem['stage'][]]) }),
+  z.object({ action: z.literal('follow_up'), id: z.string(), note: text(300).optional() }),
+  z.object({ action: z.literal('add_note'), id: z.string(), note: text(300).min(1) }),
+  z.object({ action: z.literal('update_signals'), id: z.string(), signals }),
+  z.object({ action: z.literal('update_details'), id: z.string(), details: DetailsSchema }),
+  z.object({ action: z.literal('opt_out'), id: z.string(), optedOut: z.boolean() }),
+]);
+
+const bad = (error: string, status = 400) => NextResponse.json({ error }, { status });
+const firstIssue = (e: z.ZodError) => e.issues[0]?.message || 'Datos no válidos.';
 
 export async function GET(req: NextRequest) {
-  const prospects = crmStore.getAll();
-  return NextResponse.json({ success: true, prospects });
+  const g = requireSession(req, STAFF_ROLES);
+  if (isGuardResponse(g)) return g;
+  return NextResponse.json({ success: true, prospects: crmStore.getAll() }, { headers: { 'cache-control': 'no-store' } });
 }
 
 export async function POST(req: NextRequest) {
-  try {
-    const clientIp =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
-    const rateLimit = checkRateLimit(`crm-create:${clientIp}`, 20, 60000);
-    if (!rateLimit.allowed) {
-      return NextResponse.json({ error: 'Demasiadas solicitudes.' }, { status: 429 });
-    }
+  const g = requireSession(req, STAFF_ROLES);
+  if (isGuardResponse(g)) return g;
+  if (!checkRateLimit(`crm-create:${g.ip}`, 20, 60_000).allowed) return bad('Demasiadas solicitudes.', 429);
 
-    const body = await req.json();
-    if (!body.businessName || !body.phone) {
-      return NextResponse.json(
-        { error: 'El nombre del negocio y el teléfono son obligatorios.' },
-        { status: 400 }
-      );
-    }
+  let body: Record<string, unknown>;
+  try { body = await req.json(); } catch { return bad('Solicitud inválida.'); }
 
-    const item = crmStore.create({
-      batchNumber: body.batchNumber || 1,
-      businessName: body.businessName,
-      ownerName: body.ownerName,
-      phone: body.phone,
-      address: body.address,
-      city: body.city || 'Midland',
-      category: body.category || 'Servicios Locales',
-      stage: body.stage || 'LISTED',
-      source: body.source || 'BARBARA',
-      signals: body.signals || {
-        unclaimedGoogleProfile: false,
-        lowOrFewReviews: false,
-        noOrBrokenWebsite: false,
-        notMobileResponsive: false,
-        incompleteHours: false,
-        oldOrNoPhotos: false,
-        noDirectContactButtons: false,
-        slowLoadingSpeed: false,
-      },
-      followUpCount: 0,
-      contactNotes: body.contactNotes || [],
-    });
-
-    return NextResponse.json({ success: true, prospect: item }, { status: 201 });
-  } catch (error) {
-    console.error('CRM create error:', error);
-    return NextResponse.json({ error: 'Error interno en CRM' }, { status: 500 });
+  // Bulk CSV import (admins only, max one batch of 30 per request)
+  if (body.action === 'import_csv') {
+    if (!ADMIN_ROLES.includes(g.session.role)) return bad('Solo administradores pueden importar.', 403);
+    const csv = typeof body.csv === 'string' ? body.csv : '';
+    if (csv.length > 200_000) return bad('El archivo es demasiado grande.');
+    const defaultBatch = batch.safeParse(body.batchNumber).success ? (body.batchNumber as number) : 1;
+    const { rows, errors } = rowsFromCsv(csv, defaultBatch);
+    if (rows.length > 30) return bad('Máximo 30 negocios por importación (un lote).');
+    const res = crmStore.importMany(rows);
+    audit('CRM_IMPORT', 'INFO', g.ip, `${res.created.length} created, ${res.skipped.length} skipped, ${errors.length} invalid rows`, g.session.email);
+    return NextResponse.json({ success: true, created: res.created.length, skipped: res.skipped, errors });
   }
+
+  const parsed = CreateSchema.safeParse(body);
+  if (!parsed.success) return bad(firstIssue(parsed.error));
+  const d = parsed.data;
+  const item = crmStore.create({
+    ...d,
+    stage: 'LISTED',
+    signals: d.signals ?? Object.fromEntries(SIGNAL_KEYS.map((k) => [k, false])) as ProspectItem['signals'],
+    followUpCount: 0,
+    contactNotes: [],
+  });
+  return NextResponse.json({ success: true, prospect: item }, { status: 201 });
 }
 
 export async function PATCH(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { id, action, stage, note } = body;
+  const g = requireSession(req, STAFF_ROLES);
+  if (isGuardResponse(g)) return g;
+  let body: unknown;
+  try { body = await req.json(); } catch { return bad('Solicitud inválida.'); }
+  const parsed = PatchSchema.safeParse(body);
+  if (!parsed.success) return bad(firstIssue(parsed.error));
+  const b = parsed.data;
+  if (!crmStore.getById(b.id)) return bad('Prospecto no encontrado', 404);
+  const ok = (prospect: unknown) => NextResponse.json({ success: true, prospect });
 
-    if (!id) {
-      return NextResponse.json({ error: 'ID de prospecto requerido' }, { status: 400 });
+  switch (b.action) {
+    case 'update_stage':
+      crmStore.updateStage(b.id, b.stage);
+      return ok(crmStore.getById(b.id));
+    case 'follow_up': {
+      const res = crmStore.incrementFollowUp(b.id, b.note ? `${b.note} (${g.session.name})` : `Seguimiento enviado por ${g.session.name}`);
+      if (!res.success) return NextResponse.json({ error: res.error, count: res.count }, { status: 409 });
+      return ok(crmStore.getById(b.id));
     }
-
-    if (action === 'update_stage' && stage) {
-      const ok = crmStore.updateStage(id, stage);
-      if (!ok) return NextResponse.json({ error: 'Prospecto no encontrado' }, { status: 404 });
-      return NextResponse.json({ success: true, prospect: crmStore.getById(id) });
+    case 'add_note': {
+      const item = crmStore.getById(b.id)!;
+      item.contactNotes = [`[${new Date().toLocaleDateString('es-US')}] (${g.session.name}): ${b.note}`, ...(item.contactNotes ?? [])].slice(0, 200);
+      return ok(item);
     }
-
-    if (action === 'follow_up') {
-      const res = crmStore.incrementFollowUp(id, note);
-      if (!res.success) {
-        return NextResponse.json({ error: res.error, count: res.count }, { status: 400 });
-      }
-      return NextResponse.json({ success: true, prospect: crmStore.getById(id) });
+    case 'update_signals':
+      return ok(crmStore.updateSignals(b.id, b.signals));
+    case 'update_details':
+      return ok(crmStore.updateDetails(b.id, b.details));
+    case 'opt_out': {
+      const item = crmStore.setOptOut(b.id, b.optedOut);
+      audit('CRM_OPT_OUT', 'INFO', g.ip, `${item?.businessName}: ${b.optedOut ? 'no contactar' : 'contacto reactivado'}`, g.session.email);
+      return ok(item);
     }
-
-    if (action === 'update_signals' && body.signals) {
-      const updated = crmStore.updateSignals(id, body.signals);
-      if (!updated) return NextResponse.json({ error: 'Prospecto no encontrado' }, { status: 404 });
-      return NextResponse.json({ success: true, prospect: updated });
-    }
-
-    if (action === 'update_details' && body.details) {
-      const updated = crmStore.updateDetails(id, body.details);
-      if (!updated) return NextResponse.json({ error: 'Prospecto no encontrado' }, { status: 404 });
-      return NextResponse.json({ success: true, prospect: updated });
-    }
-
-    return NextResponse.json({ error: 'Acción no soportada' }, { status: 400 });
-  } catch (error) {
-    console.error('CRM patch error:', error);
-    return NextResponse.json({ error: 'Error interno en CRM' }, { status: 500 });
   }
 }
-

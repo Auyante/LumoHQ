@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { TemplateConfig } from '@/lib/templates';
 import { DemoBadge } from '@/components/demos/DemoBadge';
 import { BookingModal } from '@/components/demos/BookingModal';
@@ -10,27 +9,26 @@ import { ReviewQrCard } from '@/components/demos/ReviewQrCard';
 import type { Locale } from '@/lib/types';
 import {
   Phone,
-  MessageSquare,
   Calendar,
   MessageCircle,
   MapPin,
   Clock,
-  Instagram,
-  CheckCircle2,
-  Sparkles,
 } from 'lucide-react';
 
 interface MasterTemplateViewProps {
   config: TemplateConfig;
-  ownerToggle?: {
-    isOwnerView: boolean;
-    appointmentCount?: number;
-    onToggle: () => void;
-  };
+  ownerToggle?: React.ComponentProps<typeof DemoBadge>['ownerToggle'];
+  onBooked?: React.ComponentProps<typeof BookingModal>['onBooked'];
+  onOrdered?: React.ComponentProps<typeof WhatsAppOrderModal>['onOrdered'];
+  /** Controlled language (the demo shell keeps it when switching views). */
+  locale?: Locale;
+  onLocaleChange?: (l: Locale) => void;
 }
 
-export function MasterTemplateView({ config, ownerToggle }: MasterTemplateViewProps) {
-  const [locale, setLocale] = useState<Locale>('es');
+export function MasterTemplateView({ config, ownerToggle, onBooked, onOrdered, locale: lockedLocale, onLocaleChange }: MasterTemplateViewProps) {
+  const [ownLocale, setOwnLocale] = useState<Locale>('es');
+  const locale = lockedLocale ?? ownLocale;
+  const setLocale = (l: Locale) => (onLocaleChange ? onLocaleChange(l) : setOwnLocale(l));
   const [bookingOpen, setBookingOpen] = useState(false);
   const [whatsAppOpen, setWhatsAppOpen] = useState(false);
 
@@ -38,7 +36,6 @@ export function MasterTemplateView({ config, ownerToggle }: MasterTemplateViewPr
     setLocale(locale === 'es' ? 'en' : 'es');
   };
 
-  const categories = Array.from(new Set(config.items.map((i) => i.category)));
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col antialiased selection:bg-amber-200">
@@ -361,6 +358,7 @@ export function MasterTemplateView({ config, ownerToggle }: MasterTemplateViewPr
         services={config.items}
         locale={locale}
         businessName={config.name}
+        onBooked={onBooked}
       />
 
       <WhatsAppOrderModal
@@ -370,6 +368,7 @@ export function MasterTemplateView({ config, ownerToggle }: MasterTemplateViewPr
         locale={locale}
         businessName={config.name}
         whatsAppNumber={config.buttons.whatsAppNumber || '14325550189'}
+        onOrdered={onOrdered}
       />
     </div>
   );

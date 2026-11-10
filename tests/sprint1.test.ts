@@ -46,8 +46,8 @@ describe('SPRINT 1 GATE VERIFICATION — LUMO HQ', () => {
       expect(enMessages.packages.founder.price).toBe('$250');
       expect(esMessages.packages.base.price).toBe('$500');
       expect(enMessages.packages.base.price).toBe('$500');
-      expect(esMessages.faq.items.length).toBe(7);
-      expect(enMessages.faq.items.length).toBe(7);
+      expect(esMessages.faq.items.length).toBe(8); // the 8 objections from Doc 03
+      expect(enMessages.faq.items.length).toBe(8);
     });
 
     it('should strictly comply with FTC guidelines (no false ranking or reviews)', () => {

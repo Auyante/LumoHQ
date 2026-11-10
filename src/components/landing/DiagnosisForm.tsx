@@ -3,7 +3,16 @@
 import React, { useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import type { DiagnosisFormData } from '@/lib/types';
-import { Send, CheckCircle2, AlertCircle, Clock, ShieldCheck, Sparkles, MessageCircle, MessageSquare, Phone } from 'lucide-react';
+import {
+  Send,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  ShieldCheck,
+  MessageCircle,
+  MessageSquare,
+  Phone,
+} from 'lucide-react';
 
 export function DiagnosisForm() {
   const { t } = useI18n();
@@ -54,8 +63,8 @@ export function DiagnosisForm() {
       }
 
       setSuccess(true);
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Ocurrió un error. Intenta de nuevo.');
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : '') || 'Ocurrió un error. Intenta de nuevo.');
     } finally {
       setIsSubmitting(false);
     }

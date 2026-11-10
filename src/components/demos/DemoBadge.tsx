@@ -2,21 +2,24 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Globe, CalendarCheck, LayoutDashboard, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, Globe, LayoutDashboard, ArrowRight } from 'lucide-react';
 import type { Locale } from '@/lib/types';
 
 interface DemoBadgeProps {
   businessName: string;
   locale: Locale;
   onToggleLocale: () => void;
+  /** Two-view switch: the public site vs. what the owner sees. */
   ownerToggle?: {
-    isOwnerView: boolean;
-    appointmentCount?: number;
-    onToggle: () => void;
+    view: 'client' | 'owner';
+    ownerLabel: string;
+    count?: number;
+    onChange: (view: 'client' | 'owner') => void;
   };
+
 }
 
-export function DemoBadge({ businessName, locale, onToggleLocale, ownerToggle }: DemoBadgeProps) {
+export function DemoBadge({ locale, onToggleLocale, ownerToggle }: DemoBadgeProps) {
   return (
     <div className="sticky top-0 z-50 bg-lumo-noche text-white border-b border-lumo-ambar/40 px-3 py-2 text-xs font-semibold shadow-md">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
@@ -39,30 +42,24 @@ export function DemoBadge({ businessName, locale, onToggleLocale, ownerToggle }:
           </span>
         </div>
 
-        <div className="flex items-center flex-wrap gap-2">
+        <div className="flex items-center flex-wrap gap-2 w-full md:w-auto">
           {ownerToggle && (
-            <button
-              type="button"
-              onClick={ownerToggle.onToggle}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-transform active:scale-95 min-h-[36px] ${ownerToggle.isOwnerView
-                  ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                  : 'bg-white/15 text-white hover:bg-white/25 border border-white/20'
-                }`}
-            >
-              {ownerToggle.isOwnerView ? (
-                <>
-                  <CalendarCheck className="w-3.5 h-3.5" />
-                  <span>Vista Cliente (Web Pública)</span>
-                </>
-              ) : (
-                <>
-                  <LayoutDashboard className="w-3.5 h-3.5 text-lumo-ambar" />
-                  <span>
-                    Vista Dueño: Agenda ({ownerToggle.appointmentCount ?? 3})
-                  </span>
-                </>
-              )}
-            </button>
+            <div role="group" aria-label={locale === 'es' ? 'Cambiar de vista' : 'Switch view'}
+              className="order-last md:order-none w-full md:w-auto grid grid-cols-2 p-0.5 rounded-lg bg-white/10">
+              {(['client', 'owner'] as const).map((v) => {
+                const on = ownerToggle.view === v;
+                return (
+                  <button key={v} type="button" aria-pressed={on} onClick={() => ownerToggle.onChange(v)}
+                    className={`min-h-[40px] inline-flex items-center justify-center gap-1.5 px-3 rounded-md text-xs font-bold transition-colors ${on ? 'bg-white text-lumo-noche' : 'text-white/80 hover:text-white'}`}>
+                    {v === 'client' ? <Globe className="w-3.5 h-3.5" aria-hidden="true" /> : <LayoutDashboard className="w-3.5 h-3.5" aria-hidden="true" />}
+                    <span>{v === 'client' ? (locale === 'es' ? 'Vista del cliente' : 'Customer view') : ownerToggle.ownerLabel}</span>
+                    {v === 'owner' && ownerToggle.count !== undefined && (
+                      <span className={`min-w-5 h-5 px-1 rounded-full text-[11px] grid place-items-center tabular-nums ${on ? 'bg-lumo-ambar text-lumo-noche' : 'bg-white/20'}`}>{ownerToggle.count}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           )}
 
           <Link

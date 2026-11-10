@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CreateCheckoutSessionSchema } from '@/lib/schemas';
-import {
-  getPackageAmounts,
-  createStripeDepositSession,
-  PRICING_CONSTANTS,
-} from '@/lib/stripe';
+import { getPackageAmounts, createStripeDepositSession } from '@/lib/stripe';
 import { contractStore } from '@/lib/contract-store';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security/client-ip';
+import { honeypotTripped } from '@/lib/security/guard';
 
 export async function POST(req: NextRequest) {
   try {
     // 1. Rate limiting: 10 per minute per IP
-    const clientIp =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      req.headers.get('x-real-ip') ||
-      '127.0.0.1';
+    const clientIp = getClientIp(req.headers);
 
     const rateLimit = checkRateLimit(`checkout-create:${clientIp}`, 10, 60000);
     if (!rateLimit.allowed) {
@@ -26,6 +21,8 @@ export async function POST(req: NextRequest) {
 
     // 2. Body validation
     const rawBody = await req.json();
+    const trap = honeypotTripped(req, rawBody, 'checkout');
+    if (trap) return trap;
     const parsed = CreateCheckoutSessionSchema.safeParse(rawBody);
 
     if (!parsed.success) {

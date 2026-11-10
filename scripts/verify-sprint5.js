@@ -186,7 +186,9 @@ const finanzasPage = fs.readFileSync(path.join(__dirname, '../src/app/admin/fina
 assert(finanzasPage.includes('DBA Midland'), 'Registro del DBA de Luis Barbera en Midland County');
 assert(finanzasPage.includes('Texas Sales Tax') || finanzasPage.includes('Permiso de Ventas'), 'Configuración del Permiso de Ventas de Texas');
 assert(finanzasPage.includes('W-8BEN'), 'Formularios W-8BEN de Carlos y Bárbara en archivo');
-assert(finanzasPage.includes('deducción') && finanzasPage.includes('0.67'), 'Rastreador de deducción fiscal por millaje de Luis ($0.67/milla)');
+// The mileage ledger moved to its own component and engine (Phase 4).
+const ledgerEngine = fs.readFileSync(path.join(__dirname, '../src/lib/ledger-engine.ts'), 'utf8');
+assert(finanzasPage.includes('ScheduleCLedger') && /IRS_MILEAGE_RATE = 0\.67/.test(ledgerEngine) && /DUAL_APPROVAL_OVER = 100/.test(ledgerEngine), 'Rastreador de deducción fiscal por millaje de Luis ($0.67/milla)');
 
 console.log('\n====================================================');
 console.log(`RESUMEN DE PRUEBAS SPRINT 5: ${passedTests} PASADAS, ${failedTests} FALLIDAS`);

@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { AdminNav } from '@/components/admin/AdminNav';
 import {
-  FileText,
   TrendingUp,
   PhoneCall,
   MessageSquare,
@@ -12,12 +10,8 @@ import {
   Star,
   Users,
   Plus,
-  CheckCircle2,
-  AlertCircle,
   Clock,
-  DollarSign,
   Printer,
-  ChevronRight,
   X,
 } from 'lucide-react';
 import {
@@ -27,13 +21,13 @@ import {
 } from '@/lib/retention';
 
 export default function AdminRetencionPage() {
-  const [reports, setReports] = useState<MonthlyReportData[]>(retentionStore.getMonthlyReports());
+  const [reports] = useState<MonthlyReportData[]>(retentionStore.getMonthlyReports());
   const [tickets, setTickets] = useState<ChangeTicket[]>(retentionStore.getAllTickets());
 
   // Ticket creation modal state
   const [isCreatingTicket, setIsCreatingTicket] = useState(false);
-  const [ticketClientId, setTicketClientId] = useState('cli_elrey_01');
-  const [ticketBizName, setTicketBizName] = useState('El Rey Barbershop');
+  const [ticketClientId] = useState('cli_elrey_01');
+  const [ticketBizName] = useState('El Rey Barbershop');
   const [ticketDesc, setTicketDesc] = useState('');
   const [isMajorWork, setIsMajorWork] = useState(false);
 

@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { businessName, googleUrlOrPlaceId, ownerName } = result.data;
+    const { businessName, googleUrlOrPlaceId } = result.data;
 
     // Validate against Open Redirect vulnerabilities
     let shortReviewLink = '';

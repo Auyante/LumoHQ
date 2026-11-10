@@ -37,6 +37,16 @@ export interface ProspectItem {
   questionSource?: string;
   questionMissedCalls?: string;
   createdAt: string;
+
+  // Cadence anchors (set when the stage changes). Doc 03: diagnosis <24 h after contact,
+  // follow-ups 2, 5 and 7 days after the diagnosis.
+  contactedAt?: string;
+  diagnosedAt?: string;
+  metAt?: string;
+  closedAt?: string;
+  /** TCPA: the business asked not to be contacted. Blocks every message from then on. */
+  optedOut?: boolean;
+  optedOutAt?: string;
 }
 
 /**
@@ -346,6 +356,27 @@ if (!globalCrm.__lumo_prospects) {
   ];
 }
 
+// Demo cadence anchors for the seed data, relative to server start.
+{
+  const ago = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
+  const anchors: Record<string, Partial<ProspectItem>> = {
+    lead_midland_barber_01: { createdAt: ago(240), contactedAt: ago(200), diagnosedAt: ago(190), metAt: ago(3), lastContactedAt: ago(3) },
+    lead_odessa_taqueria_02: { createdAt: ago(120), contactedAt: ago(100), diagnosedAt: ago(50), lastContactedAt: ago(50) },
+    lead_midland_roofing_03: { createdAt: ago(30), contactedAt: ago(20), lastContactedAt: ago(20) },
+    lead_odessa_autodetail_04: { createdAt: ago(5) },
+    lead_midland_bakery_05: { createdAt: ago(400), contactedAt: ago(380), diagnosedAt: ago(370), lastContactedAt: ago(200) },
+    lead_odessa_plumbing_06: { createdAt: ago(500), contactedAt: ago(480), diagnosedAt: ago(470), metAt: ago(400), closedAt: ago(390), lastContactedAt: ago(390) },
+  };
+  for (const p of globalCrm.__lumo_prospects!) if (anchors[p.id] && !p.contactedAt && !p.closedAt) Object.assign(p, anchors[p.id]);
+}
+
+/** Fields the team may edit by hand. Score, priority, id, follow-up count and timestamps are server-owned. */
+const EDITABLE = ['businessName', 'ownerName', 'phone', 'address', 'city', 'googleMapsUrl', 'category', 'source', 'batchNumber', 'preferredChannel', 'questionSource', 'questionMissedCalls'] as const;
+
+const STAGE_STAMP: Partial<Record<ProspectItem['stage'], 'contactedAt' | 'diagnosedAt' | 'metAt' | 'closedAt'>> = {
+  CONTACTED: 'contactedAt', DIAGNOSED: 'diagnosedAt', MET: 'metAt', CLOSED: 'closedAt',
+};
+
 export const crmStore = {
   getAll(): ProspectItem[] {
     return globalCrm.__lumo_prospects || [];
@@ -359,7 +390,7 @@ export const crmStore = {
     const { score, priority } = calculateProspectSignals(prospect.signals);
     const item: ProspectItem = {
       ...prospect,
-      id: `lead_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      id: `lead_${Date.now().toString(36)}_${globalThis.crypto.randomUUID().slice(0, 8)}`,
       totalScore: score,
       priority,
       createdAt: new Date().toISOString(),
@@ -371,14 +402,51 @@ export const crmStore = {
   updateStage(id: string, stage: ProspectItem['stage']): boolean {
     const item = this.getById(id);
     if (!item) return false;
+    const now = new Date().toISOString();
     item.stage = stage;
+    // stamp the cadence anchor the first time the business reaches this stage
+    const stamp = STAGE_STAMP[stage];
+    if (stamp && !item[stamp]) item[stamp] = now;
+    if (stage !== 'LISTED') item.lastContactedAt = now;
     return true;
+  },
+
+  setOptOut(id: string, optedOut: boolean): ProspectItem | null {
+    const item = this.getById(id);
+    if (!item) return null;
+    item.optedOut = optedOut;
+    item.optedOutAt = optedOut ? new Date().toISOString() : undefined;
+    return item;
+  },
+
+  /** Bulk import: skips numbers already in the CRM and refuses to grow a batch past 30. */
+  importMany(rows: Omit<ProspectItem, 'id' | 'totalScore' | 'priority' | 'createdAt' | 'stage' | 'signals' | 'followUpCount'>[]): { created: ProspectItem[]; skipped: { businessName: string; reason: string }[] } {
+    const digits = (s: string) => s.replace(/\D/g, '').slice(-10);
+    const known = new Set(this.getAll().map((p) => digits(p.phone)));
+    const created: ProspectItem[] = [];
+    const skipped: { businessName: string; reason: string }[] = [];
+    for (const r of rows) {
+      const d = digits(r.phone);
+      if (known.has(d)) { skipped.push({ businessName: r.businessName, reason: 'Ya está en el CRM (mismo teléfono).' }); continue; }
+      if (this.getAll().filter((p) => p.batchNumber === r.batchNumber).length >= 30) {
+        skipped.push({ businessName: r.businessName, reason: `El lote ${r.batchNumber} ya tiene 30 negocios.` }); continue;
+      }
+      known.add(d);
+      created.push(this.create({
+        ...r, stage: 'LISTED', followUpCount: 0, contactNotes: [],
+        signals: { scoreReviews: false, scoreWebsite: false, scorePhotos: false, scoreHours: false, scoreDescription: false, scoreReviewResponse: false, scoreBooking: false, scoreSpanish: false },
+      }));
+    }
+    return { created, skipped };
   },
 
   incrementFollowUp(id: string, note?: string): { success: boolean; error?: string; count: number } {
     const item = this.getById(id);
     if (!item) return { success: false, error: 'Prospecto no encontrado', count: 0 };
 
+    if (item.optedOut) {
+      return { success: false, error: 'El negocio pidió no recibir mensajes (TCPA).', count: item.followUpCount };
+    }
     if (item.followUpCount >= 3) {
       return {
         success: false,
@@ -409,7 +477,9 @@ export const crmStore = {
   updateDetails(id: string, details: Partial<ProspectItem>): ProspectItem | null {
     const item = this.getById(id);
     if (!item) return null;
-    Object.assign(item, details);
+    // Whitelist only: a request can never set the score, the priority, the id or the follow-up count.
+    const target = item as unknown as Record<string, unknown>;
+    for (const k of EDITABLE) if (k in details) target[k] = (details as Record<string, unknown>)[k];
     return item;
   },
 };

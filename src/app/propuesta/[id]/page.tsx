@@ -2,18 +2,7 @@
 
 import React, { use } from 'react';
 import Link from 'next/link';
-import {
-  CheckCircle2,
-  Calendar,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Building2,
-  PhoneCall,
-  Clock,
-  Star,
-  Check,
-} from 'lucide-react';
+import { CheckCircle2, Sparkles, ArrowRight, Building2 } from 'lucide-react';
 import { PRICING_CONSTANTS } from '@/lib/stripe';
 
 interface ProposalPageProps {

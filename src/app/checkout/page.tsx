@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   ShieldCheck,
@@ -19,11 +19,10 @@ import {
   Share2,
 } from 'lucide-react';
 import { SignaturePad } from '@/components/checkout/SignaturePad';
-import { PRICING_CONSTANTS, getPackageAmounts } from '@/lib/stripe';
+import { getPackageAmounts } from '@/lib/stripe';
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   // Wizard state: 1 = Paquete, 2 = Datos, 3 = Contrato y Firma, 4 = Pago Anticipo
   const [step, setStep] = useState<number>(1);
@@ -36,7 +35,7 @@ function CheckoutContent() {
   const [ownerName, setOwnerName] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('Midland');
-  const [state, setState] = useState('TX');
+  const [state] = useState('TX');
   const [zipCode, setZipCode] = useState('79701');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -54,22 +53,22 @@ function CheckoutContent() {
   const [isSigning, setIsSigning] = useState(false);
   const [signedContractId, setSignedContractId] = useState<string | null>(null);
   const [contractSha256, setContractSha256] = useState<string | null>(null);
-  const [contractHtml, setContractHtml] = useState<string | null>(null);
+  const [, setContractHtml] = useState<string | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Founder slots
-  const [founderSlotsRemaining, setFounderSlotsRemaining] = useState<number>(2);
+  const [founderSlotsRemaining] = useState<number>(2);
 
   // Read URL query params on mount
   useEffect(() => {
     const pkg = searchParams.get('package')?.toUpperCase();
     if (pkg === 'FOUNDER' || pkg === 'BASE' || pkg === 'PREMIUM') {
-      setPackageType(pkg as any);
+      setPackageType(pkg);
     }
     const ch = searchParams.get('channel')?.toUpperCase();
     if (ch === 'BOOKING' || ch === 'IG_FB' || ch === 'WHATSAPP') {
-      setExtraChannel(ch as any);
+      setExtraChannel(ch);
     }
     const biz = searchParams.get('businessName') || searchParams.get('biz');
     if (biz) setBusinessName(biz);
@@ -148,8 +147,8 @@ function CheckoutContent() {
       setContractSha256(data.documentHashSha256);
       setContractHtml(data.contractHtml);
       setStep(4);
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Error al conectar con el servidor.');
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : '') || 'Error al conectar con el servidor.');
     } finally {
       setIsSigning(false);
     }
@@ -187,8 +186,8 @@ function CheckoutContent() {
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Error al procesar el pago con Stripe.');
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : '') || 'Error al procesar el pago con Stripe.');
       setIsCheckingOut(false);
     }
   };
@@ -609,7 +608,7 @@ function CheckoutContent() {
               </p>
               <p>LUGAR: Midland, Texas, EE. UU. | FECHA: {new Date().toISOString().split('T')[0]}</p>
               <p className="mt-2">
-                <strong>1. PARTES:</strong> Luis Barbera (DBA "Lumo HQ") y {ownerName || '[TITULAR]'} ({businessName || '[NEGOCIO]'}, {address}, {city}, TX {zipCode}).
+                <strong>1. PARTES:</strong> Luis Barbera (DBA &ldquo;Lumo HQ&rdquo;) y {ownerName || '[TITULAR]'} ({businessName || '[NEGOCIO]'}, {address}, {city}, TX {zipCode}).
               </p>
               <p className="mt-2">
                 <strong>2. OBJETO:</strong> Montaje de presencia digital {packageType} con canal {extraChannel}.
@@ -631,7 +630,7 @@ function CheckoutContent() {
               </p>
               {packageType === 'FOUNDER' && (
                 <p className="mt-2 text-amber-900 bg-amber-100 p-2 rounded">
-                  <strong>8. CLÁUSULA FUNDADOR:</strong> Autorización de capturas del "antes y después" en portafolio y testimonio honesto a los 30 días a cambio del precio especial de $250 USD.
+                  <strong>8. CLÁUSULA FUNDADOR:</strong> Autorización de capturas del &ldquo;antes y después&rdquo; en portafolio y testimonio honesto a los 30 días a cambio del precio especial de $250 USD.
                 </p>
               )}
             </div>
@@ -682,7 +681,7 @@ function CheckoutContent() {
                   className="mt-0.5 w-4 h-4 rounded text-lumo-ambar focus:ring-lumo-ambar"
                 />
                 <span>
-                  Confirmo la política "Cero Contraseñas": otorgaré accesos como administrador sin compartir contraseñas personales ni bancarias.
+                  Confirmo la política &ldquo;Cero Contraseñas&rdquo;: otorgaré accesos como administrador sin compartir contraseñas personales ni bancarias.
                 </span>
               </label>
 

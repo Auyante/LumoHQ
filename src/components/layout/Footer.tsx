@@ -3,11 +3,23 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
-import { MapPin, Mail, Phone, Shield, Scissors, Utensils, QrCode } from 'lucide-react';
+import {
+  MapPin,
+  Shield,
+  Scissors,
+  Utensils,
+  QrCode,
+} from 'lucide-react';
 
 export function Footer() {
   const { locale, setLocale, t } = useI18n();
+  const pathname = usePathname();
+
+  // The landing draws its own footer.
+  // Admin and demo pages draw their own bars; the demos are a client's site, not Lumo's.
+  if (pathname === '/' || ['/diagnostico', '/admin', '/demo'].some((p) => pathname.startsWith(p))) return null;
 
   return (
     <footer className="bg-lumo-noche text-white pt-16 pb-28 md:pb-16 border-t border-lumo-pizarra/30">

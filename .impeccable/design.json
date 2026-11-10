@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-10T05:51:13+00:00",
+  "title": "Design System: Lumo HQ",
+  "extensions": {
+    "colorMeta": {
+      "noche": {
+        "role": "neutral",
+        "displayName": "Noche",
+        "canonical": "#1B2130",
+        "tonalRamp": [
+          "#20232D",
+          "#353C50",
+          "#485575",
+          "#596C9C",
+          "#7C8BB1",
+          "#A2ABC3",
+          "#C9CED9",
+          "#EDEFF2"
+        ]
+      },
+      "noche-deep": {
+        "role": "neutral",
+        "displayName": "Noche Deep",
+        "canonical": "#151A26",
+        "tonalRamp": [
+          "#1F232D",
+          "#343D50",
+          "#475576",
+          "#586C9D",
+          "#7B8BB2",
+          "#A1ABC4",
+          "#C9CEDA",
+          "#EDEFF2"
+        ]
+      },
+      "arena": {
+        "role": "neutral",
+        "displayName": "Arena",
+        "canonical": "#FFF7EC",
+        "tonalRamp": [
+          "#3E2A0F",
+          "#734A12",
+          "#AF6B0D",
+          "#F28D03",
+          "#F5A538",
+          "#EEBC77",
+          "#EFD6B3",
+          "#F8F1E8"
+        ]
+      },
+      "arena-reverse": {
+        "role": "neutral",
+        "displayName": "Arena Reverse",
+        "canonical": "#FBEFD9",
+        "tonalRamp": [
+          "#392C13",
+          "#6A4E1B",
+          "#A0721D",
+          "#DB9719",
+          "#E3AD4A",
+          "#E3C182",
+          "#E9D8B9",
+          "#F6F2E9"
+        ]
+      },
+      "copy-yellow": {
+        "role": "neutral",
+        "displayName": "Copy Yellow",
+        "canonical": "#FFE6A8",
+        "tonalRamp": [
+          "#3E300F",
+          "#735712",
+          "#AF810D",
+          "#F2AD03",
+          "#F5BF38",
+          "#EECC77",
+          "#EFDEB3",
+          "#F8F3E8"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#E9DCC4",
+        "tonalRamp": [
+          "#31291C",
+          "#59492C",
+          "#836939",
+          "#B18B44",
+          "#C1A36B",
+          "#CEBB97",
+          "#DFD5C4",
+          "#F3F1EC"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong",
+        "canonical": "#D9C8A9",
+        "tonalRamp": [
+          "#2F291D",
+          "#55482F",
+          "#7E673F",
+          "#A9884C",
+          "#BBA172",
+          "#CAB99B",
+          "#DDD4C6",
+          "#F3F1ED"
+        ]
+      },
+      "pizarra": {
+        "role": "neutral",
+        "displayName": "Pizarra",
+        "canonical": "#5B6375",
+        "tonalRamp": [
+          "#232529",
+          "#3C4048",
+          "#545A68",
+          "#6B7589",
+          "#8B92A2",
+          "#ABB0BA",
+          "#CDD0D5",
+          "#EFEFF1"
+        ]
+      },
+      "ink-warm": {
+        "role": "neutral",
+        "displayName": "Ink Warm",
+        "canonical": "#69635A",
+        "tonalRamp": [
+          "#282724",
+          "#46433F",
+          "#656058",
+          "#847C71",
+          "#9E988F",
+          "#B7B3AE",
+          "#D3D2CF",
+          "#F0F0EF"
+        ]
+      },
+      "carbon": {
+        "role": "secondary",
+        "displayName": "Carbon Blue",
+        "canonical": "#3446A3",
+        "tonalRamp": [
+          "#1A1E32",
+          "#29315B",
+          "#354288",
+          "#3D51B8",
+          "#6676C7",
+          "#949ED1",
+          "#C2C7E0",
+          "#ECEDF4"
+        ]
+      },
+      "ambar": {
+        "role": "primary",
+        "displayName": "Ámbar Lumo",
+        "canonical": "#F2A33A",
+        "tonalRamp": [
+          "#3B2912",
+          "#6D4818",
+          "#A56818",
+          "#E38912",
+          "#E9A244",
+          "#E7BA7E",
+          "#EBD5B7",
+          "#F7F1E9"
+        ]
+      },
+      "ambar-hover": {
+        "role": "primary",
+        "displayName": "Ámbar Hover",
+        "canonical": "#F5B256",
+        "tonalRamp": [
+          "#3B2A11",
+          "#6E4917",
+          "#A66A17",
+          "#E58B10",
+          "#EAA443",
+          "#E8BB7D",
+          "#ECD5B7",
+          "#F7F1E9"
+        ]
+      },
+      "ambar-ink": {
+        "role": "primary",
+        "displayName": "Ámbar Ink",
+        "canonical": "#8F520A",
+        "tonalRamp": [
+          "#3B2812",
+          "#6D4618",
+          "#A56418",
+          "#E28312",
+          "#E89D45",
+          "#E6B77F",
+          "#EBD3B7",
+          "#F7F0E9"
+        ]
+      },
+      "brillo": {
+        "role": "tertiary",
+        "displayName": "Brillo",
+        "canonical": "#FFD27A",
+        "tonalRamp": [
+          "#3E2E0F",
+          "#735212",
+          "#AF780D",
+          "#F2A103",
+          "#F5B538",
+          "#EEC677",
+          "#EFDBB3",
+          "#F8F2E8"
+        ]
+      },
+      "copy-ink": {
+        "role": "neutral",
+        "displayName": "Copy Ink",
+        "canonical": "#6B501B",
+        "tonalRamp": [
+          "#342B18",
+          "#5F4C25",
+          "#8F6E2E",
+          "#C29233",
+          "#CFA95E",
+          "#D6BE8F",
+          "#E3D7BF",
+          "#F4F1EB"
+        ]
+      },
+      "sello-rojo": {
+        "role": "tertiary",
+        "displayName": "Sello Rojo",
+        "canonical": "#B8433A",
+        "tonalRamp": [
+          "#321C1A",
+          "#5C2D29",
+          "#883A34",
+          "#B9453C",
+          "#C76C65",
+          "#D29893",
+          "#E1C4C2",
+          "#F4ECEC"
+        ]
+      },
+      "sello-verde": {
+        "role": "tertiary",
+        "displayName": "Sello Verde",
+        "canonical": "#22663F",
+        "tonalRamp": [
+          "#1A3225",
+          "#2A5B3F",
+          "#368758",
+          "#3FB672",
+          "#67C690",
+          "#95D0AE",
+          "#C2E0CF",
+          "#ECF4EF"
+        ]
+      },
+      "desk-text-soft": {
+        "role": "neutral",
+        "displayName": "Desk Text Soft",
+        "canonical": "#B7BDCB",
+        "tonalRamp": [
+          "#22252A",
+          "#3A3F4A",
+          "#51596B",
+          "#67738E",
+          "#8790A6",
+          "#A9AFBC",
+          "#CCCFD6",
+          "#EEEFF1"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline on nota 0001 only; second line in Ámbar Ink."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Each sheet title, max 17ch."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Price nota tier names and sub-sheet headings."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Folios, day numbers, totals, prices; always tabular."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, ledes in Pizarra."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase printed captions attached to a field or table."
+      },
+      "hand": {
+        "displayName": "Hand",
+        "purpose": "Only written content: inputs, filled values, carbon copy, results."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet",
+        "value": "0 1px 1px rgba(0,0,0,.18),0 12px 24px -8px rgba(0,0,0,.45),0 40px 70px -30px rgba(0,0,0,.55)",
+        "purpose": "Every sheet and the under-copy."
+      },
+      {
+        "name": "lifted-stub",
+        "value": "0 1px 1px rgba(0,0,0,.2),0 14px 24px -12px rgba(0,0,0,.5)",
+        "purpose": "Selected tear stub lifted off its strip."
+      },
+      {
+        "name": "loose-copy",
+        "value": "0 1px 1px rgba(0,0,0,.15),0 10px 20px -12px rgba(0,0,0,.4)",
+        "purpose": "Carbon copy beside the request form."
+      },
+      {
+        "name": "dock",
+        "value": "0 -10px 24px -10px rgba(0,0,0,.5)",
+        "purpose": "Fixed mobile dock."
+      },
+      {
+        "name": "cta-glow",
+        "value": "0 6px 16px -6px rgba(242,163,58,.8)",
+        "purpose": "Header CTA hover only."
+      },
+      {
+        "name": "sim-chassis",
+        "value": "0 30px 60px -20px rgba(0,0,0,.6)",
+        "purpose": "Simulator phone body on the sheet."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "The single curve for all paper and UI motion."
+      },
+      {
+        "name": "lift",
+        "value": "0.9s; translateY(34px) rotate(.8deg), opacity .35",
+        "purpose": "Sheets slide up off the pad on first entry."
+      },
+      {
+        "name": "thump",
+        "value": "0.55s",
+        "purpose": "Stamp lands from 1.9x scale, -16deg, blurred."
+      },
+      {
+        "name": "stub-lift",
+        "value": "0.45s",
+        "purpose": "Selected stub lifts 6px at -1.2deg; dock slides in."
+      },
+      {
+        "name": "ink-in",
+        "value": "0.35s",
+        "purpose": "Checkbox tick, FAQ plus rotation, bubble pop."
+      },
+      {
+        "name": "sim-tilt",
+        "value": "0.5s; max rotateX 7deg / rotateY 11deg each way, mouse only",
+        "purpose": "Simulator chassis follows the pointer."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all animation and transition none",
+        "purpose": "Stamps final, sheets in place, WebGL one still frame."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "header-bare",
+        "value": "520px"
+      },
+      {
+        "name": "stubs-1col",
+        "value": "560px"
+      },
+      {
+        "name": "form-1col",
+        "value": "600px"
+      },
+      {
+        "name": "days-1col",
+        "value": "620px"
+      },
+      {
+        "name": "prices-1col",
+        "value": "720px"
+      },
+      {
+        "name": "dock",
+        "value": "760px"
+      },
+      {
+        "name": "interiors-1col",
+        "value": "860px"
+      },
+      {
+        "name": "hero-1col",
+        "value": "980px"
+      },
+      {
+        "name": "days-3col",
+        "value": "1060px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Tear-off Stub",
+      "kind": "button",
+      "refersTo": "stub-primary",
+      "description": "Primary action: full-width Ámbar strip at the foot of a sheet behind a dashed tear line.",
+      "html": "<a class=\"ds-stub\" href=\"#\"><span>Arranca aquí: tu diagnóstico gratis<small>Te respondemos en 1 día hábil</small></span><svg width=\"30\" height=\"30\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ".ds-stub{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F2A33A;color:#1B2130;text-decoration:none;padding:18px 32px 20px;border-radius:0 0 3px 3px;font:800 1.3rem/1.1 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;letter-spacing:-.01em;transition:background .2s}.ds-stub::before{content:'';position:absolute;left:0;right:0;top:-1px;height:2px;background:repeating-linear-gradient(90deg,#1B2130 0 7px,transparent 7px 13px);opacity:.55;}.ds-stub small{display:block;font:600 .82rem/1.35 Figtree,system-ui,sans-serif;margin-top:4px}.ds-stub svg{transition:transform .3s cubic-bezier(.16,1,.3,1)}.ds-stub:hover{background:#F5B256}.ds-stub:hover svg{transform:translateX(4px)}.ds-stub:focus-visible{outline:3px solid #F2A33A;outline-offset:3px}"
+    },
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Action of the recommended price nota.",
+      "html": "<a class=\"ds-btn-ink\" href=\"#\">Empezar con Premium <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ".ds-btn-ink{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:13px 16px;border-radius:6px;border:1.5px solid #1B2130;background:#1B2130;color:#FFF7EC;font-weight:700;text-decoration:none;transition:background .2s}.ds-btn-ink:hover{background:#5B6375}.ds-btn-ink:focus-visible{outline:3px solid #F2A33A;outline-offset:3px}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary actions on paper: price actions, demo links, channel choices.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\"><span>Ver demo: barbería<small>Sitio de ejemplo</small></span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ".ds-btn-outline{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px;padding:12px 14px;border:1.5px solid #1B2130;border-radius:6px;background:transparent;color:#1B2130;font-weight:700;font-size:.95rem;text-decoration:none;transition:background .2s}.ds-btn-outline small{display:block;font-weight:600;font-size:.8rem;color:#5B6375}.ds-btn-outline:hover{background:rgba(27,33,48,.08)}.ds-btn-outline:focus-visible{outline:3px solid #F2A33A;outline-offset:3px}"
+    },
+    {
+      "name": "Handwritten Field",
+      "kind": "input",
+      "refersTo": "input-hand",
+      "description": "Bare ruled line; the owner writes in Caveat carbon blue.",
+      "html": "<div class=\"ds-fline\"><label for=\"ds-f\">Tu negocio</label><input id=\"ds-f\" placeholder=\"Barbería El Rey\"></div>",
+      "css": ".ds-fline{display:grid;max-width:360px;background:#FFF7EC;padding:16px}.ds-fline label{font:700 .78rem Figtree,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#5B6375}.ds-fline input{border:0;border-bottom:1.5px solid #1B2130;background:transparent;font:700 1.7rem/1.2 Caveat,'Bradley Hand',cursive;color:#3446A3;caret-color:#3446A3;padding:2px 0 4px;outline:none}.ds-fline input::placeholder{color:rgba(52,70,163,.5)}.ds-fline input:focus{border-bottom-color:#3446A3;box-shadow:0 2px 0 #3446A3}"
+    },
+    {
+      "name": "Desk Header",
+      "kind": "nav",
+      "refersTo": "nav-cta",
+      "description": "Sticky 60px Noche header with links, ES/EN toggle, and Ámbar CTA.",
+      "html": "<header class=\"ds-desk\"><b>lumo</b><nav><a href=\"#\">Simulador</a><a href=\"#\">Precios</a><a href=\"#\">Preguntas</a></nav><div class=\"ds-lang\"><button aria-pressed=\"true\">ES</button><button aria-pressed=\"false\">EN</button></div><a class=\"ds-cta\" href=\"#\">Diagnóstico gratis</a></header>",
+      "css": ".ds-desk{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;display:flex;align-items:center;gap:14px;height:60px;padding:0 16px;background:rgba(27,33,48,.94);border-bottom:1px solid rgba(255,247,236,.08);color:#FFF7EC}.ds-desk b{font:800 1.3rem 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif}.ds-desk nav{display:flex;gap:2px;margin-left:auto}.ds-desk nav a{color:#B7BDCB;text-decoration:none;font-weight:600;font-size:.92rem;padding:8px 12px;border-radius:6px;transition:color .2s,background .2s}.ds-desk nav a:hover{color:#FFF7EC;background:rgba(255,247,236,.08)}.ds-lang{display:inline-flex;border:1.5px solid rgba(255,247,236,.25);border-radius:6px;overflow:hidden}.ds-lang button{border:0;background:transparent;color:#B7BDCB;font:700 .8rem Figtree,system-ui,sans-serif;letter-spacing:.06em;padding:8px 12px;cursor:pointer}.ds-lang button[aria-pressed=true]{background:#FFF7EC;color:#1B2130}.ds-cta{background:#F2A33A;color:#1B2130;text-decoration:none;font-weight:700;font-size:.92rem;padding:9px 14px;border-radius:6px;transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s}.ds-cta:hover{transform:translateY(-1px);box-shadow:0 6px 16px -6px rgba(242,163,58,.8)}.ds-desk a:focus-visible,.ds-desk button:focus-visible{outline:3px solid #F2A33A;outline-offset:3px}"
+    },
+    {
+      "name": "Sheet with Folio",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "Every section: an Arena sheet with perforation row, folio number, headline.",
+      "html": "<article class=\"ds-sheet\"><div class=\"ds-folio\"><b>Nº 0006</b></div><h2>Lo que pagas, sin letra chica.</h2><p>Dos notas, una por plan.</p></article>",
+      "css": ".ds-sheet{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;position:relative;background:#FFF7EC;color:#1B2130;border-radius:3px;padding:44px 32px 32px;box-shadow:0 1px 1px rgba(0,0,0,.18),0 12px 24px -8px rgba(0,0,0,.45),0 40px 70px -30px rgba(0,0,0,.55)}.ds-sheet::before{content:'';position:absolute;left:10px;right:10px;top:12px;height:8px;background:radial-gradient(circle at 4px 4px,#1B2130 3px,transparent 3.6px) 0 0/16px 8px repeat-x;opacity:.9}.ds-folio{display:flex;justify-content:flex-end;border-bottom:1.5px solid #1B2130;padding-bottom:8px;margin-bottom:22px}.ds-folio b{font:800 1.05rem 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;color:#8F520A;font-variant-numeric:tabular-nums}.ds-sheet h2{font:800 2.4rem/1 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;letter-spacing:-.03em;margin:0;max-width:17ch}.ds-sheet p{color:#5B6375;margin:14px 0 0}"
+    },
+    {
+      "name": "Rubber Stamp",
+      "kind": "custom",
+      "refersTo": "stamp",
+      "description": "Done or committed state; thumps down on an owner action.",
+      "html": "<div class=\"ds-stamp-wrap\"><span class=\"ds-stamp\">Pagas la mitad<br>al aprobar</span><span class=\"ds-stamp ds-green\">Reservado</span><span class=\"ds-stamp ds-carbon\">Enviada</span></div>",
+      "css": ".ds-stamp-wrap{display:flex;gap:28px;padding:24px;background:#FFF7EC}.ds-stamp{display:inline-grid;place-items:center;text-align:center;border:3px solid currentColor;border-radius:8px;padding:7px 14px;font:800 .95rem/1.05 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8F520A;transform:rotate(-9deg);mix-blend-mode:multiply;animation:ds-thump .55s cubic-bezier(.16,1,.3,1) both}.ds-green{color:#22663F}.ds-carbon{color:#3446A3}@keyframes ds-thump{0%{transform:rotate(-16deg) scale(1.9);opacity:0;filter:blur(3px)}55%{transform:rotate(-8deg) scale(.94);opacity:1;filter:blur(0)}100%{transform:rotate(-9deg) scale(1)}}"
+    },
+    {
+      "name": "Tear Stub Strip",
+      "kind": "chip",
+      "refersTo": "tear-stub-selected",
+      "description": "Equal choices as stubs in one strip; the selected one lifts off in Copy Yellow.",
+      "html": "<div class=\"ds-stubs\"><button aria-pressed=\"false\"><b>Reservas</b><em>Agenda en línea</em></button><button aria-pressed=\"true\"><b>WhatsApp</b><em>Responde por ti</em></button><button aria-pressed=\"false\"><b>Instagram</b><em>Mensajes directos</em></button></div>",
+      "css": ".ds-stubs{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid #1B2130;border-bottom:2px solid #1B2130;background:#FBEFD9}.ds-stubs button{border:0;border-right:2px dashed #D9C8A9;background:transparent;text-align:left;padding:14px 14px 12px;display:grid;gap:4px;min-height:84px;cursor:pointer;color:#1B2130;transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s,background .3s}.ds-stubs button:last-child{border-right:0}.ds-stubs b{font:800 1.08rem/1.1 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif}.ds-stubs em{font-style:normal;font-size:.84rem;font-weight:600;color:#5B6375}.ds-stubs button:hover{background:rgba(255,230,168,.45)}.ds-stubs button[aria-pressed=true]{background:#FFE6A8;transform:translateY(-6px) rotate(-1.2deg);box-shadow:0 1px 1px rgba(0,0,0,.2),0 14px 24px -12px rgba(0,0,0,.5);position:relative;z-index:2}.ds-stubs button:focus-visible{outline:3px solid #F2A33A;outline-offset:3px}"
+    },
+    {
+      "name": "Price Nota",
+      "kind": "card",
+      "refersTo": "button-ink",
+      "description": "One sheet per tier in place of a comparison table; the recommended tier gets an Ámbar wash.",
+      "html": "<div class=\"ds-pnota\"><header><h3>Premium</h3><p>Todo lo de Esencial, más reservas.</p></header><ul><li><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>Perfil de Google completo</li><li class=\"off\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>Tienda en línea</li></ul><dl><div><dt>Instalación</dt><dd>$500</dd></div><div><dt>Mensual</dt><dd>$149</dd></div></dl></div>",
+      "css": ".ds-pnota{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;max-width:340px;background:#FFF7EC;border-top:2.5px solid #1B2130;box-shadow:inset 0 0 0 1px rgba(242,163,58,.25);background-image:linear-gradient(rgba(242,163,58,.1),rgba(242,163,58,.1));color:#1B2130}.ds-pnota header{padding:14px;border-bottom:1.5px solid #1B2130}.ds-pnota h3{font:800 2rem/1 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;letter-spacing:-.02em;margin:0}.ds-pnota header p{font-size:.88rem;color:#5B6375;margin:4px 0 0}.ds-pnota ul{list-style:none;margin:0;padding:0 14px}.ds-pnota li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #E9DCC4;font-size:.95rem}.ds-pnota li svg{color:#22663F;margin-top:3px}.ds-pnota li.off{color:#69635A}.ds-pnota li.off svg{color:#D9C8A9}.ds-pnota dl{margin:0;padding:4px 14px 14px}.ds-pnota dl div{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid #E9DCC4}.ds-pnota dl div:last-child{border-bottom:2.5px solid #1B2130}.ds-pnota dt{font-weight:700}.ds-pnota dd{margin:0;font:800 1.6rem/1 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Carbon Copy",
+      "kind": "custom",
+      "refersTo": "carbon-copy",
+      "description": "Yellow copy mirroring every form field; dashed blanks until filled.",
+      "html": "<div class=\"ds-out\"><h3>Tu copia</h3><ul><li><span>Nombre</span><span class=\"ds-hand\">Carlos</span></li><li><span>Negocio</span><span class=\"ds-hand ds-blank\"></span></li></ul></div>",
+      "css": ".ds-out{font-family:Figtree,'Helvetica Neue',system-ui,sans-serif;max-width:340px;background:#FFE6A8;border-radius:3px;padding:22px;transform:rotate(1deg);box-shadow:0 1px 1px rgba(0,0,0,.15),0 10px 20px -12px rgba(0,0,0,.4)}.ds-out h3{font:800 1.3rem/1 'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;margin:0;color:#1B2130}.ds-out ul{list-style:none;margin:14px 0 0;padding:0;border-top:1.5px solid rgba(52,70,163,.4)}.ds-out li{display:grid;grid-template-columns:6.5rem 1fr;gap:10px;padding:8px 0;border-bottom:1px solid rgba(52,70,163,.18);font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B501B;align-items:baseline}.ds-hand{font:700 1.4rem/1.1 Caveat,'Bradley Hand',cursive;color:#3446A3;text-transform:none;letter-spacing:0}.ds-blank{min-height:1.4rem;border-bottom:1.5px dashed rgba(52,70,163,.35)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "El talonario de notas",
+    "overview": "The landing is Lumo's order book: Arena bond sheets laid on a grained Noche desk, each one a numbered nota (Nº 0001 to Nº 0008, with a reverse side marked -R). Line items say what the owner gets and what it costs, the owner's own words appear as carbon-blue handwriting on ruled lines, and finished things carry a rubber stamp. The pale yellow customer copy sits under the original and, at the request sheet, receives every field the owner fills in, as if through carbon paper.\n\nDensity is that of a working form: ruled rows, tabular amounts, short printed captions, generous sheet padding. Hierarchy comes from heavy letterhead type (Bricolage Grotesque 800), not from colour fields or cards. States are strict: stamped means done, carbon means \"your copy / your words\", an empty dashed line or a red \"falta\" note means something is absent. Everything on paper moves like paper: sheets slide up off the pad, stamps thump down, checkmarks ink in, a selected stub lifts off its strip.\n\nTwo objects are allowed real depth, and only these two: the WebGL phone standing on the desk beside nota 0001, and the CSS-3D simulator phone inside nota 0002. Everything else is flat paper with a soft drop shadow. The agency default of headline plus device plus a row of feature cards is rejected, and so are glass panels and tilting cards: a section is a sheet, never a card grid.",
+    "keyCharacteristics": [
+      "Arena paper sheets with fine grain noise, 3px corners, a soft three-layer drop shadow, on a Noche desk with its own faint grain.",
+      "A perforation hole row at the top of every sheet; dashed tear lines between stubs, between days, and above every Ámbar tear-off action.",
+      "Folio numbers in Ámbar Ink, tabular, as the only section numbering.",
+      "Caveat handwriting in carbon blue only where a person would write: inputs, filled values, the carbon copy, results.",
+      "Rubber stamps (bordered, rotated -9deg, grain-masked, multiply) for completed or committed states.",
+      "Exactly two 3D phones; one easing curve for all motion; reduced motion removes all of it."
+    ],
+    "rules": [
+      {
+        "name": "The Carbon Means Yours Rule",
+        "body": "Carbon blue is reserved for words written by or for the owner (inputs, filled values, the carbon copy, their side of a conversation). Printed copy is never carbon blue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stub Is Ámbar Rule",
+        "body": "The primary action is the only large Ámbar surface in view, and it always sits behind a dashed tear line (2px, Noche 7px on / 6px off at 55%).",
+        "section": "colors"
+      },
+      {
+        "name": "The Pen Only Writes Rule",
+        "body": "Caveat appears only as written content (inputs, filled values, a note scrawled on the desk), never as a headline, label, or button.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Money Rule",
+        "body": "Every amount, folio, time slot, and day number uses tabular numerals.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Tilt Rule",
+        "body": "Paper rotates by small fixed angles: -0.8deg the hero nota (-0.45deg at 520px and below), 2.2deg the under-copy, 1deg the carbon copy, -1.2deg a selected stub, -3deg the desk note, -9deg stamps. Strips, tables, and controls inside a sheet sit square.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Two Phones Rule",
+        "body": "Only the hero desk phone and the simulator phone have real 3D or pointer tilt. Sheets, stubs, and price notas never tilt toward the pointer, and nothing is glass.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** put every section on its own Arena sheet with a perforation row and a folio number, and keep numbering sequential.",
+      "**Do** use the single easing curve (`cubic-bezier(.16,1,.3,1)`) for all motion: slide up off the pad (0.9s, 34px and 0.8deg), thump (0.55s), stub lift (0.45s), ink-in (0.35s).",
+      "**Do** write user-entered or user-specific content in Caveat carbon blue on a ruled line.",
+      "**Do** mark completion with a stamp and absence with an empty dashed line or a red \"falta\" note.",
+      "**Do** place the primary action as an Ámbar tear-off stub behind a dashed tear line.",
+      "**Do** show one logo and one language switch at a time; the header's copies wait while the letterhead is in view.",
+      "**Do** drop all animation and transitions under `prefers-reduced-motion`, show stamps in their final state, and render the WebGL phone as one still frame."
+    ],
+    "donts": [
+      "**Don't** build card grids or rounded feature tiles; equal items are tear stubs in one strip, and tiers are price notas.",
+      "**Don't** use carbon blue for printed copy or Caveat for headings, labels, or buttons.",
+      "**Don't** set amounts, folios, or time slots in proportional figures.",
+      "**Don't** put a topic label above a sheet title; the folio row carries only the number.",
+      "**Don't** add 3D, pointer tilt, or glass to anything but the two phones.",
+      "**Don't** use hard offset shadows or radii above 8px on the world's own surfaces; larger radii exist only inside depicted device screens."
+    ]
+  }
+}

@@ -1,10 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Clock,
   PauseCircle,
   PlayCircle,
   CheckCircle2,
@@ -13,11 +13,8 @@ import {
   UploadCloud,
   FileCheck,
   ShieldCheck,
-  QrCode,
-  Lock,
   Download,
   Building2,
-  Calendar,
   Sparkles,
   ChevronDown,
   ChevronUp,
@@ -27,6 +24,8 @@ import { ClientProject, clientProjectStore } from '@/lib/client-portal';
 function PortalContent() {
   const searchParams = useSearchParams();
   const clientIdParam = searchParams.get('client_id') || 'cli_elrey_01';
+  // Access key from the client's portal link; the API refuses changes without it.
+  const portalKey = searchParams.get('k') || '';
 
   const [project, setProject] = useState<ClientProject | null>(null);
   const [activeTab, setActiveTab] = useState<'clock' | 'checklist' | 'passwords' | 'preview' | 'kit'>('clock');
@@ -50,7 +49,7 @@ function PortalContent() {
       const res = await fetch('/api/client/checklist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clientId: project.id, updates }),
+        body: JSON.stringify({ clientId: project.id, key: portalKey, updates }),
       });
       const data = await res.json();
       if (data.project) {
@@ -61,24 +60,25 @@ function PortalContent() {
     }
   };
 
-  const handleSimulatePhotoUpload = async () => {
-    if (!project) return;
-    const newCount = project.day1Checklist.photosUploadedCount + 3;
+  const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+  const handlePhotoUpload = async (files: FileList | null) => {
+    if (!project || !files || files.length === 0) return;
+    const fd = new FormData();
+    fd.append('clientId', project.id);
+    fd.append('key', portalKey);
+    Array.from(files).forEach((f) => fd.append('photos', f));
+    setUploadMsg('Subiendo…');
     try {
-      const res = await fetch('/api/client/checklist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clientId: project.id,
-          updates: { photosUploadedCount: newCount },
-        }),
-      });
+      const res = await fetch('/api/client/photos', { method: 'POST', body: fd });
       const data = await res.json();
       if (data.project) setProject(data.project);
-    } catch (e) {
-      console.error(e);
+      const bad = (data.rejected || []).map((r: { name: string; error: string }) => `${r.name}: ${r.error}`).join(' · ');
+      setUploadMsg(data.error || (data.saved ? `${data.saved} foto(s) guardada(s).${bad ? ' Rechazadas: ' + bad : ''}` : bad || 'No se pudo subir.'));
+    } catch {
+      setUploadMsg('No se pudo subir. Revisa tu conexión.');
     }
   };
+
 
   const handleClientApproval = async () => {
     if (!project) return;
@@ -88,7 +88,7 @@ function PortalContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          clientId: project.id,
+          clientId: project.id, key: portalKey,
           clientWrittenConfirmation: true,
         }),
       });
@@ -491,15 +491,13 @@ function PortalContent() {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleSimulatePhotoUpload}
-                  className="min-h-touch px-4 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 shadow-sm"
-                >
+                <label className="min-h-touch px-4 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 shadow-sm cursor-pointer">
                   <UploadCloud className="w-4 h-4 text-lumo-ambar" />
-                  <span>Subir Fotos de Alta Calidad (+3)</span>
-                </button>
+                  <span>Subir fotos (JPG, PNG o WebP, hasta 10 MB)</span>
+                  <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" onChange={(e) => { handlePhotoUpload(e.target.files); e.target.value = ''; }} />
+                </label>
               </div>
+              {uploadMsg && <p className="text-xs text-slate-600" role="status">{uploadMsg}</p>}
 
               {/* Mandatory copyright checkbox */}
               <label className="flex items-start gap-2.5 text-xs text-slate-700 pt-2 border-t border-slate-200 cursor-pointer">
@@ -523,7 +521,7 @@ function PortalContent() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold mb-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Política "Cero Contraseñas" de Lumo HQ</span>
+                <span>Política &ldquo;Cero Contraseñas&rdquo; de Lumo HQ</span>
               </div>
               <h2 className="text-xl font-heading font-bold text-lumo-noche">
                 Tú mantienes el control total de tus cuentas
@@ -681,8 +679,10 @@ function PortalContent() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-3">
-                <img
+                <Image
                   src="/images/sticker_resenas_1200x1200.png"
+                  width={192}
+                  height={192}
                   alt="Sticker de Reseñas Lumo HQ"
                   className="w-48 h-48 mx-auto rounded-xl shadow-md object-contain bg-white p-2"
                 />
@@ -710,7 +710,7 @@ function PortalContent() {
                 <div className="space-y-2">
                   <h4 className="font-bold text-lumo-noche">¿Cómo usarlo en tu local?</h4>
                   <p>• Pégalo en tu caja registradora, mostrador de cobro o espejos de corte.</p>
-                  <p>• Di al cliente: <em>"Si te gustó el servicio, ¿nos regalas una reseña en Google con tu celular escaneando este código?"</em></p>
+                  <p>• Di al cliente: <em>&ldquo;Si te gustó el servicio, ¿nos regalas una reseña en Google con tu celular escaneando este código?&rdquo;</em></p>
                   <p className="text-[11px] text-slate-500 italic">
                     Cumplimiento FTC: No ofrezcas descuentos a cambio de reseñas de 5 estrellas. Solo experiencias auténticas.
                   </p>

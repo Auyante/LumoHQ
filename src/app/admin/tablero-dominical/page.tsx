@@ -1,369 +1,259 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AdminNav } from '@/components/admin/AdminNav';
+import { AlertTriangle, CheckCircle2, Minus, Plus, RefreshCw, Save, CalendarCheck, Loader2 } from 'lucide-react';
 import {
-  Calendar,
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  TrendingUp,
-  Target,
-  Users,
-  ShieldAlert,
-  Smartphone,
-  ChevronRight,
-  Edit3,
-  Plus,
-  Minus,
-  Sparkles,
-  X,
-} from 'lucide-react';
-import {
-  SUNDAY_MILESTONES,
-  evaluateRisk1Alert,
-  WeeklyTeamHours,
+  SUNDAY_MILESTONES, HOUR_TARGETS, MIN_WEEKLY_HOURS, MIN_WEEKLY_CONTACTS, METRIC_KEYS,
+  evaluateRisk1Alert, progressPct, targetFor,
+  type SundayReview, type SundayMetrics,
 } from '@/lib/sunday-dashboard';
 
+interface Board { current: SundayReview; history: SundayReview[]; fromCrm: SundayMetrics; canEdit: boolean }
+
+const METRIC_LABEL: Record<keyof SundayMetrics, string> = {
+  contacts: 'Contactos', diagnoses: 'Diagnósticos', meetings: 'Reuniones de 15 min', closedClients: 'Clientes cerrados', mrr: 'Ingreso mensual (MRR)',
+};
+const isMoney = (k: keyof SundayMetrics) => k === 'mrr';
+const fmt = (k: keyof SundayMetrics, n: number) => (isMoney(k) ? `$${n.toLocaleString('en-US')}` : n.toLocaleString('en-US'));
+const weekLabel = (iso: string) => new Date(iso + 'T12:00:00Z').toLocaleDateString('es-US', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+
+const field = 'min-h-touch w-full px-3 rounded-xl border border-slate-300 bg-white text-lumo-noche tabular-nums focus:outline-none focus:ring-2 focus:ring-lumo-ambar disabled:bg-slate-50 disabled:text-slate-500';
+
+function Stepper({ id, value, step, min = 0, max, disabled, onChange, label }: { id: string; value: number; step: number; min?: number; max: number; disabled?: boolean; onChange: (n: number) => void; label: string }) {
+  const set = (n: number) => onChange(Math.max(min, Math.min(max, Math.round(n / step) * step)));
+  return (
+    <div className="flex items-stretch gap-1.5">
+      <button type="button" disabled={disabled || value <= min} onClick={() => set(value - step)} aria-label={`Restar ${step} a ${label}`}
+        className="min-h-touch min-w-touch grid place-items-center rounded-xl border border-slate-300 bg-white text-lumo-noche disabled:opacity-40">
+        <Minus className="w-4 h-4" aria-hidden="true" />
+      </button>
+      <input id={id} type="number" inputMode="decimal" min={min} max={max} step={step} value={Number.isFinite(value) ? value : 0} disabled={disabled}
+        onChange={(e) => set(Number(e.target.value) || 0)} className={`${field} text-center text-lg font-black min-w-0`} />
+      <button type="button" disabled={disabled || value >= max} onClick={() => set(value + step)} aria-label={`Sumar ${step} a ${label}`}
+        className="min-h-touch min-w-touch grid place-items-center rounded-xl border border-slate-300 bg-white text-lumo-noche disabled:opacity-40">
+        <Plus className="w-4 h-4" aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 export default function SundayDashboardPage() {
-  const [selectedMilestone, setSelectedMilestone] = useState<14 | 30 | 60 | 90>(14);
+  const [board, setBoard] = useState<Board | null>(null);
+  const [draft, setDraft] = useState<SundayReview | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [busy, setBusy] = useState<'save' | 'close' | null>(null);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
-  // Current weekly hours tracking
-  const [currentWeekHours, setCurrentWeekHours] = useState<WeeklyTeamHours>({
-    weekNumber: 2,
-    luisHours: 9.5,
-    carlosHours: 16.0,
-    barbaraHours: 5.0,
-    contactsThisWeek: 14,
-    notes: 'Buen ritmo en Lote 1 de Midland. Visitas presenciales completadas.',
-  });
+  useEffect(() => {
+    fetch('/api/admin/sunday', { cache: 'no-store' })
+      .then(async (r) => {
+        if (!r.ok) throw new Error();
+        const d: Board = await r.json();
+        setBoard(d);
+        // A week nobody has saved yet starts from what the CRM already counts.
+        if (!d.current.savedAt && d.canEdit) {
+          setDraft({ ...d.current, metrics: d.fromCrm });
+          setDirty(true);
+          setMsg({ ok: true, text: 'Números traídos del CRM. Ajusta lo que haga falta y guarda.' });
+        } else setDraft(d.current);
+      })
+      .catch(() => setMsg({ ok: false, text: 'No se pudo cargar el tablero.' }));
+  }, []);
 
-  // Actual Metrics (Live editable)
-  const [actualMetrics, setActualMetrics] = useState({
-    contacts: 30,
-    diagnoses: 12,
-    meetings: 4,
-    closedClients: 2,
-    mrr: 0,
-  });
+  // Warn before leaving with unsaved numbers.
+  useEffect(() => {
+    if (!dirty) return;
+    const h = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener('beforeunload', h);
+    return () => window.removeEventListener('beforeunload', h);
+  }, [dirty]);
 
-  const [editingMetric, setEditingMetric] = useState<{
-    key: keyof typeof actualMetrics;
-    label: string;
-    value: number;
-  } | null>(null);
+  const edit = (fn: (d: SundayReview) => SundayReview) => { setDraft((d) => (d ? fn(d) : d)); setDirty(true); setMsg(null); };
 
-  const risk1 = evaluateRisk1Alert(currentWeekHours);
-  const activeMilestoneTarget = SUNDAY_MILESTONES.find((m) => m.day === selectedMilestone)!;
+  async function post(body: object, kind: 'save' | 'close') {
+    setBusy(kind);
+    try {
+      const r = await fetch('/api/admin/sunday', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) return setMsg({ ok: false, text: d.error || 'No se pudo guardar.' });
+      setBoard(d); setDraft(d.current); setDirty(false);
+      setMsg({ ok: true, text: kind === 'save' ? 'Guardado.' : 'Semana cerrada. Empieza la siguiente con las mismas metas.' });
+    } catch {
+      setMsg({ ok: false, text: 'Sin conexión. Los números siguen en pantalla; intenta guardar otra vez.' });
+    } finally {
+      setBusy(null);
+    }
+  }
 
-  const metricCards = [
-    {
-      key: 'contacts' as const,
-      label: 'Contactos Realizados',
-      current: actualMetrics.contacts,
-      target: activeMilestoneTarget.targetContacts,
-      unit: 'contactos',
-      color: 'bg-amber-500',
-    },
-    {
-      key: 'diagnoses' as const,
-      label: 'Diagnósticos 24h',
-      current: actualMetrics.diagnoses,
-      target: activeMilestoneTarget.targetDiagnoses,
-      unit: 'diagnósticos',
-      color: 'bg-purple-500',
-    },
-    {
-      key: 'meetings' as const,
-      label: 'Reuniones 15 Min',
-      current: actualMetrics.meetings,
-      target: activeMilestoneTarget.targetMeetings,
-      unit: 'reuniones',
-      color: 'bg-blue-500',
-    },
-    {
-      key: 'closedClients' as const,
-      label: 'Clientes Cerrados',
-      current: actualMetrics.closedClients,
-      target: activeMilestoneTarget.targetClosedClients,
-      unit: 'clientes',
-      color: 'bg-emerald-500',
-    },
-    {
-      key: 'mrr' as const,
-      label: 'MRR Recurrente',
-      current: actualMetrics.mrr,
-      target: activeMilestoneTarget.targetMrr,
-      unit: 'USD/mes',
-      isCurrency: true,
-      color: 'bg-indigo-500',
-    },
-  ];
-
-  const handleUpdateMetric = (delta: number) => {
-    if (!editingMetric) return;
-    const newVal = Math.max(0, editingMetric.value + delta);
-    setEditingMetric({ ...editingMetric, value: newVal });
-    setActualMetrics((prev) => ({ ...prev, [editingMetric.key]: newVal }));
+  const save = () => draft && post({ action: 'save', review: { milestone: draft.milestone, hours: draft.hours, metrics: draft.metrics, notes: draft.notes } }, 'save');
+  const closeWeek = () => {
+    if (dirty) return setMsg({ ok: false, text: 'Guarda los cambios antes de cerrar la semana.' });
+    if (window.confirm('¿Cerrar esta semana? Queda en el historial y las horas vuelven a 0.')) post({ action: 'close_week' }, 'close');
   };
 
-  return (
-    <div className="min-h-screen bg-slate-100 text-lumo-noche pb-16 flex flex-col antialiased">
-      <AdminNav />
+  const risk = useMemo(() => (draft ? evaluateRisk1Alert({ weekNumber: 0, ...draft.hours }) : null), [draft]);
+  const milestone = SUNDAY_MILESTONES.find((m) => m.day === draft?.milestone) ?? SUNDAY_MILESTONES[0];
+  const ro = !board?.canEdit;
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6 grow w-full">
-        {/* Title Header */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-lumo-niebla shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-xs font-bold text-slate-700 mb-2">
-              <Calendar className="w-3.5 h-3.5 text-lumo-ambar" />
-              <span>GOBERNANZA & GATES · DOCUMENTO 04 SECCIÓN 4</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-heading font-black text-lumo-noche">
-              Revisión Semanal de 15 Minutos (Domingos)
+  return (
+    <div className="min-h-screen bg-slate-100 text-lumo-noche pb-16">
+      <AdminNav />
+      <main className="max-w-7xl mx-auto px-4 md:px-6 pt-6 space-y-5">
+        <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-xs font-bold uppercase tracking-widest text-lumo-pizarra">Revisión de 15 minutos · Doc 04</p>
+            <h1 className="text-2xl md:text-3xl font-black font-heading leading-tight mt-1">
+              Domingo{draft ? `, semana del ${weekLabel(draft.weekOf)}` : ''}
             </h1>
-            <p className="text-xs sm:text-sm text-lumo-pizarra mt-1">
-              Luis Barbera & Carlos Gómez · Comparativa Objetivo vs Real y Vigilancia Estricta de Horas.
+            <p className="text-sm text-lumo-pizarra mt-1" aria-live="polite">
+              {!board ? 'Cargando…' : dirty ? 'Cambios sin guardar.' : draft?.savedAt ? `Guardado por ${draft.savedBy} el ${new Date(draft.savedAt).toLocaleString('es-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' })}.` : 'Aún no se guarda esta semana.'}
+              {ro && board ? ' Solo lectura.' : ''}
             </p>
           </div>
-
-          <div className="text-xs text-lumo-pizarra bg-slate-50 border border-slate-200 px-3.5 py-2 rounded-2xl">
-            Próxima revisión: <strong className="text-lumo-noche">Este Domingo 8:00 PM CST</strong>
-          </div>
-        </div>
-
-        {/* 1. TOP METRICS IN 3 CARDS (grid-cols-1 sm:grid-cols-3 gap-4) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Card 1: Gate 0 Hours Status */}
-          <div className="bg-white rounded-2xl p-5 border border-lumo-niebla shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-lumo-pizarra">
-                Compromiso de Horas (Gate 0)
-              </span>
-              <span className="p-2 bg-emerald-50 rounded-xl">
-                <Clock className="w-4 h-4 text-emerald-600" />
-              </span>
+          {!ro && board && (
+            <div className="grid grid-cols-2 md:flex gap-2">
+              <button type="button" onClick={() => edit((d) => ({ ...d, metrics: board.fromCrm }))}
+                className="col-span-2 md:col-auto min-h-touch inline-flex items-center justify-center gap-2 px-4 rounded-xl border border-slate-300 bg-white text-sm font-bold">
+                <RefreshCw className="w-4 h-4" aria-hidden="true" />Traer números del CRM
+              </button>
+              <button type="button" onClick={closeWeek} disabled={!!busy}
+                className="min-h-touch inline-flex items-center justify-center gap-2 px-4 rounded-xl border border-slate-300 bg-white text-sm font-bold disabled:opacity-60">
+                {busy === 'close' ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : <CalendarCheck className="w-4 h-4" aria-hidden="true" />}Cerrar semana
+              </button>
+              <button type="button" onClick={save} disabled={!!busy || !dirty}
+                className="min-h-touch inline-flex items-center justify-center gap-2 px-5 rounded-xl bg-lumo-ambar text-lumo-noche text-sm font-black disabled:opacity-50">
+                {busy === 'save' ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : <Save className="w-4 h-4" aria-hidden="true" />}Guardar
+              </button>
             </div>
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black text-emerald-700">{risk1.totalHours}h</span>
-                <span className="text-xs text-lumo-pizarra font-bold">/ 18h mínimas semanales</span>
-              </div>
-              <p className="text-xs text-emerald-700 font-semibold mt-1">
-                Umbral mínimo cumplido (Luis {currentWeekHours.luisHours}h + Carlos {currentWeekHours.carlosHours}h)
-              </p>
-            </div>
-          </div>
+          )}
+        </header>
+        {msg && <p role={msg.ok ? 'status' : 'alert'} className={`text-sm font-bold ${msg.ok ? 'text-emerald-800' : 'text-red-700'}`}>{msg.text}</p>}
 
-          {/* Card 2: Risk #1 Alert Monitor */}
-          <div
-            className={`rounded-2xl p-5 border shadow-xs flex flex-col justify-between ${
-              risk1.isAlertActive
-                ? 'bg-red-50 border-red-200 text-red-950'
-                : 'bg-white border-lumo-niebla text-lumo-noche'
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-lumo-pizarra">
-                Monitor de Riesgo #1
-              </span>
-              <span className={`p-2 rounded-xl ${risk1.isAlertActive ? 'bg-red-100' : 'bg-emerald-50'}`}>
-                {risk1.isAlertActive ? (
-                  <ShieldAlert className="w-4 h-4 text-red-600 animate-pulse" />
-                ) : (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                )}
-              </span>
-            </div>
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black">
-                  {risk1.isAlertActive ? 'Alerta Activa' : 'Ritmo Sano'}
-                </span>
-                <span className="text-xs text-lumo-pizarra">({currentWeekHours.contactsThisWeek} contactos)</span>
-              </div>
-              <p className="text-xs text-lumo-pizarra mt-1">
-                {risk1.isAlertActive
-                  ? risk1.reasons[0]
-                  : 'Bárbara (5h) + Luis y Carlos en ritmo operativo nominal.'}
-              </p>
-            </div>
-          </div>
-
-          {/* Card 3: Fortnightly eSIM Maintenance */}
-          <div className="bg-white rounded-2xl p-5 border border-lumo-niebla shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-lumo-pizarra">
-                eSIM & WhatsApp Boost
-              </span>
-              <span className="p-2 bg-amber-50 rounded-xl">
-                <Smartphone className="w-4 h-4 text-lumo-ambar" />
-              </span>
-            </div>
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black text-amber-900">Activo / Al Día</span>
-              </div>
-              <p className="text-xs text-slate-600 mt-1">
-                Mantenimiento quincenal de recargas y proxy SMS activo para Midland-Odessa.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. MILESTONE BUTTONS (H1 a H4) IN grid-cols-2 sm:flex gap-2 */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-lumo-niebla shadow-xs space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <div>
-              <h2 className="text-lg sm:text-xl font-heading font-black text-lumo-noche flex items-center gap-2">
-                <Target className="w-5 h-5 text-lumo-ambar" />
-                <span>Comparativa Semanal: Objetivo vs Real por Hito</span>
-              </h2>
-              <p className="text-xs text-lumo-pizarra mt-0.5">
-                Evaluación directa contra los acuerdos de Gate del Documento 02 y Documento 04.
-              </p>
-            </div>
-
-            {/* Responsive Milestone Selector: grid-cols-2 sm:flex gap-2 */}
-            <div className="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto">
-              {[
-                { day: 14 as const, label: 'H1: Día 14' },
-                { day: 30 as const, label: 'H2: Día 30' },
-                { day: 60 as const, label: 'H3: Día 60' },
-                { day: 90 as const, label: 'H4: Día 90' },
-              ].map((m) => (
-                <button
-                  key={m.day}
-                  type="button"
-                  onClick={() => setSelectedMilestone(m.day)}
-                  className={`min-h-touch px-4 py-2.5 rounded-xl font-black text-xs transition-all active:scale-95 ${
-                    selectedMilestone === m.day
-                      ? 'bg-lumo-noche text-white shadow-xs ring-2 ring-lumo-ambar'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  {m.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-200 text-xs font-bold text-amber-900">
-            Hito Seleccionado: {activeMilestoneTarget.name}
-          </div>
-
-          {/* 3. THE 5 METRIC CARDS (grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {metricCards.map((card) => {
-              const percentage = Math.min(100, Math.round((card.current / (card.target || 1)) * 100));
-              return (
-                <div
-                  key={card.key}
-                  className="bg-slate-50 rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col justify-between space-y-3"
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="text-xs font-bold text-slate-600 leading-tight">
-                      {card.label}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setEditingMetric({
-                          key: card.key,
-                          label: card.label,
-                          value: card.current,
-                        })
-                      }
-                      className="p-1.5 text-gray-400 hover:text-lumo-noche rounded-lg transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
-                      title="Editar métrica en vivo"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-lumo-noche">
-                        {card.isCurrency ? `$${card.current}` : card.current}
-                      </span>
-                      <span className="text-xs text-lumo-pizarra font-semibold">
-                        / {card.isCurrency ? `$${card.target}` : card.target} meta
-                      </span>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="w-full bg-slate-200 h-2 rounded-full mt-2 overflow-hidden">
-                      <div
-                        className={`${card.color} h-full rounded-full transition-all duration-300`}
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center text-[10px] text-slate-500 mt-1.5 font-bold">
-                      <span>Progreso</span>
-                      <span>{percentage}%</span>
-                    </div>
-                  </div>
+        {draft && risk && (
+          <>
+            {/* Risk #1 */}
+            <section aria-labelledby="risk-h" className={`rounded-3xl border p-5 md:p-6 ${risk.isAlertActive ? 'bg-red-50 border-red-200' : 'bg-white border-lumo-niebla'}`}>
+              <div className="flex items-start gap-3">
+                {risk.isAlertActive
+                  ? <AlertTriangle className="w-6 h-6 text-red-700 shrink-0" aria-hidden="true" />
+                  : <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0" aria-hidden="true" />}
+                <div className="min-w-0">
+                  <h2 id="risk-h" className={`text-lg font-black ${risk.isAlertActive ? 'text-red-900' : 'text-emerald-900'}`}>
+                    Riesgo #1: {risk.isAlertActive ? 'el ritmo está bajo esta semana' : 'el ritmo va bien'}
+                  </h2>
+                  <p className="text-sm text-slate-700 mt-0.5">
+                    <span className="tabular-nums font-bold">{risk.totalHours}</span> de {MIN_WEEKLY_HOURS}&nbsp;h mínimas ·{' '}
+                    <span className="tabular-nums font-bold">{draft.hours.contactsThisWeek}</span> de {MIN_WEEKLY_CONTACTS} contactos mínimos
+                  </p>
+                  {risk.reasons.length > 0 && <ul className="mt-2 text-sm text-red-900 list-disc pl-5 space-y-0.5">{risk.reasons.map((r) => <li key={r}>{r}</li>)}</ul>}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </main>
+              </div>
+            </section>
 
-      {/* Quick Edit Metric Modal */}
-      {editingMetric && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-lumo-niebla shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between pb-3 border-b border-lumo-niebla">
-              <h3 className="font-heading font-black text-sm text-lumo-noche">
-                Ajustar Métrica: {editingMetric.label}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setEditingMetric(null)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-700"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Hours */}
+            <section aria-labelledby="hours-h" className="bg-white rounded-3xl border border-lumo-niebla p-5 md:p-6">
+              <h2 id="hours-h" className="text-lg font-black font-heading">Horas de la semana</h2>
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {(Object.keys(HOUR_TARGETS) as (keyof typeof HOUR_TARGETS)[]).map((k) => {
+                  const t = HOUR_TARGETS[k];
+                  const v = draft.hours[k];
+                  const state = v < t.min ? { c: 'text-red-700', l: 'Debajo de la meta' } : v > t.max ? { c: 'text-amber-800', l: 'Arriba del rango' } : { c: 'text-emerald-800', l: 'En rango' };
+                  return (
+                    <div key={k} className="min-w-0">
+                      <label htmlFor={`h-${k}`} className="block text-sm font-bold">{t.name}</label>
+                      <p className="text-xs text-lumo-pizarra mb-1.5">Meta {t.min}–{t.max}&nbsp;h · <span className={`font-bold ${state.c}`}>{state.l}</span></p>
+                      <Stepper id={`h-${k}`} label={`horas de ${t.name}`} value={v} step={0.5} max={80} disabled={ro}
+                        onChange={(n) => edit((d) => ({ ...d, hours: { ...d.hours, [k]: n } }))} />
+                    </div>
+                  );
+                })}
+                <div className="min-w-0">
+                  <label htmlFor="h-contacts" className="block text-sm font-bold">Contactos esta semana</label>
+                  <p className="text-xs text-lumo-pizarra mb-1.5">Mínimo {MIN_WEEKLY_CONTACTS}</p>
+                  <Stepper id="h-contacts" label="contactos" value={draft.hours.contactsThisWeek} step={1} max={1000} disabled={ro}
+                    onChange={(n) => edit((d) => ({ ...d, hours: { ...d.hours, contactsThisWeek: n } }))} />
+                </div>
+              </div>
+            </section>
 
-            <div className="flex items-center justify-center gap-4 py-4">
-              <button
-                type="button"
-                onClick={() => handleUpdateMetric(-1)}
-                className="w-12 h-12 rounded-2xl bg-slate-100 hover:bg-slate-200 text-lumo-noche font-black text-xl flex items-center justify-center transition-transform active:scale-95"
-              >
-                <Minus className="w-5 h-5" />
-              </button>
-
-              <div className="text-center">
-                <span className="text-3xl font-black text-lumo-noche block">
-                  {editingMetric.value}
-                </span>
-                <span className="text-[10px] text-lumo-pizarra uppercase font-bold">Valor Actual</span>
+            {/* Milestones */}
+            <section aria-labelledby="ms-h" className="bg-white rounded-3xl border border-lumo-niebla p-5 md:p-6">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 id="ms-h" className="text-lg font-black font-heading">Meta contra real</h2>
+                  <p className="text-sm text-lumo-pizarra mt-0.5">{milestone.name}</p>
+                </div>
+                <div role="radiogroup" aria-label="Hito" className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-slate-100 md:w-auto">
+                  {SUNDAY_MILESTONES.map((m) => (
+                    <button key={m.day} type="button" role="radio" aria-checked={draft.milestone === m.day} disabled={ro && draft.milestone !== m.day}
+                      onClick={() => edit((d) => ({ ...d, milestone: m.day }))}
+                      className={`min-h-[40px] px-3 rounded-lg text-sm font-bold whitespace-nowrap ${draft.milestone === m.day ? 'bg-white shadow-sm text-lumo-noche' : 'text-slate-600'}`}>
+                      Día {m.day}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => handleUpdateMetric(1)}
-                className="w-12 h-12 rounded-2xl bg-lumo-ambar hover:bg-lumo-brillo text-lumo-noche font-black text-xl flex items-center justify-center transition-transform active:scale-95 shadow-xs"
-              >
-                <Plus className="w-5 h-5" />
-              </button>
-            </div>
+              <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {METRIC_KEYS.map((k) => {
+                  const cur = draft.metrics[k];
+                  const target = targetFor(milestone, k);
+                  const pct = progressPct(cur, target);
+                  const crm = board?.fromCrm[k];
+                  return (
+                    <div key={k} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 min-w-0 flex flex-col gap-2">
+                      <label htmlFor={`m-${k}`} className="text-sm font-bold leading-snug">{METRIC_LABEL[k]}</label>
+                      <p className="text-xs text-lumo-pizarra -mt-1.5">Meta: <span className="font-bold tabular-nums">{fmt(k, target)}</span></p>
+                      <Stepper id={`m-${k}`} label={METRIC_LABEL[k]} value={cur} step={isMoney(k) ? 100 : 1} max={isMoney(k) ? 1_000_000 : 10_000} disabled={ro}
+                        onChange={(n) => edit((d) => ({ ...d, metrics: { ...d.metrics, [k]: n } }))} />
+                      <div>
+                        <div className="h-2 rounded-full bg-slate-200 overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${METRIC_LABEL[k]}: ${pct}% de la meta`}>
+                          <div className={`h-full rounded-full transition-[width] duration-300 motion-reduce:transition-none ${pct >= 100 ? 'bg-emerald-600' : pct >= 50 ? 'bg-lumo-ambar' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
+                        </div>
+                        <p className="mt-1 flex justify-between text-xs tabular-nums">
+                          <span className="text-lumo-pizarra">{crm !== undefined && crm !== cur ? `CRM: ${fmt(k, crm)}` : ' '}</span>
+                          <span className="font-bold">{pct}%</span>
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
 
-            <button
-              type="button"
-              onClick={() => setEditingMetric(null)}
-              className="w-full min-h-touch py-3 rounded-xl bg-lumo-noche text-white font-black text-xs transition-transform active:scale-95"
-            >
-              Guardar y Cerrar
-            </button>
-          </div>
-        </div>
-      )}
+            {/* Notes */}
+            <section className="bg-white rounded-3xl border border-lumo-niebla p-5 md:p-6">
+              <label htmlFor="notes" className="text-lg font-black font-heading">Acuerdos de la semana</label>
+              <textarea id="notes" rows={3} maxLength={1000} value={draft.notes} disabled={ro}
+                onChange={(e) => edit((d) => ({ ...d, notes: e.target.value }))}
+                placeholder="Qué se decidió y quién lo hace antes del próximo domingo."
+                className="mt-2 w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-lumo-ambar disabled:bg-slate-50" />
+            </section>
+
+            {/* History */}
+            {board && board.history.length > 0 && (
+              <section aria-labelledby="hist-h" className="bg-white rounded-3xl border border-lumo-niebla p-5 md:p-6">
+                <h2 id="hist-h" className="text-lg font-black font-heading">Semanas anteriores</h2>
+                <ul className="mt-3 divide-y divide-slate-100">
+                  {board.history.slice(0, 12).map((h) => {
+                    const r = evaluateRisk1Alert({ weekNumber: 0, ...h.hours });
+                    return (
+                      <li key={h.weekOf} className="py-2.5 grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-0.5 text-sm tabular-nums">
+                        <span className="font-bold">Semana del {weekLabel(h.weekOf)}</span>
+                        <span className={r.isAlertActive ? 'text-red-700 font-bold' : 'text-emerald-800 font-bold'}>{r.isAlertActive ? 'Ritmo bajo' : 'Ritmo sano'}</span>
+                        <span>{r.totalHours}&nbsp;h · {h.hours.contactsThisWeek} contactos</span>
+                        <span>{h.metrics.closedClients} clientes</span>
+                        <span>${h.metrics.mrr.toLocaleString('en-US')}/mes</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            )}
+          </>
+        )}
+      </main>
     </div>
   );
 }

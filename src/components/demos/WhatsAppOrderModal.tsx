@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, MessageCircle, Send, CheckCircle2, ShoppingBag, Car } from 'lucide-react';
+import {
+  X,
+  MessageCircle,
+  Send,
+  ShoppingBag,
+  Car,
+} from 'lucide-react';
 import type { Locale } from '@/lib/types';
 
 interface MenuItem {
@@ -18,6 +24,8 @@ interface WhatsAppOrderModalProps {
   locale: Locale;
   businessName: string;
   whatsAppNumber: string;
+  /** Called when the visitor sends the order; the demo page saves it for the owner view. */
+  onOrdered?: (o: { customerName: string; type: 'pickup' | 'delivery'; lines: { name: string; qty: number; price: number }[]; total: number }) => void;
 }
 
 export function WhatsAppOrderModal({
@@ -27,6 +35,7 @@ export function WhatsAppOrderModal({
   locale,
   businessName,
   whatsAppNumber,
+  onOrdered,
 }: WhatsAppOrderModalProps) {
   const [quantities, setQuantities] = useState<Record<string, number>>({
     [items[0]?.id || '']: 2,
@@ -58,8 +67,8 @@ export function WhatsAppOrderModal({
   const encodedMessage = encodeURIComponent(
     `¡Hola ${businessName}! Quisiera hacer un pedido:\n` +
       `Cliente: ${customerName || 'Cliente'}\n` +
-      `Tipo: ${orderType === 'pickup' ? 'Para Recoger' : 'Para Llevar'}\n` +
-      `Orden: ${selectedList || '1 Orden de Tacos'}\n` +
+      `Tipo: ${orderType === 'pickup' ? 'Para recoger' : 'A domicilio'}\n` +
+      `Orden: ${selectedList}\n` +
       `Total estimado: $${total.toFixed(2)} USD`
   );
 
@@ -118,14 +127,16 @@ export function WhatsAppOrderModal({
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.id, -1)}
+                      aria-label={`${locale === 'es' ? 'Quitar uno de' : 'Remove one'} ${locale === 'es' ? item.nameEs : item.nameEn}`}
                       className="min-h-touch min-w-touch w-9 h-9 rounded-full bg-white border border-lumo-niebla text-lumo-noche font-black text-sm flex items-center justify-center hover:bg-slate-100"
                     >
-                      -
+                      <span aria-hidden="true">−</span>
                     </button>
-                    <span className="font-bold text-sm w-5 text-center">{q}</span>
+                    <span className="font-bold text-sm w-5 text-center tabular-nums" aria-live="polite">{q}</span>
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.id, 1)}
+                      aria-label={`${locale === 'es' ? 'Agregar uno de' : 'Add one'} ${locale === 'es' ? item.nameEs : item.nameEn}`}
                       className="min-h-touch min-w-touch w-9 h-9 rounded-full bg-lumo-ambar text-lumo-noche font-black text-sm flex items-center justify-center shadow-xs hover:bg-[#e09129]"
                     >
                       +
@@ -194,8 +205,18 @@ export function WhatsAppOrderModal({
             href={whatsAppUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={onClose}
-            className="min-h-touch w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] active:scale-98 text-white font-black text-sm shadow-lg transition-transform text-center"
+            aria-disabled={total === 0}
+            onClick={(e) => {
+              if (total === 0) { e.preventDefault(); return; }
+              onOrdered?.({
+                customerName: customerName.trim() || (locale === 'es' ? 'Cliente' : 'Customer'),
+                type: orderType,
+                lines: items.filter((i) => (quantities[i.id] || 0) > 0).map((i) => ({ name: i.nameEs, qty: quantities[i.id], price: i.price })),
+                total,
+              });
+              onClose();
+            }}
+            className="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed min-h-touch w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] active:scale-98 text-white font-black text-sm shadow-lg transition-transform text-center"
           >
             <Send className="w-4 h-4 fill-white" />
             <span>{locale === 'es' ? 'Enviar Pedido por WhatsApp' : 'Send Order to WhatsApp'}</span>

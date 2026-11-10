@@ -9,21 +9,21 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
-  Sparkles,
   ArrowRight,
   AlertCircle,
-  CheckCircle2,
-  Users,
 } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/admin/crm';
+  // Only internal admin paths: an absolute or protocol-relative URL here would be an open redirect.
+  const rawRedirect = searchParams.get('redirect') || '';
+  const redirectPath = /^\/admin(\/[A-Za-z0-9\-/]*)?$/.test(rawRedirect) ? rawRedirect : '/admin/crm';
   const errorParam = searchParams.get('error');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [website, setWebsite] = useState(''); // honeypot
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(
@@ -41,7 +41,7 @@ function LoginForm() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, website }),
       });
 
       const data = await res.json();
@@ -53,17 +53,11 @@ function LoginForm() {
       // Successful login
       router.push(redirectPath);
       router.refresh();
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Error de autenticación.');
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : '') || 'Error de autenticación.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const fillQuickAccess = (userEmail: string, userPass: string) => {
-    setEmail(userEmail);
-    setPassword(userPass);
-    setErrorMessage(null);
   };
 
   return (
@@ -99,6 +93,11 @@ function LoginForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot: invisible to people; a bot that fills it gets its IP blocked. */}
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label htmlFor="website">Website</label>
+              <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+            </div>
             <div>
               <label className="block text-xs font-bold text-lumo-noche mb-1.5">
                 Correo Electrónico Corporativo
@@ -151,59 +150,6 @@ function LoginForm() {
             </button>
           </form>
 
-          {/* Quick Access Dev Helper */}
-          <div className="pt-4 border-t border-slate-100 space-y-2.5">
-            <div className="flex items-center justify-between text-[11px] font-bold text-gray-500">
-              <span className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-lumo-ambar" />
-                <span>Acceso Rápido de Equipo (Local / Pruebas):</span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 gap-1.5">
-              <button
-                type="button"
-                onClick={() => fillQuickAccess('carlos@lumohq.com', 'LumoAdmin$2026!Carlos')}
-                className="w-full text-left p-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-lumo-ambar text-xs transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <span className="font-bold text-lumo-noche block">Carlos Gómez</span>
-                  <span className="text-[10px] text-gray-500">carlos@lumohq.com</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  Super Admin
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillQuickAccess('luis@lumohq.com', 'LumoAdmin$2026!Luis')}
-                className="w-full text-left p-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-lumo-ambar text-xs transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <span className="font-bold text-lumo-noche block">Luis Barbera</span>
-                  <span className="text-[10px] text-gray-500">luis@lumohq.com</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  Admin Luis
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillQuickAccess('barbara@lumohq.com', 'LumoVentas$2026!Barb')}
-                className="w-full text-left p-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-lumo-ambar text-xs transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <span className="font-bold text-lumo-noche block">Bárbara</span>
-                  <span className="text-[10px] text-gray-500">barbara@lumohq.com</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  Ventas / CRM
-                </span>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Security badge footer */}

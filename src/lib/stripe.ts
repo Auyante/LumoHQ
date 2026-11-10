@@ -191,12 +191,11 @@ export function verifyStripeWebhookSignature(
   try {
     const parts = signatureHeader.split(',');
     const timestampPart = parts.find((p) => p.startsWith('t='));
-    const sigPart = parts.find((p) => p.startsWith('v1='));
+    const signatures = parts.filter((p) => p.startsWith('v1=')).map((p) => p.slice(3));
 
-    if (!timestampPart || !sigPart) return false;
+    if (!timestampPart || signatures.length === 0) return false;
 
     const timestamp = timestampPart.split('=')[1];
-    const signature = sigPart.split('=')[1];
 
     // Anti-replay: tolerance 5 minutes
     const now = Math.floor(Date.now() / 1000);
@@ -211,10 +210,11 @@ export function verifyStripeWebhookSignature(
       .update(signedPayload, 'utf8')
       .digest('hex');
 
-    return crypto.timingSafeEqual(
-      Buffer.from(signature, 'hex'),
-      Buffer.from(expectedSignature, 'hex')
-    );
+    const expected = Buffer.from(expectedSignature, 'hex');
+    return signatures.some((sig) => {
+      const given = Buffer.from(sig, 'hex');
+      return given.length === expected.length && crypto.timingSafeEqual(given, expected);
+    });
   } catch {
     return false;
   }
