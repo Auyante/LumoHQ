@@ -13,7 +13,6 @@ import {
   ArrowRight,
   AlertCircle,
   CheckCircle2,
-  Users,
 } from 'lucide-react';
 
 function LoginForm() {
@@ -58,12 +57,6 @@ function LoginForm() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fillQuickAccess = (userEmail: string, userPass: string) => {
-    setEmail(userEmail);
-    setPassword(userPass);
-    setErrorMessage(null);
   };
 
   return (
@@ -151,59 +144,6 @@ function LoginForm() {
             </button>
           </form>
 
-          {/* Quick Access Dev Helper */}
-          <div className="pt-4 border-t border-slate-100 space-y-2.5">
-            <div className="flex items-center justify-between text-[11px] font-bold text-gray-500">
-              <span className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-lumo-ambar" />
-                <span>Acceso Rápido de Equipo (Local / Pruebas):</span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 gap-1.5">
-              <button
-                type="button"
-                onClick={() => fillQuickAccess('carlos@lumohq.com', 'LumoAdmin$2026!Carlos')}
-                className="w-full text-left p-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-lumo-ambar text-xs transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <span className="font-bold text-lumo-noche block">Carlos Gómez</span>
-                  <span className="text-[10px] text-gray-500">carlos@lumohq.com</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  Super Admin
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillQuickAccess('luis@lumohq.com', 'LumoAdmin$2026!Luis')}
-                className="w-full text-left p-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-lumo-ambar text-xs transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <span className="font-bold text-lumo-noche block">Luis Barbera</span>
-                  <span className="text-[10px] text-gray-500">luis@lumohq.com</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  Admin Luis
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillQuickAccess('barbara@lumohq.com', 'LumoVentas$2026!Barb')}
-                className="w-full text-left p-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-lumo-ambar text-xs transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <span className="font-bold text-lumo-noche block">Bárbara</span>
-                  <span className="text-[10px] text-gray-500">barbara@lumohq.com</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">
-                  Ventas / CRM
-                </span>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Security badge footer */}

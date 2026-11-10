@@ -54,3 +54,6 @@ Thumbs.db
 # Antigravity & Scratch Artifacts
 .system_generated/
 
+
+# Runtime user store (contains password hashes)
+/data/users.json

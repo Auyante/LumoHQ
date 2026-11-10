@@ -4,7 +4,6 @@ import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { StickyMobileCta } from '@/components/layout/StickyMobileCta';
 import { TopProgressBar } from '@/components/layout/TopProgressBar';
 
 export const metadata: Metadata = {
@@ -69,9 +68,8 @@ export default function RootLayout({
           <TopProgressBar />
           <div className="flex min-h-screen flex-col">
             <Navbar />
-            <main className="grow pb-24 md:pb-0">{children}</main>
+            <main className="grow">{children}</main>
             <Footer />
-            <StickyMobileCta />
           </div>
         </I18nProvider>
       </body>

@@ -2,6 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+function generatePassword() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
+  let out = '';
+  for (let i = 0; i < 18; i++) out += chars[crypto.randomInt(chars.length)];
+  return out;
+}
+
+// Passwords come from env vars or are generated here and printed once. Never hardcode them.
+const passwords = {
+  carlos: process.env.ADMIN_CARLOS_PASSWORD || generatePassword(),
+  luis: process.env.ADMIN_LUIS_PASSWORD || generatePassword(),
+  barbara: process.env.SALES_BARBARA_PASSWORD || generatePassword(),
+};
+
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
@@ -14,7 +28,7 @@ const users = [
     name: 'Carlos Gómez',
     email: 'carlos@lumohq.com',
     role: 'SUPER_ADMIN',
-    ...hashPassword('LumoAdmin$2026!Carlos'),
+    ...hashPassword(passwords.carlos),
     active: true,
     createdAt: new Date().toISOString()
   },
@@ -23,7 +37,7 @@ const users = [
     name: 'Luis Barbera',
     email: 'luis@lumohq.com',
     role: 'ADMIN_LUIS',
-    ...hashPassword('LumoAdmin$2026!Luis'),
+    ...hashPassword(passwords.luis),
     active: true,
     createdAt: new Date().toISOString()
   },
@@ -32,7 +46,7 @@ const users = [
     name: 'Bárbara',
     email: 'barbara@lumohq.com',
     role: 'SALES_BARBARA',
-    ...hashPassword('LumoVentas$2026!Barb'),
+    ...hashPassword(passwords.barbara),
     active: true,
     createdAt: new Date().toISOString()
   }
@@ -44,5 +58,8 @@ if (!fs.existsSync(dataDir)) {
 }
 
 fs.writeFileSync(path.join(dataDir, 'users.json'), JSON.stringify(users, null, 2), 'utf8');
-console.log('users.json rehashed successfully with exact literal passwords including $2026!');
+console.log('users.json rehashed. Store these passwords in a password manager now:');
+console.log(`  carlos@lumohq.com   ${passwords.carlos}`);
+console.log(`  luis@lumohq.com     ${passwords.luis}`);
+console.log(`  barbara@lumohq.com  ${passwords.barbara}`);
 

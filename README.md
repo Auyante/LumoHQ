@@ -79,13 +79,16 @@ node scripts/verify-sprint5.js  # Motor Financiero, Tablero Dominical & Hardenin
 
 ## 🔐 Cuentas de Acceso y Roles (RBAC)
 
-El sistema cuenta con 3 usuarios preconfigurados con contraseñas seguras PBKDF2:
+Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca** van en el código:
 
-| Usuario | Correo Electrónico | Rol | Contraseña por Defecto |
-| :--- | :--- | :--- | :--- |
-| **Carlos Mendoza** | `carlos@lumohq.com` | `SUPER_ADMIN` | `LumoAdmin$2026!Carlos` |
-| **Luis Barbera** | `luis@lumohq.com` | `ADMIN_LUIS` | `LumoAdmin$2026!Luis` |
-| **Bárbara** | `barbara@lumohq.com` | `SALES_BARBARA` | `LumoVentas$2026!Barb` |
+- Defínelas en `.env.local` (`ADMIN_CARLOS_PASSWORD`, `ADMIN_LUIS_PASSWORD`, `SALES_BARBARA_PASSWORD`), o
+- ejecuta `node scripts/rehash-users.js`, que genera contraseñas aleatorias y las muestra una sola vez.
+
+| Usuario | Correo Electrónico | Rol |
+| :--- | :--- | :--- |
+| **Carlos Gómez** | `carlos@lumohq.com` | `SUPER_ADMIN` |
+| **Luis Barbera** | `luis@lumohq.com` | `ADMIN_LUIS` |
+| **Bárbara** | `barbara@lumohq.com` | `SALES_BARBARA` |
 
 *Acceso al panel administrativo:* [`/login`](http://localhost:3000/login)
 

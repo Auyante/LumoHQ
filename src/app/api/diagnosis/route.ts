@@ -55,6 +55,14 @@ export async function POST(request: Request) {
 
     // 2. Parse & validate body
     const json = await request.json();
+
+    // Honeypot: the hidden "website" field is invisible to people. If it is filled, a bot sent this.
+    // Answer like a success so the bot learns nothing, and store nothing.
+    if (json && typeof json === 'object' && typeof json.website === 'string' && json.website.trim() !== '') {
+      console.warn(`[security] honeypot triggered on /api/diagnosis from ${ip}`);
+      return NextResponse.json({ success: true });
+    }
+
     const result = diagnosisSchema.safeParse(json);
 
     if (!result.success) {

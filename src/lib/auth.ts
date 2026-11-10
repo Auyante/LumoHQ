@@ -24,8 +24,13 @@ export interface SessionPayload {
   exp: number; // Unix timestamp in seconds
 }
 
-const SESSION_SECRET =
-  process.env.SESSION_SECRET || 'lumo-hq-texas-super-secret-key-2026-production-hmac-secure';
+import { getSessionSecret } from './session-secret';
+
+function requireSecret(): string {
+  const secret = getSessionSecret();
+  if (!secret) throw new Error('SESSION_SECRET (32+ chars) is required in production.');
+  return secret;
+}
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
@@ -65,7 +70,7 @@ export function createSessionToken(user: { id: string; name: string; email: stri
 
   const payloadStr = JSON.stringify(payload);
   const payloadB64 = Buffer.from(payloadStr, 'utf-8').toString('base64url');
-  const signature = crypto.createHmac('sha256', SESSION_SECRET).update(payloadB64).digest('hex');
+  const signature = crypto.createHmac('sha256', requireSecret()).update(payloadB64).digest('hex');
 
   return `${payloadB64}.${signature}`;
 }
@@ -79,7 +84,7 @@ export function verifySessionToken(token: string): { valid: boolean; payload?: S
     if (parts.length !== 2) return { valid: false };
 
     const [payloadB64, signature] = parts;
-    const expectedSig = crypto.createHmac('sha256', SESSION_SECRET).update(payloadB64).digest('hex');
+    const expectedSig = crypto.createHmac('sha256', requireSecret()).update(payloadB64).digest('hex');
 
     if (!crypto.timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expectedSig, 'hex'))) {
       return { valid: false };
@@ -125,10 +130,22 @@ function saveUsers(users: User[]): void {
   }
 }
 
+/**
+ * Seed password: taken from env, or generated once and printed to the server console.
+ * Never hardcode passwords in source.
+ */
+function seedPassword(envVar: string, email: string): string {
+  const fromEnv = process.env[envVar];
+  if (fromEnv && fromEnv.length >= 12) return fromEnv;
+  const generated = generateSecurePassword();
+  console.warn(`[auth] ${envVar} not set. Generated one-time password for ${email}: ${generated}`);
+  return generated;
+}
+
 function initializeDefaultUsers(): User[] {
-  const carlos = hashPassword('LumoAdmin$2026!Carlos');
-  const luis = hashPassword('LumoAdmin$2026!Luis');
-  const barbara = hashPassword('LumoVentas$2026!Barb');
+  const carlos = hashPassword(seedPassword('ADMIN_CARLOS_PASSWORD', 'carlos@lumohq.com'));
+  const luis = hashPassword(seedPassword('ADMIN_LUIS_PASSWORD', 'luis@lumohq.com'));
+  const barbara = hashPassword(seedPassword('SALES_BARBARA_PASSWORD', 'barbara@lumohq.com'));
 
   const defaultUsers: User[] = [
     {
@@ -215,22 +232,28 @@ export function generateSecurePassword(): string {
   const symbols = '!@#$%^&*';
 
   let pwd = '';
-  pwd += upper.charAt(Math.floor(Math.random() * upper.length));
-  pwd += upper.charAt(Math.floor(Math.random() * upper.length));
-  pwd += lower.charAt(Math.floor(Math.random() * lower.length));
-  pwd += lower.charAt(Math.floor(Math.random() * lower.length));
-  pwd += digits.charAt(Math.floor(Math.random() * digits.length));
-  pwd += digits.charAt(Math.floor(Math.random() * digits.length));
-  pwd += symbols.charAt(Math.floor(Math.random() * symbols.length));
-  pwd += symbols.charAt(Math.floor(Math.random() * symbols.length));
+  pwd += upper.charAt(crypto.randomInt(upper.length));
+  pwd += upper.charAt(crypto.randomInt(upper.length));
+  pwd += lower.charAt(crypto.randomInt(lower.length));
+  pwd += lower.charAt(crypto.randomInt(lower.length));
+  pwd += digits.charAt(crypto.randomInt(digits.length));
+  pwd += digits.charAt(crypto.randomInt(digits.length));
+  pwd += symbols.charAt(crypto.randomInt(symbols.length));
+  pwd += symbols.charAt(crypto.randomInt(symbols.length));
 
   // Add random characters to make it 14 chars long
   const allChars = upper + lower + digits + symbols;
   for (let i = 0; i < 6; i++) {
-    pwd += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    pwd += allChars.charAt(crypto.randomInt(allChars.length));
   }
 
-  return pwd.split('').sort(() => 0.5 - Math.random()).join('');
+  // Fisher-Yates shuffle with a CSPRNG
+  const chars = pwd.split('');
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = crypto.randomInt(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join('');
 }
 
 export function createUser(

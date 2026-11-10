@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const SESSION_SECRET =
-  process.env.SESSION_SECRET || 'lumo-hq-texas-super-secret-key-2026-production-hmac-secure';
+import { getSessionSecret } from '@/lib/session-secret';
 
 async function verifyEdgeSession(token: string) {
+  const secret = getSessionSecret();
+  if (!secret) return null;
   try {
     const parts = token.split('.');
     if (parts.length !== 2) return null;
@@ -12,7 +13,7 @@ async function verifyEdgeSession(token: string) {
     const enc = new TextEncoder();
     const key = await crypto.subtle.importKey(
       'raw',
-      enc.encode(SESSION_SECRET),
+      enc.encode(secret),
       { name: 'HMAC', hash: 'SHA-256' },
       false,
       ['verify']
