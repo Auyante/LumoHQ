@@ -9,6 +9,17 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+const envPath = path.join(__dirname, '..', '.env.local');
+if (fs.existsSync(envPath)) {
+  const content = fs.readFileSync(envPath, 'utf8');
+  for (const line of content.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const [k, ...v] = trimmed.split('=');
+    if (k && v.length) process.env[k.trim()] = v.join('=').trim();
+  }
+}
+
 const ITER = 210000;
 
 function generatePassword(length = 18) {
