@@ -57,3 +57,8 @@ Thumbs.db
 
 # Runtime user store (contains password hashes)
 /data/users.json
+/data/users.json.tmp
+/data/security-audit.jsonl
+/data/security-blocks.json
+/data/uploads/
+/data/INITIAL-PASSWORDS.txt

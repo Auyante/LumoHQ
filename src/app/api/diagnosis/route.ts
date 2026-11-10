@@ -1,4 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { getClientIp } from '@/lib/security/client-ip';
+import { honeypotTripped } from '@/lib/security/guard';
 import { z } from 'zod';
 
 // Zod Schema with strict input validation
@@ -29,11 +31,10 @@ const diagnosisSchema = z.object({
 // Simple in-memory rate limiter per IP
 const rateLimitMap = new Map<string, { count: number; expiresAt: number }>();
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     // 1. IP extraction & Rate Limiting (max 5 requests per 10 minutes per IP)
-    const forwarded = request.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
+    const ip = getClientIp(request.headers);
     const now = Date.now();
     const clientRate = rateLimitMap.get(ip);
 
@@ -56,12 +57,10 @@ export async function POST(request: Request) {
     // 2. Parse & validate body
     const json = await request.json();
 
-    // Honeypot: the hidden "website" field is invisible to people. If it is filled, a bot sent this.
-    // Answer like a success so the bot learns nothing, and store nothing.
-    if (json && typeof json === 'object' && typeof json.website === 'string' && json.website.trim() !== '') {
-      console.warn(`[security] honeypot triggered on /api/diagnosis from ${ip}`);
-      return NextResponse.json({ success: true });
-    }
+    // Honeypot: the hidden "website" field is invisible to people. If it is filled, a bot sent this:
+    // the IP is blocked and the bot gets a fake success, so it learns nothing. Nothing is stored.
+    const trap = honeypotTripped(request, json, 'diagnosis');
+    if (trap) return trap;
 
     const result = diagnosisSchema.safeParse(json);
 

@@ -71,3 +71,26 @@ export function validateImageMagicBytes(buffer: Buffer, originalFilename: string
   };
 }
 
+
+/**
+ * Anti-polyglot: a file can carry a valid image header and still hide a script or markup further in.
+ * The whole buffer is searched for executable or markup signatures. Any hit rejects the file.
+ */
+const POLYGLOT_SIGNATURES = ['<?php', '<?=', '<script', '<svg', '<html', '<iframe', '<%', 'javascript:', '#!/', '<!doctype', '<?xml'];
+
+export function scanPolyglot(buffer: Buffer): string | null {
+  const text = buffer.toString('latin1').toLowerCase();
+  for (const sig of POLYGLOT_SIGNATURES) if (text.includes(sig)) return sig;
+  return null;
+}
+
+export const EXT_FOR_MIME: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+
+/** Full check for one upload: size, extension, magic bytes, polyglot scan. */
+export function validateUpload(buffer: Buffer, originalFilename: string): FileValidationResult {
+  const base = validateImageMagicBytes(buffer, originalFilename);
+  if (!base.isValid) return base;
+  const hit = scanPolyglot(buffer);
+  if (hit) return { isValid: false, error: 'El archivo contiene código incrustado y fue rechazado.' };
+  return base;
+}

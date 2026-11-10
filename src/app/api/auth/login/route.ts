@@ -1,98 +1,59 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import {
-  getUserByEmail,
-  verifyPassword,
-  createSessionToken,
-  updateUserLastLogin,
-} from '@/lib/auth';
-import { checkRateLimit, clearRateLimit } from '@/lib/rate-limit';
+import { NextResponse, type NextRequest } from 'next/server';
+import { getUserByEmail, verifyPassword, dummyVerify, createSessionToken, recordLogin, SESSION_TTL_S } from '@/lib/auth';
+import { getClientIp } from '@/lib/security/client-ip';
+import { audit, blockIp, recordFailure, clearFailures, accountLockedUntil, lockAccount, clearAccountLock } from '@/lib/security/store';
+import { honeypotTripped, sessionCookie } from '@/lib/security/guard';
+
+const GENERIC = 'Correo o contraseña incorrectos.';
+const MAX_FAILS = 5;
+const WINDOW_MS = 15 * 60 * 1000;
 
 export async function POST(request: NextRequest) {
-  try {
-    const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
-    const body = await request.json();
-    const { email, password } = body;
+  const ip = getClientIp(request.headers);
+  let body: Record<string, unknown>;
+  try { body = await request.json(); } catch { return NextResponse.json({ error: 'Solicitud inválida.' }, { status: 400 }); }
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Por favor ingresa tu correo y contraseña.' },
-        { status: 400 }
-      );
-    }
+  const trap = honeypotTripped(request, body, 'login');
+  if (trap) return NextResponse.json({ error: GENERIC }, { status: 401 });
 
-    // Rate Limiting: 5 attempts per 15 minutes (900,000 ms)
-    const rateLimitKey = `login-attempt:${ip}:${email.toLowerCase().trim()}`;
-    const rateCheck = checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
+  const email = typeof body.email === 'string' ? body.email.toLowerCase().trim().slice(0, 120) : '';
+  const password = typeof body.password === 'string' ? body.password.slice(0, 256) : '';
+  if (!email || !password) return NextResponse.json({ error: 'Escribe tu correo y tu contraseña.' }, { status: 400 });
 
-    if (!rateCheck.allowed) {
-      const waitMinutes = Math.ceil((rateCheck.resetAt - Date.now()) / 60000);
-      return NextResponse.json(
-        {
-          error: `Demasiados intentos fallidos. Por seguridad, la cuenta está bloqueada temporalmente. Intenta en ${waitMinutes} minutos.`,
-        },
-        { status: 429 }
-      );
-    }
-
-    const user = getUserByEmail(email);
-
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Credenciales inválidas. Verifica tu correo y contraseña.' },
-        { status: 401 }
-      );
-    }
-
-    if (!user.active) {
-      return NextResponse.json(
-        { error: 'Esta cuenta ha sido desactivada. Consulta con el Administrador.' },
-        { status: 403 }
-      );
-    }
-
-    const isMatch = verifyPassword(password, user.hash, user.salt);
-
-    if (!isMatch) {
-      return NextResponse.json(
-        { error: 'Credenciales inválidas. Verifica tu correo y contraseña.' },
-        { status: 401 }
-      );
-    }
-
-    // Login successful
-    clearRateLimit(rateLimitKey);
-    updateUserLastLogin(user.id);
-    const token = createSessionToken(user);
-
-    const isProd = process.env.NODE_ENV === 'production';
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
-
-    response.cookies.set({
-      name: 'lumo_session',
-      value: token,
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-    });
-
-    return response;
-  } catch (err: any) {
-    console.error('Login error:', err);
-    return NextResponse.json(
-      { error: 'Error interno al procesar el inicio de sesión.' },
-      { status: 500 }
-    );
+  // Account lockout: checked before the password so a locked account cannot be probed.
+  const lockedUntil = accountLockedUntil(email);
+  if (lockedUntil) {
+    audit('LOGIN_LOCKED', 'WARN', ip, `attempt on locked account`, email);
+    const mins = Math.ceil((lockedUntil - Date.now()) / 60000);
+    return NextResponse.json({ error: `Demasiados intentos. Intenta de nuevo en ${mins} min.` }, { status: 429 });
   }
-}
 
+  const user = getUserByEmail(email);
+  const ok = user ? verifyPassword(password, user.hash, user.salt, user.iter) : (dummyVerify(password), false);
+
+  if (!ok || !user || !user.active) {
+    const ipFails = recordFailure(`login-ip:${ip}`, WINDOW_MS);
+    const accFails = recordFailure(`login-acc:${email}`, WINDOW_MS);
+    audit('LOGIN_FAIL', ipFails >= 3 ? 'WARN' : 'INFO', ip, user && !user.active ? 'suspended account' : 'bad credentials', email);
+    if (ipFails >= MAX_FAILS) { blockIp(ip, `${ipFails} failed logins`); clearFailures(`login-ip:${ip}`); }
+    if (accFails >= MAX_FAILS) {
+      const until = lockAccount(email);
+      clearFailures(`login-acc:${email}`);
+      audit('LOGIN_LOCKED', 'CRITICAL', ip, `account locked until ${new Date(until).toISOString()}`, email);
+    }
+    // Same message and status for unknown, wrong and suspended: no account enumeration.
+    return NextResponse.json({ error: GENERIC }, { status: 401 });
+  }
+
+  clearFailures(`login-ip:${ip}`);
+  clearFailures(`login-acc:${email}`);
+  clearAccountLock(email);
+  recordLogin(user.id, password);
+  audit('LOGIN_OK', 'INFO', ip, `role ${user.role}`, user.email);
+
+  const token = createSessionToken(user, request.headers.get('user-agent'));
+  const res = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  res.cookies.set(sessionCookie(token, SESSION_TTL_S));
+  res.headers.set('cache-control', 'no-store');
+  return res;
+}

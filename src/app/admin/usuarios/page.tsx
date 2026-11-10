@@ -88,21 +88,29 @@ export default function AdminUsuariosPage() {
     }
   };
 
+  // CSPRNG in the browser (crypto.getRandomValues), 18 characters, never Math.random.
   const generateAutoPassword = () => {
-    const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-    const lower = 'abcdefghijkmnopqrstuvwxyz';
-    const numbers = '23456789';
-    const symbols = '!@#$%^&*';
-    let res = '';
-    res += upper[Math.floor(Math.random() * upper.length)];
-    res += lower[Math.floor(Math.random() * lower.length)];
-    res += numbers[Math.floor(Math.random() * numbers.length)];
-    res += symbols[Math.floor(Math.random() * symbols.length)];
-    const all = upper + lower + numbers + symbols;
-    for (let i = 0; i < 8; i++) {
-      res += all[Math.floor(Math.random() * all.length)];
+    const sets = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghijkmnopqrstuvwxyz', '23456789', '!@#$%^&*-_=+'];
+    const all = sets.join('');
+    const rnd = (n: number) => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
+    const chars = sets.map((set) => set[rnd(set.length)]);
+    while (chars.length < 18) chars.push(all[rnd(all.length)]);
+    for (let i = chars.length - 1; i > 0; i--) { const j = rnd(i + 1); [chars[i], chars[j]] = [chars[j], chars[i]]; }
+    return chars.join('');
+  };
+
+  const patchUser = async (user: SystemUser, body: Record<string, unknown>, okMsg: string) => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+    try {
+      const res = await fetch('/api/admin/users', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, ...body }) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'La acción falló.');
+      setSuccessMessage(okMsg);
+      await loadUsers();
+    } catch (err: any) {
+      setErrorMessage(err.message);
     }
-    return res;
   };
 
   const handleCreateUser = async (e: React.FormEvent) => {
@@ -146,8 +154,8 @@ export default function AdminUsuariosPage() {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (changePasswordInput.length < 8) {
-      setErrorMessage('La contraseña debe tener al menos 8 caracteres.');
+    if (changePasswordInput.length < 12) {
+      setErrorMessage('La contraseña debe tener al menos 12 caracteres.');
       return;
     }
 
@@ -308,7 +316,7 @@ export default function AdminUsuariosPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                     <button
                       type="button"
                       onClick={() => {
@@ -332,6 +340,28 @@ export default function AdminUsuariosPage() {
                     >
                       <span>{usr.active ? 'Desactivar' : 'Activar'}</span>
                     </button>
+
+                    <button
+                      type="button"
+                      onClick={() => patchUser(usr, { action: 'revoke-sessions' }, `Sesiones de ${usr.name} cerradas.`)}
+                      className="min-h-touch grow sm:grow-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-lumo-noche text-xs font-bold"
+                    >
+                      <span>Cerrar sesiones</span>
+                    </button>
+
+                    <select
+                      aria-label={`Rol de ${usr.name}`}
+                      value={usr.role}
+                      onChange={(e) => patchUser(usr, { action: 'set-role', role: e.target.value }, `Rol de ${usr.name} actualizado.`)}
+                      className="min-h-touch grow sm:grow-0 px-2 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold"
+                    >
+                      <option value="SUPER_ADMIN">Super admin</option>
+                      <option value="ADMIN_LUIS">Admin Luis</option>
+                      <option value="ADMIN_CARLOS">Admin Carlos</option>
+                      <option value="SALES_BARBARA">Ventas (Bárbara)</option>
+                      <option value="DEVELOPER">Desarrollador</option>
+                      <option value="CLIENT">Cliente</option>
+                    </select>
                   </div>
                 </div>
               ))}
@@ -442,6 +472,8 @@ export default function AdminUsuariosPage() {
                     <option value="ADMIN_LUIS">Administrador de Operaciones (Luis)</option>
                     <option value="SUPER_ADMIN">Super Administrador (Carlos Gómez)</option>
                     <option value="DEVELOPER">Desarrollador / Técnico</option>
+                    <option value="ADMIN_CARLOS">Administrador Técnico (Carlos)</option>
+                    <option value="CLIENT">Cliente (portal)</option>
                   </select>
                 </div>
 
@@ -506,7 +538,7 @@ export default function AdminUsuariosPage() {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-bold text-lumo-noche">
-                    Nueva Contraseña (mínimo 8 caracteres):
+                    Nueva Contraseña (mínimo 12 caracteres):
                   </label>
                   <button
                     type="button"

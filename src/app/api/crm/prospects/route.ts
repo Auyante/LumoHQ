@@ -1,16 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { crmStore, calculateProspectSignals } from '@/lib/crm';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { STAFF_ROLES } from '@/lib/auth';
+import { requireSession, isGuardResponse } from '@/lib/security/guard';
 
 export async function GET(req: NextRequest) {
+  const g = requireSession(req, STAFF_ROLES);
+  if (isGuardResponse(g)) return g;
   const prospects = crmStore.getAll();
   return NextResponse.json({ success: true, prospects });
 }
 
 export async function POST(req: NextRequest) {
+  const g = requireSession(req, STAFF_ROLES);
+  if (isGuardResponse(g)) return g;
   try {
-    const clientIp =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
+    const clientIp = g.ip;
     const rateLimit = checkRateLimit(`crm-create:${clientIp}`, 20, 60000);
     if (!rateLimit.allowed) {
       return NextResponse.json({ error: 'Demasiadas solicitudes.' }, { status: 429 });
@@ -56,6 +61,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const g = requireSession(req, STAFF_ROLES);
+  if (isGuardResponse(g)) return g;
   try {
     const body = await req.json();
     const { id, action, stage, note } = body;

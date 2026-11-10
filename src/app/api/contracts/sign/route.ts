@@ -4,14 +4,14 @@ import { generateContractLegalText, calculateContractSha256 } from '@/lib/contra
 import { getPackageAmounts, PRICING_CONSTANTS } from '@/lib/stripe';
 import { contractStore } from '@/lib/contract-store';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security/client-ip';
+import { honeypotTripped } from '@/lib/security/guard';
+import { audit } from '@/lib/security/store';
 
 export async function POST(req: NextRequest) {
   try {
     // 1. Rate limiting: 10 attempts per minute per IP
-    const clientIp =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      req.headers.get('x-real-ip') ||
-      '127.0.0.1';
+    const clientIp = getClientIp(req.headers);
 
     const rateLimit = checkRateLimit(`contract-sign:${clientIp}`, 10, 60000);
     if (!rateLimit.allowed) {
@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
 
     // 2. Body parsing and schema validation
     const rawBody = await req.json();
+    const trap = honeypotTripped(req, rawBody, 'contract');
+    if (trap) return trap;
     const parsed = ContractSigningSchema.safeParse(rawBody);
 
     if (!parsed.success) {
@@ -120,6 +122,8 @@ export async function POST(req: NextRequest) {
       createdAt: signedAtUtc,
       updatedAt: signedAtUtc,
     });
+
+    audit('CONTRACT_SIGNED', 'INFO', clientIp, `${contractId} · ${data.packageType} · sha256 ${documentHashSha256}`, data.email);
 
     return NextResponse.json({
       success: true,

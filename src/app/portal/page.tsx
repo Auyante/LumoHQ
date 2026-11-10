@@ -27,6 +27,8 @@ import { ClientProject, clientProjectStore } from '@/lib/client-portal';
 function PortalContent() {
   const searchParams = useSearchParams();
   const clientIdParam = searchParams.get('client_id') || 'cli_elrey_01';
+  // Access key from the client's portal link; the API refuses changes without it.
+  const portalKey = searchParams.get('k') || '';
 
   const [project, setProject] = useState<ClientProject | null>(null);
   const [activeTab, setActiveTab] = useState<'clock' | 'checklist' | 'passwords' | 'preview' | 'kit'>('clock');
@@ -50,7 +52,7 @@ function PortalContent() {
       const res = await fetch('/api/client/checklist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clientId: project.id, updates }),
+        body: JSON.stringify({ clientId: project.id, key: portalKey, updates }),
       });
       const data = await res.json();
       if (data.project) {
@@ -61,24 +63,25 @@ function PortalContent() {
     }
   };
 
-  const handleSimulatePhotoUpload = async () => {
-    if (!project) return;
-    const newCount = project.day1Checklist.photosUploadedCount + 3;
+  const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+  const handlePhotoUpload = async (files: FileList | null) => {
+    if (!project || !files || files.length === 0) return;
+    const fd = new FormData();
+    fd.append('clientId', project.id);
+    fd.append('key', portalKey);
+    Array.from(files).forEach((f) => fd.append('photos', f));
+    setUploadMsg('Subiendo…');
     try {
-      const res = await fetch('/api/client/checklist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clientId: project.id,
-          updates: { photosUploadedCount: newCount },
-        }),
-      });
+      const res = await fetch('/api/client/photos', { method: 'POST', body: fd });
       const data = await res.json();
       if (data.project) setProject(data.project);
-    } catch (e) {
-      console.error(e);
+      const bad = (data.rejected || []).map((r: { name: string; error: string }) => `${r.name}: ${r.error}`).join(' · ');
+      setUploadMsg(data.error || (data.saved ? `${data.saved} foto(s) guardada(s).${bad ? ' Rechazadas: ' + bad : ''}` : bad || 'No se pudo subir.'));
+    } catch {
+      setUploadMsg('No se pudo subir. Revisa tu conexión.');
     }
   };
+
 
   const handleClientApproval = async () => {
     if (!project) return;
@@ -88,7 +91,7 @@ function PortalContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          clientId: project.id,
+          clientId: project.id, key: portalKey,
           clientWrittenConfirmation: true,
         }),
       });
@@ -491,15 +494,13 @@ function PortalContent() {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleSimulatePhotoUpload}
-                  className="min-h-touch px-4 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 shadow-sm"
-                >
+                <label className="min-h-touch px-4 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-1.5 shadow-sm cursor-pointer">
                   <UploadCloud className="w-4 h-4 text-lumo-ambar" />
-                  <span>Subir Fotos de Alta Calidad (+3)</span>
-                </button>
+                  <span>Subir fotos (JPG, PNG o WebP, hasta 10 MB)</span>
+                  <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" onChange={(e) => { handlePhotoUpload(e.target.files); e.target.value = ''; }} />
+                </label>
               </div>
+              {uploadMsg && <p className="text-xs text-slate-600" role="status">{uploadMsg}</p>}
 
               {/* Mandatory copyright checkbox */}
               <label className="flex items-start gap-2.5 text-xs text-slate-700 pt-2 border-t border-slate-200 cursor-pointer">

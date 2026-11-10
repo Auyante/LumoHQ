@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyStripeWebhookSignature } from '@/lib/stripe';
 import { contractStore } from '@/lib/contract-store';
 import { calculateWaterfall, recordTransaction, financialStore } from '@/lib/finance';
+import { getClientIp } from '@/lib/security/client-ip';
+import { audit } from '@/lib/security/store';
 
 // In-memory idempotency cache
 const processedEvents = new Set<string>();
@@ -10,18 +12,25 @@ export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
     const signature = req.headers.get('stripe-signature');
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_test_secret';
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const ip = getClientIp(req.headers);
 
-    // 1. Signature Verification (unless explicitly mock in development test)
-    const isMockTest = req.headers.get('x-lumo-test-webhook') === 'true';
+    // 1. Signature verification (HMAC-SHA256, 300 s anti-replay window). No secret = fail closed.
+    // The unsigned test path exists only outside production and only when explicitly enabled.
+    const isMockTest =
+      process.env.NODE_ENV !== 'production' &&
+      process.env.ALLOW_TEST_WEBHOOKS === '1' &&
+      req.headers.get('x-lumo-test-webhook') === 'true';
 
     if (!isMockTest) {
+      if (!webhookSecret) {
+        console.error('STRIPE_WEBHOOK_SECRET is not set: refusing webhooks.');
+        return NextResponse.json({ error: 'Webhook no configurado.' }, { status: 503 });
+      }
       const isValid = verifyStripeWebhookSignature(rawBody, signature, webhookSecret);
       if (!isValid) {
-        return NextResponse.json(
-          { error: 'Firma de webhook inválida o manipulada.' },
-          { status: 400 }
-        );
+        audit('WEBHOOK_REJECTED', 'CRITICAL', ip, 'Stripe webhook with an invalid or replayed signature');
+        return NextResponse.json({ error: 'Firma de webhook inválida.' }, { status: 400 });
       }
     }
 

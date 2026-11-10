@@ -1,8 +1,41 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getSessionSecret } from './session-secret';
 
-export type UserRole = 'SUPER_ADMIN' | 'ADMIN_LUIS' | 'SALES_BARBARA' | 'DEVELOPER';
+/* ---------- roles and route policy ---------- */
+
+export const ROLES = ['SUPER_ADMIN', 'ADMIN_LUIS', 'ADMIN_CARLOS', 'SALES_BARBARA', 'DEVELOPER', 'CLIENT'] as const;
+export type UserRole = (typeof ROLES)[number];
+export const ADMIN_ROLES: readonly UserRole[] = ['SUPER_ADMIN', 'ADMIN_LUIS', 'ADMIN_CARLOS'];
+export const STAFF_ROLES: readonly UserRole[] = [...ADMIN_ROLES, 'SALES_BARBARA', 'DEVELOPER'];
+export const isRole = (r: unknown): r is UserRole => typeof r === 'string' && (ROLES as readonly string[]).includes(r);
+
+/**
+ * Which roles may open each admin area. Anything under /admin not listed here is admin-only.
+ * Bárbara (SALES_BARBARA): CRM and Day 1 collection (production) only. Finance, users, security,
+ * retention and the Sunday board answer 403.
+ */
+export const ROUTE_POLICY: { prefix: string; roles: readonly UserRole[] }[] = [
+  { prefix: '/admin/crm', roles: STAFF_ROLES },
+  { prefix: '/admin/produccion', roles: STAFF_ROLES },
+  { prefix: '/admin/retencion', roles: [...ADMIN_ROLES, 'DEVELOPER'] },
+  { prefix: '/admin/tablero-dominical', roles: [...ADMIN_ROLES, 'DEVELOPER'] },
+  { prefix: '/admin/finanzas', roles: ADMIN_ROLES },
+  { prefix: '/admin/usuarios', roles: ADMIN_ROLES },
+  { prefix: '/admin/seguridad', roles: ADMIN_ROLES },
+  { prefix: '/api/crm', roles: STAFF_ROLES },
+  { prefix: '/api/admin', roles: ADMIN_ROLES },
+  { prefix: '/api/auth/me', roles: ROLES },
+];
+
+export function canAccessRoute(role: UserRole, pathname: string): boolean {
+  const rule = ROUTE_POLICY.find((r) => pathname === r.prefix || pathname.startsWith(r.prefix + '/'));
+  if (rule) return rule.roles.includes(role);
+  return ADMIN_ROLES.includes(role); // default deny to everyone but admins
+}
+
+/* ---------- users ---------- */
 
 export interface User {
   id: string;
@@ -11,9 +44,14 @@ export interface User {
   role: UserRole;
   hash: string;
   salt: string;
+  /** PBKDF2 iterations used for this hash; older hashes are upgraded on next login. */
+  iter?: number;
   active: boolean;
+  /** Bumped on password rotation, suspension or "revoke sessions": every older token dies. */
+  sessionVersion?: number;
   createdAt: string;
   lastLoginAt?: string;
+  passwordChangedAt?: string;
 }
 
 export interface SessionPayload {
@@ -21,10 +59,19 @@ export interface SessionPayload {
   name: string;
   email: string;
   role: UserRole;
-  exp: number; // Unix timestamp in seconds
+  sv: number;   // session version
+  fp: string;   // user-agent fingerprint
+  iat: number;
+  exp: number;  // Unix seconds
 }
 
-import { getSessionSecret } from './session-secret';
+const DATA_DIR = path.join(process.cwd(), 'data');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+
+/** OWASP 2023 guidance for PBKDF2-HMAC-SHA512. */
+export const PBKDF2_ITERATIONS = 210_000;
+const LEGACY_ITERATIONS = 100_000;
+export const SESSION_TTL_S = 12 * 60 * 60;
 
 function requireSecret(): string {
   const secret = getSessionSecret();
@@ -32,102 +79,87 @@ function requireSecret(): string {
   return secret;
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const USERS_FILE = path.join(DATA_DIR, 'users.json');
-
-/**
- * Hash a password using PBKDF2 with SHA-512 and 100,000 iterations.
- */
-export function hashPassword(password: string, existingSalt?: string): { hash: string; salt: string } {
-  const salt = existingSalt || crypto.randomBytes(16).toString('hex');
-  const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
-  return { hash, salt };
+/** PBKDF2-SHA512 with a random 32-byte salt. */
+export function hashPassword(password: string, existingSalt?: string, iterations = PBKDF2_ITERATIONS): { hash: string; salt: string; iter: number } {
+  const salt = existingSalt || crypto.randomBytes(32).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, iterations, 64, 'sha512').toString('hex');
+  return { hash, salt, iter: iterations };
 }
 
-/**
- * Verify a plain text password against stored hash and salt.
- */
-export function verifyPassword(password: string, storedHash: string, salt: string): boolean {
+export function verifyPassword(password: string, storedHash: string, salt: string, iterations = LEGACY_ITERATIONS): boolean {
   try {
-    const { hash } = hashPassword(password, salt);
+    const { hash } = hashPassword(password, salt, iterations);
     return crypto.timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(storedHash, 'hex'));
   } catch {
     return false;
   }
 }
 
-/**
- * Create a signed HMAC-SHA256 session token valid for 7 days.
- */
-export function createSessionToken(user: { id: string; name: string; email: string; role: UserRole }): string {
+/** Burn the same time as a real check, so a missing account is not detectable by timing. */
+const DUMMY = hashPassword('lumo-timing-equalizer', 'a'.repeat(64));
+export function dummyVerify(password: string): void {
+  verifyPassword(password, DUMMY.hash, DUMMY.salt, PBKDF2_ITERATIONS);
+}
+
+export function fingerprint(userAgent: string | null): string {
+  return crypto.createHash('sha256').update(userAgent || 'no-ua').digest('base64url').slice(0, 22);
+}
+
+/** HMAC-SHA256 signed session, bound to the browser's user agent and the user's session version. */
+export function createSessionToken(user: Pick<User, 'id' | 'name' | 'email' | 'role' | 'sessionVersion'>, userAgent: string | null): string {
+  const now = Math.floor(Date.now() / 1000);
   const payload: SessionPayload = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60, // 7 days
+    id: user.id, name: user.name, email: user.email, role: user.role,
+    sv: user.sessionVersion ?? 0, fp: fingerprint(userAgent), iat: now, exp: now + SESSION_TTL_S,
   };
-
-  const payloadStr = JSON.stringify(payload);
-  const payloadB64 = Buffer.from(payloadStr, 'utf-8').toString('base64url');
+  const payloadB64 = Buffer.from(JSON.stringify(payload), 'utf-8').toString('base64url');
   const signature = crypto.createHmac('sha256', requireSecret()).update(payloadB64).digest('hex');
-
   return `${payloadB64}.${signature}`;
 }
 
 /**
- * Verify HMAC-SHA256 session token.
+ * Full check: signature, expiry, user-agent fingerprint, account still active, session version current.
+ * `reason` is for the audit log only; never show it to the visitor.
  */
-export function verifySessionToken(token: string): { valid: boolean; payload?: SessionPayload } {
+export function verifySessionToken(token: string, userAgent?: string | null): { valid: boolean; payload?: SessionPayload; reason?: string } {
   try {
     const parts = token.split('.');
-    if (parts.length !== 2) return { valid: false };
-
+    if (parts.length !== 2) return { valid: false, reason: 'malformed' };
     const [payloadB64, signature] = parts;
-    const expectedSig = crypto.createHmac('sha256', requireSecret()).update(payloadB64).digest('hex');
-
-    if (!crypto.timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expectedSig, 'hex'))) {
-      return { valid: false };
+    const expected = crypto.createHmac('sha256', requireSecret()).update(payloadB64).digest('hex');
+    if (signature.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expected, 'hex'))) {
+      return { valid: false, reason: 'bad-signature' };
     }
-
-    const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf-8');
-    const payload = JSON.parse(payloadJson) as SessionPayload;
-
-    if (payload.exp < Math.floor(Date.now() / 1000)) {
-      return { valid: false };
-    }
-
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8')) as SessionPayload;
+    if (!payload.exp || payload.exp < Math.floor(Date.now() / 1000)) return { valid: false, reason: 'expired' };
+    if (userAgent !== undefined && payload.fp !== fingerprint(userAgent)) return { valid: false, reason: 'fingerprint-mismatch' };
+    const user = getUserById(payload.id);
+    if (!user || !user.active) return { valid: false, reason: 'user-inactive' };
+    if ((user.sessionVersion ?? 0) !== payload.sv) return { valid: false, reason: 'revoked' };
+    if (user.role !== payload.role) return { valid: false, reason: 'role-changed' };
     return { valid: true, payload };
   } catch {
-    return { valid: false };
+    return { valid: false, reason: 'error' };
   }
 }
 
-/**
- * Read all users from disk (with in-memory fallback).
- */
+/* ---------- storage ---------- */
+
 export function getAllUsers(): User[] {
   try {
-    if (!fs.existsSync(USERS_FILE)) {
-      return initializeDefaultUsers();
-    }
-    const data = fs.readFileSync(USERS_FILE, 'utf-8');
-    return JSON.parse(data) as User[];
+    if (!fs.existsSync(USERS_FILE)) return initializeDefaultUsers();
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8')) as User[];
   } catch (err) {
     console.error('Error reading users file:', err);
-    return initializeDefaultUsers();
+    return [];
   }
 }
 
 function saveUsers(users: User[]): void {
-  try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Error saving users file:', err);
-  }
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  const tmp = USERS_FILE + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(users, null, 2), { encoding: 'utf-8', mode: 0o600 });
+  fs.renameSync(tmp, USERS_FILE);
 }
 
 /**
@@ -143,112 +175,86 @@ function seedPassword(envVar: string, email: string): string {
 }
 
 function initializeDefaultUsers(): User[] {
-  const carlos = hashPassword(seedPassword('ADMIN_CARLOS_PASSWORD', 'carlos@lumohq.com'));
-  const luis = hashPassword(seedPassword('ADMIN_LUIS_PASSWORD', 'luis@lumohq.com'));
-  const barbara = hashPassword(seedPassword('SALES_BARBARA_PASSWORD', 'barbara@lumohq.com'));
-
-  const defaultUsers: User[] = [
-    {
-      id: 'usr-carlos',
-      name: 'Carlos Gómez',
-      email: 'carlos@lumohq.com',
-      role: 'SUPER_ADMIN',
-      hash: carlos.hash,
-      salt: carlos.salt,
-      active: true,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 'usr-luis',
-      name: 'Luis Barbera',
-      email: 'luis@lumohq.com',
-      role: 'ADMIN_LUIS',
-      hash: luis.hash,
-      salt: luis.salt,
-      active: true,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 'usr-barbara',
-      name: 'Bárbara',
-      email: 'barbara@lumohq.com',
-      role: 'SALES_BARBARA',
-      hash: barbara.hash,
-      salt: barbara.salt,
-      active: true,
-      createdAt: new Date().toISOString(),
-    },
+  const seed = (id: string, name: string, email: string, role: UserRole, envVar: string): User => {
+    const h = hashPassword(seedPassword(envVar, email));
+    return { id, name, email, role, hash: h.hash, salt: h.salt, iter: h.iter, active: true, sessionVersion: 0, createdAt: new Date().toISOString() };
+  };
+  const users = [
+    seed('usr-carlos', 'Carlos Gómez', 'carlos@lumohq.com', 'SUPER_ADMIN', 'ADMIN_CARLOS_PASSWORD'),
+    seed('usr-luis', 'Luis Barbera', 'luis@lumohq.com', 'ADMIN_LUIS', 'ADMIN_LUIS_PASSWORD'),
+    seed('usr-barbara', 'Bárbara', 'barbara@lumohq.com', 'SALES_BARBARA', 'SALES_BARBARA_PASSWORD'),
   ];
-
-  saveUsers(defaultUsers);
-  return defaultUsers;
+  saveUsers(users);
+  return users;
 }
 
 export function getUserByEmail(email: string): User | null {
-  const users = getAllUsers();
-  return users.find((u) => u.email.toLowerCase() === email.toLowerCase()) || null;
+  const e = email.toLowerCase().trim();
+  return getAllUsers().find((u) => u.email.toLowerCase() === e) || null;
 }
 
 export function getUserById(id: string): User | null {
-  const users = getAllUsers();
-  return users.find((u) => u.id === id) || null;
+  return getAllUsers().find((u) => u.id === id) || null;
 }
 
-export function updateUserLastLogin(id: string): void {
+function mutate(id: string, fn: (u: User) => void): User | null {
   const users = getAllUsers();
-  const index = users.findIndex((u) => u.id === id);
-  if (index !== -1) {
-    users[index].lastLoginAt = new Date().toISOString();
-    saveUsers(users);
-  }
+  const u = users.find((x) => x.id === id);
+  if (!u) return null;
+  fn(u);
+  saveUsers(users);
+  return u;
+}
+
+/** Record a login and upgrade an old hash to the current iteration count while we have the password. */
+export function recordLogin(id: string, plainPassword: string): void {
+  mutate(id, (u) => {
+    u.lastLoginAt = new Date().toISOString();
+    if ((u.iter ?? LEGACY_ITERATIONS) < PBKDF2_ITERATIONS || u.salt.length < 64) {
+      const h = hashPassword(plainPassword);
+      u.hash = h.hash; u.salt = h.salt; u.iter = h.iter;
+    }
+  });
 }
 
 export function updateUserPassword(id: string, newPlainPassword: string): boolean {
-  const users = getAllUsers();
-  const index = users.findIndex((u) => u.id === id);
-  if (index === -1) return false;
+  return !!mutate(id, (u) => {
+    const h = hashPassword(newPlainPassword);
+    u.hash = h.hash; u.salt = h.salt; u.iter = h.iter;
+    u.passwordChangedAt = new Date().toISOString();
+    u.sessionVersion = (u.sessionVersion ?? 0) + 1; // a new password logs out every other session
+  });
+}
 
-  const { hash, salt } = hashPassword(newPlainPassword);
-  users[index].hash = hash;
-  users[index].salt = salt;
-  saveUsers(users);
-  return true;
+export function revokeSessions(id: string): boolean {
+  return !!mutate(id, (u) => { u.sessionVersion = (u.sessionVersion ?? 0) + 1; });
+}
+
+export function setUserActive(id: string, active: boolean): boolean {
+  return !!mutate(id, (u) => { u.active = active; u.sessionVersion = (u.sessionVersion ?? 0) + 1; });
 }
 
 export function toggleUserStatus(id: string): { success: boolean; active?: boolean } {
-  const users = getAllUsers();
-  const index = users.findIndex((u) => u.id === id);
-  if (index === -1) return { success: false };
-
-  users[index].active = !users[index].active;
-  saveUsers(users);
-  return { success: true, active: users[index].active };
+  const u = getUserById(id);
+  if (!u) return { success: false };
+  setUserActive(id, !u.active);
+  return { success: true, active: !u.active };
 }
 
-export function generateSecurePassword(): string {
-  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-  const lower = 'abcdefghijkmnopqrstuvwxyz';
-  const digits = '23456789';
-  const symbols = '!@#$%^&*';
+export function setUserRole(id: string, role: UserRole): boolean {
+  return !!mutate(id, (u) => { u.role = role; u.sessionVersion = (u.sessionVersion ?? 0) + 1; });
+}
 
-  let pwd = '';
-  pwd += upper.charAt(crypto.randomInt(upper.length));
-  pwd += upper.charAt(crypto.randomInt(upper.length));
-  pwd += lower.charAt(crypto.randomInt(lower.length));
-  pwd += lower.charAt(crypto.randomInt(lower.length));
-  pwd += digits.charAt(crypto.randomInt(digits.length));
-  pwd += digits.charAt(crypto.randomInt(digits.length));
-  pwd += symbols.charAt(crypto.randomInt(symbols.length));
-  pwd += symbols.charAt(crypto.randomInt(symbols.length));
+export function countActiveAdmins(): number {
+  return getAllUsers().filter((u) => u.active && ADMIN_ROLES.includes(u.role)).length;
+}
 
-  // Add random characters to make it 14 chars long
-  const allChars = upper + lower + digits + symbols;
-  for (let i = 0; i < 6; i++) {
-    pwd += allChars.charAt(crypto.randomInt(allChars.length));
-  }
-
-  // Fisher-Yates shuffle with a CSPRNG
-  const chars = pwd.split('');
+/** 18 characters from a CSPRNG over a 70-symbol alphabet (about 110 bits). */
+export function generateSecurePassword(length = 18): string {
+  const sets = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghijkmnopqrstuvwxyz', '23456789', '!@#$%^&*-_=+'];
+  const all = sets.join('');
+  const chars = sets.map((s) => s[crypto.randomInt(s.length)]);
+  while (chars.length < length) chars.push(all[crypto.randomInt(all.length)]);
   for (let i = chars.length - 1; i > 0; i--) {
     const j = crypto.randomInt(i + 1);
     [chars[i], chars[j]] = [chars[j], chars[i]];
@@ -256,71 +262,53 @@ export function generateSecurePassword(): string {
   return chars.join('');
 }
 
+export type PublicUser = Omit<User, 'hash' | 'salt' | 'iter'>;
+export const toPublic = ({ hash: _h, salt: _s, iter: _i, ...rest }: User): PublicUser => rest;
+
 export function createUser(
   name: string,
   email: string,
   role: UserRole,
   customPassword?: string
-): { success: boolean; user?: Omit<User, 'hash' | 'salt'>; generatedPassword?: string; error?: string } {
+): { success: boolean; user?: PublicUser; generatedPassword?: string; error?: string } {
   const users = getAllUsers();
-  if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
+  const cleanEmail = email.toLowerCase().trim();
+  if (users.some((u) => u.email.toLowerCase() === cleanEmail)) {
     return { success: false, error: 'Ya existe un usuario con este correo electrónico.' };
   }
-
-  const generatedPassword = customPassword || generateSecurePassword();
-  const { hash, salt } = hashPassword(generatedPassword);
-
+  const password = customPassword || generateSecurePassword();
+  const h = hashPassword(password);
   const newUser: User = {
-    id: `usr-${Date.now().toString(36)}`,
-    name,
-    email: email.toLowerCase().trim(),
-    role,
-    hash,
-    salt,
-    active: true,
-    createdAt: new Date().toISOString(),
+    id: `usr-${crypto.randomBytes(6).toString('hex')}`,
+    name: name.trim(), email: cleanEmail, role,
+    hash: h.hash, salt: h.salt, iter: h.iter,
+    active: true, sessionVersion: 0, createdAt: new Date().toISOString(),
   };
-
   users.push(newUser);
   saveUsers(users);
-
-  return {
-    success: true,
-    user: {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
-      active: newUser.active,
-      createdAt: newUser.createdAt,
-    },
-    generatedPassword: customPassword ? undefined : generatedPassword,
-  };
+  return { success: true, user: toPublic(newUser), generatedPassword: customPassword ? undefined : password };
 }
+
+/** Password policy for anything a person types: 12+ chars, at least 3 of 4 character classes. */
+export function passwordProblem(pw: string): string | null {
+  if (typeof pw !== 'string' || pw.length < 12) return 'La contraseña debe tener al menos 12 caracteres.';
+  if (pw.length > 128) return 'La contraseña es demasiado larga.';
+  const classes = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter((r) => r.test(pw)).length;
+  if (classes < 3) return 'Usa al menos 3 de: minúsculas, mayúsculas, números y símbolos.';
+  return null;
+}
+
+/* ---------- client portal access keys ---------- */
 
 /**
- * Role-Based Access Control checker.
+ * Clients have no password: their portal link carries a key derived from their id with the
+ * server secret. Knowing or guessing a client id is no longer enough to act on that project.
  */
-export function canAccessRoute(role: UserRole, pathname: string): boolean {
-  if (role === 'SUPER_ADMIN' || role === 'ADMIN_LUIS') {
-    return true;
-  }
-
-  if (role === 'SALES_BARBARA') {
-    // Bárbara cannot access financial management
-    if (pathname.startsWith('/admin/finanzas')) {
-      return false;
-    }
-    return true;
-  }
-
-  if (role === 'DEVELOPER') {
-    if (pathname.startsWith('/admin/finanzas')) {
-      return false;
-    }
-    return true;
-  }
-
-  return false;
+export function clientAccessKey(clientId: string): string {
+  return crypto.createHmac('sha256', requireSecret()).update(`client-portal:${clientId}`).digest('base64url').slice(0, 32);
 }
-
+export function verifyClientKey(clientId: unknown, key: unknown): boolean {
+  if (typeof clientId !== 'string' || typeof key !== 'string' || key.length !== 32) return false;
+  const expected = clientAccessKey(clientId);
+  return crypto.timingSafeEqual(Buffer.from(key), Buffer.from(expected));
+}

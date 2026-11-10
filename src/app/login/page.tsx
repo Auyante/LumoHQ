@@ -18,11 +18,14 @@ import {
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/admin/crm';
+  // Only internal admin paths: an absolute or protocol-relative URL here would be an open redirect.
+  const rawRedirect = searchParams.get('redirect') || '';
+  const redirectPath = /^\/admin(\/[A-Za-z0-9\-/]*)?$/.test(rawRedirect) ? rawRedirect : '/admin/crm';
   const errorParam = searchParams.get('error');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [website, setWebsite] = useState(''); // honeypot
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(
@@ -40,7 +43,7 @@ function LoginForm() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, website }),
       });
 
       const data = await res.json();
@@ -92,6 +95,11 @@ function LoginForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot: invisible to people; a bot that fills it gets its IP blocked. */}
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label htmlFor="website">Website</label>
+              <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+            </div>
             <div>
               <label className="block text-xs font-bold text-lumo-noche mb-1.5">
                 Correo Electrónico Corporativo

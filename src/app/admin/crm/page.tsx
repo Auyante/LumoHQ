@@ -51,7 +51,13 @@ const SIGNAL_DEFS: { key: keyof ProspectItem['signals']; label: string }[] = [
 ];
 
 export default function AdminCrmPage() {
-  const [role, setRole] = useState<'SALES_BARBARA' | 'ADMIN_LUIS'>('SALES_BARBARA');
+  // The operator is whoever is signed in; there is no role switch in the UI.
+  const [me, setMe] = useState<{ name: string; role: string } | null>(null);
+  useEffect(() => {
+    fetch('/api/auth/me').then((r) => (r.ok ? r.json() : null)).then((d) => d?.user && setMe(d.user)).catch(() => {});
+  }, []);
+  const role: 'SALES_BARBARA' | 'ADMIN_LUIS' = me?.role === 'SALES_BARBARA' ? 'SALES_BARBARA' : 'ADMIN_LUIS';
+  const operatorName = me?.name ?? (role === 'SALES_BARBARA' ? 'Bárbara' : 'Luis');
   const [prospects, setProspects] = useState<ProspectItem[]>([]);
   const [selectedBatch, setSelectedBatch] = useState<number>(1);
   const [selectedLead, setSelectedLead] = useState<ProspectItem | null>(null);
@@ -178,7 +184,7 @@ export default function AdminCrmPage() {
     const formattedNote = `[${new Date().toLocaleDateString('es-US')} ${new Date().toLocaleTimeString(
       [],
       { hour: '2-digit', minute: '2-digit' }
-    )}] (${role === 'SALES_BARBARA' ? 'Bárbara' : 'Luis'}): ${newNoteInput.trim()}`;
+    )}] (${operatorName}): ${newNoteInput.trim()}`;
 
     const updatedNotes = [formattedNote, ...(selectedLead.contactNotes || [])];
     setSelectedLead((prev) => (prev ? { ...prev, contactNotes: updatedNotes } : null));
@@ -208,7 +214,7 @@ export default function AdminCrmPage() {
         body: JSON.stringify({
           id,
           action: 'follow_up',
-          note: `Seguimiento registrado por ${role === 'SALES_BARBARA' ? 'Bárbara' : 'Luis'}`,
+          note: `Seguimiento registrado por ${operatorName}`,
         }),
       });
       const data = await res.json();
@@ -365,34 +371,11 @@ export default function AdminCrmPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6 grow w-full">
         {/* Role & Operational Context Bar */}
         <div className="bg-white rounded-2xl p-3 sm:p-4 border border-lumo-niebla shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-lumo-pizarra">Operando como:</span>
-            <div className="inline-flex rounded-xl bg-slate-100 p-1 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => setRole('SALES_BARBARA')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
-                  role === 'SALES_BARBARA'
-                    ? 'bg-lumo-ambar text-lumo-noche shadow-xs'
-                    : 'text-slate-600 hover:text-lumo-noche'
-                }`}
-              >
-                Bárbara (Ventas Remotas)
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('ADMIN_LUIS')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
-                  role === 'ADMIN_LUIS'
-                    ? 'bg-lumo-noche text-white shadow-xs'
-                    : 'text-slate-600 hover:text-lumo-noche'
-                }`}
-              >
-                Luis Barbera (Admin)
-              </button>
-            </div>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-bold text-lumo-pizarra">Sesión:</span>
+            <strong className="text-lumo-noche">{me ? me.name : '…'}</strong>
+            {me && <span className="px-2 py-0.5 rounded-lg bg-slate-100 font-bold text-slate-600">{me.role}</span>}
           </div>
-
           <div className="text-xs text-lumo-pizarra">
             Fuente de Verdad:{' '}
             <strong className="text-lumo-noche">LUMO-SOP-003 · Manual de Operaciones</strong>

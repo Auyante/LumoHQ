@@ -58,43 +58,17 @@ export function AdminNav() {
     }
   };
 
+  // Mirrors ROUTE_POLICY in src/lib/auth.ts. Hiding a link is a convenience; the server enforces access.
+  const isAdmin = !!user && ['SUPER_ADMIN', 'ADMIN_LUIS', 'ADMIN_CARLOS'].includes(user.role);
+  const isDev = user?.role === 'DEVELOPER';
   const navItems = [
-    {
-      name: 'CRM & Ventas',
-      href: '/admin/crm',
-      icon: Target,
-      visible: true,
-    },
-    {
-      name: 'Tablero Dominical',
-      href: '/admin/tablero-dominical',
-      icon: TrendingUp,
-      visible: true,
-    },
-    {
-      name: 'Producción',
-      href: '/admin/produccion',
-      icon: Kanban,
-      visible: true,
-    },
-    {
-      name: 'Finanzas & Tax',
-      href: '/admin/finanzas',
-      icon: DollarSign,
-      visible: user?.role !== 'SALES_BARBARA',
-    },
-    {
-      name: 'Retención & Churn',
-      href: '/admin/retencion',
-      icon: ShieldAlert,
-      visible: true,
-    },
-    {
-      name: 'Usuarios & Claves',
-      href: '/admin/usuarios',
-      icon: Users,
-      visible: true,
-    },
+    { name: 'CRM & Ventas', href: '/admin/crm', icon: Target, visible: true },
+    { name: 'Producción', href: '/admin/produccion', icon: Kanban, visible: true },
+    { name: 'Tablero Dominical', href: '/admin/tablero-dominical', icon: TrendingUp, visible: isAdmin || isDev },
+    { name: 'Finanzas & Tax', href: '/admin/finanzas', icon: DollarSign, visible: isAdmin },
+    { name: 'Retención & Churn', href: '/admin/retencion', icon: UserCheck, visible: isAdmin || isDev },
+    { name: 'Usuarios & Claves', href: '/admin/usuarios', icon: Users, visible: isAdmin },
+    { name: 'Seguridad (SOC)', href: '/admin/seguridad', icon: ShieldAlert, visible: isAdmin },
   ];
 
   return (

@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { clientProjectStore } from '@/lib/client-portal';
 import { calculateWaterfall, recordTransaction, financialStore } from '@/lib/finance';
 import { getPackageAmounts } from '@/lib/stripe';
+import { requireClientKey } from '@/lib/security/guard';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { clientId, clientWrittenConfirmation } = body;
+    const { clientId, clientWrittenConfirmation, key } = body;
+    const denied = requireClientKey(req, clientId, key);
+    if (denied) return denied;
 
     if (!clientId) {
       return NextResponse.json({ error: 'ID de cliente requerido' }, { status: 400 });
@@ -17,6 +20,11 @@ export async function POST(req: NextRequest) {
         { error: 'Se requiere confirmación escrita de aprobación final (Día 5).' },
         { status: 400 }
       );
+    }
+
+    // Idempotent: a second approval must never record a second final payment.
+    if (clientProjectStore.getById(clientId)?.finalPaid) {
+      return NextResponse.json({ error: 'Esta entrega ya fue aprobada.' }, { status: 409 });
     }
 
     const res = clientProjectStore.approveDelivery(clientId);
