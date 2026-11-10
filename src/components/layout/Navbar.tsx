@@ -17,7 +17,7 @@ export function Navbar() {
   };
 
   // The landing draws its own desk header.
-  if (pathname === '/') return null;
+  if (pathname === '/' || pathname.startsWith('/diagnostico')) return null;
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-lumo-niebla shadow-xs">

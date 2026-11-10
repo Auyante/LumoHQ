@@ -149,6 +149,34 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok((await up('x.svg', Buffer.from('<svg onload=alert(1)>'))).status === 400, 'SVG rejected');
   ok((await call('/api/client/photos', { method: 'POST', raw: 'x', headers: { 'content-type': 'multipart/form-data; boundary=z' } })).status >= 400, 'Malformed upload rejected');
 
+  console.log('\n--- 8b. CRM (Phase 3) ---');
+  const barb2 = await login('barbara@lumohq.com', pw.barbara);
+  const crmList = (await call('/api/crm/prospects', { cookie: luis.cookie })).json?.prospects || [];
+  const target = crmList.find((x) => x.stage === 'LISTED') || crmList[0];
+  const mass = await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: target.id, action: 'update_details', details: { totalScore: 8, priority: 'P1', followUpCount: 0 } } });
+  ok(mass.status === 400, 'Mass assignment (score, priority, follow-up count) rejected');
+  ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: target.id, action: 'update_stage', stage: 'HACKED' } })).status === 400, 'Unknown stage rejected');
+  ok((await call('/api/crm/prospects', { cookie: barb2.cookie, method: 'POST', body: { action: 'import_csv', csv: 'negocio,teléfono\nX,4325550199' } })).status === 403, 'Bárbara cannot bulk-import');
+  const imp = await call('/api/crm/prospects', { cookie: luis.cookie, method: 'POST', body: { action: 'import_csv', batchNumber: 5, csv: 'negocio,teléfono,ciudad\n=cmd|calc,(432) 555-0777,Midland\nDup,(432) 555-0777,Odessa\nMal,12,Midland' } });
+  ok(imp.status === 200 && imp.json.created === 1 && imp.json.skipped.length === 1 && imp.json.errors.length === 1, 'CSV import: creates valid rows, skips duplicates, reports bad ones');
+  const exported = (await call('/api/crm/prospects', { cookie: luis.cookie })).json.prospects.find((x) => x.phone.includes('0777'));
+  ok(exported && exported.businessName.startsWith('=cmd'), 'Imported name stored as text (export neutralizes it)');
+  ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: exported.id, action: 'opt_out', optedOut: true } })).status === 200, 'Opt-out recorded');
+  ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: exported.id, action: 'follow_up' } })).status === 409, 'Follow-up to an opted-out business: refused (TCPA)');
+  const tcpa = crmList.find((x) => x.followUpCount >= 3);
+  if (tcpa) ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: tcpa.id, action: 'follow_up' } })).status === 409, '4th follow-up refused (TCPA 3/3)');
+  const dlink = (await call(`/api/crm/diagnosis-link?id=${encodeURIComponent(target.id)}`, { cookie: barb2.cookie })).json?.url;
+  ok(!!dlink, 'Staff get a signed diagnosis link');
+  const diagPath = new URL(dlink).pathname;
+  const noKey = await call(diagPath);
+  ok(noKey.status === 200 && noKey.text.includes('no es válido') && !noKey.text.includes(target.businessName), 'Diagnosis without the key shows nothing');
+  const withKey = await call(diagPath + new URL(dlink).search);
+  ok(withKey.text.includes(target.businessName.replace(/&/g, '&amp;')), 'Diagnosis with the key shows that business');
+  ok(!withKey.text.includes(target.phone) && !(target.ownerName && withKey.text.includes(target.ownerName)), 'Diagnosis never prints the owner name or phone');
+  const other = crmList.find((x) => x.id !== target.id);
+  ok(!withKey.text.includes(other.businessName), 'Diagnosis page leaks no other prospect');
+  ok((await call(`/diagnostico/${encodeURIComponent(other.id)}${new URL(dlink).search}`)).text.includes('no es válido'), "One business's key does not open another's diagnosis");
+
   console.log('\n--- 9. Security center ---');
   const soc = await call('/api/admin/security', { cookie: luis.cookie });
   ok(soc.status === 200 && soc.json?.integrity?.intact === true, 'Audit log hash chain is intact');

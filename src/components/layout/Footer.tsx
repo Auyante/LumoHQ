@@ -12,7 +12,7 @@ export function Footer() {
   const pathname = usePathname();
 
   // The landing draws its own footer.
-  if (pathname === '/') return null;
+  if (pathname === '/' || pathname.startsWith('/diagnostico')) return null;
 
   return (
     <footer className="bg-lumo-noche text-white pt-16 pb-28 md:pb-16 border-t border-lumo-pizarra/30">

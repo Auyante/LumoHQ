@@ -32,12 +32,17 @@ import {
   MapPin,
   Tag,
   DollarSign,
+  Upload,
 } from 'lucide-react';
 import {
   ProspectItem,
   OFFICIAL_SCRIPTS,
   calculateProspectSignals,
 } from '@/lib/crm';
+import { toCsv, byUrgency, commissionLedger, type Moment } from '@/lib/crm-engine';
+
+const commissionLedgerTotal = (list: ProspectItem[]) => commissionLedger(list).barbaraTotal;
+import { CadenceBadge, ContactLauncher, CsvImport, FunnelAndMoney, ObjectionFinder, WorkQueue, useNow } from '@/components/admin/crm/CrmTools';
 
 const SIGNAL_DEFS: { key: keyof ProspectItem['signals']; label: string }[] = [
   { key: 'scoreReviews', label: '1. Menos de 20 reseñas, o la última tiene más de 3 meses.' },
@@ -72,6 +77,12 @@ export default function AdminCrmPage() {
   const [filterCategory, setFilterCategory] = useState<string>('ALL');
   const [filterPriority, setFilterPriority] = useState<'ALL' | 'P1' | 'P2' | 'DISCARD'>('ALL');
   const [filterStage, setFilterStage] = useState<string>('ALL');
+  const [filterSource, setFilterSource] = useState<'ALL' | ProspectItem['source']>('ALL');
+  const [mobileStage, setMobileStage] = useState<ProspectItem['stage']>('LISTED');
+  const [isImporting, setIsImporting] = useState(false);
+  const [diagnosisUrl, setDiagnosisUrl] = useState<string | null>(null);
+  const now = useNow();
+  const isAdmin = !!me && ['SUPER_ADMIN', 'ADMIN_LUIS', 'ADMIN_CARLOS'].includes(me.role);
 
   // Detail Modal Sub-state
   const [newNoteInput, setNewNoteInput] = useState('');
@@ -181,25 +192,17 @@ export default function AdminCrmPage() {
 
   const handleAddNote = async () => {
     if (!selectedLead || !newNoteInput.trim()) return;
-    const formattedNote = `[${new Date().toLocaleDateString('es-US')} ${new Date().toLocaleTimeString(
-      [],
-      { hour: '2-digit', minute: '2-digit' }
-    )}] (${operatorName}): ${newNoteInput.trim()}`;
-
-    const updatedNotes = [formattedNote, ...(selectedLead.contactNotes || [])];
-    setSelectedLead((prev) => (prev ? { ...prev, contactNotes: updatedNotes } : null));
+    const note = newNoteInput.trim();
     setNewNoteInput('');
-
     try {
-      await fetch('/api/crm/prospects', {
+      // The server stamps the date and the author; notes are append-only.
+      const res = await fetch('/api/crm/prospects', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: selectedLead.id,
-          action: 'update_details',
-          details: { contactNotes: updatedNotes },
-        }),
+        body: JSON.stringify({ id: selectedLead.id, action: 'add_note', note }),
       });
+      const data = await res.json();
+      if (res.ok && data.prospect) setSelectedLead(data.prospect);
       fetchLeads();
     } catch (e) {
       console.error(e);
@@ -277,52 +280,48 @@ export default function AdminCrmPage() {
 
   // Export to CSV helper
   const handleExportCsv = () => {
-    const headers = [
-      'ID',
-      'Lote',
-      'Negocio',
-      'Dueño',
-      'Teléfono',
-      'Ciudad',
-      'Categoría',
-      'Etapa',
-      'Prioridad',
-      'Puntaje',
-      'Seguimientos',
-      'Canal Preferido',
-      'Origen Clientes',
-      'Llamadas Perdidas',
-    ];
-
-    const rows = filteredProspects.map((p) => [
-      `"${p.id}"`,
-      p.batchNumber,
-      `"${p.businessName.replace(/"/g, '""')}"`,
-      `"${(p.ownerName || '').replace(/"/g, '""')}"`,
-      `"${p.phone}"`,
-      `"${p.city}"`,
-      `"${p.category}"`,
-      `"${p.stage}"`,
-      `"${p.priority}"`,
-      p.totalScore,
-      p.followUpCount,
-      `"${p.preferredChannel || ''}"`,
-      `"${(p.questionSource || '').replace(/"/g, '""')}"`,
-      `"${(p.questionMissedCalls || '').replace(/"/g, '""')}"`,
-    ]);
-
-    const csvContent =
-      'data:text/csv;charset=utf-8,\uFEFF' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-
-    const encodedUri = encodeURI(csvContent);
+    // toCsv quotes every cell and neutralizes =, +, -, @ so a business name can never run as a formula.
+    const blob = new Blob([toCsv(filteredProspects, now)], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `LumoHQ_Leads_Lote_${selectedBatch}_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.href = url;
+    link.download = `LumoHQ_Lote_${selectedBatch}_${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    link.remove();
+    URL.revokeObjectURL(url);
   };
+
+  /** What "Marcar como enviado" records for each moment. Follow-ups go through the server's TCPA check. */
+  const handleSent = async (lead: ProspectItem, moment: Moment): Promise<string | null> => {
+    const patch = (body: Record<string, unknown>) =>
+      fetch('/api/crm/prospects', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: lead.id, ...body }) });
+    let res: Response;
+    if (moment === 'primerContacto') res = await patch({ action: 'update_stage', stage: lead.stage === 'LISTED' ? 'CONTACTED' : lead.stage });
+    else if (moment === 'envioDiagnostico') res = await patch({ action: 'update_stage', stage: 'DIAGNOSED' });
+    else if (moment === 'propuesta') res = await patch({ action: 'add_note', note: 'Propuesta enviada.' });
+    else res = await patch({ action: 'follow_up' });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return data.error || 'No se pudo registrar.';
+    if (data.prospect) setSelectedLead(data.prospect);
+    fetchLeads();
+    return 'Registrado. El siguiente paso ya se recalculó.';
+  };
+
+  const handleOptOut = async (lead: ProspectItem, optedOut: boolean) => {
+    const res = await fetch('/api/crm/prospects', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: lead.id, action: 'opt_out', optedOut }) });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.prospect) setSelectedLead(data.prospect);
+    fetchLeads();
+  };
+
+  // A fresh signed share link for the 1-page diagnosis whenever a lead is opened.
+  useEffect(() => {
+    setDiagnosisUrl(null);
+    if (!selectedLead) return;
+    fetch(`/api/crm/diagnosis-link?id=${encodeURIComponent(selectedLead.id)}`)
+      .then((r) => (r.ok ? r.json() : null)).then((d) => d?.url && setDiagnosisUrl(d.url)).catch(() => {});
+  }, [selectedLead?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Filtered prospects with combined criteria
   const batchProspects = useMemo(() => {
@@ -342,13 +341,14 @@ export default function AdminCrmPage() {
       if (filterCategory !== 'ALL' && p.category !== filterCategory) return false;
       if (filterPriority !== 'ALL' && p.priority !== filterPriority) return false;
       if (filterStage !== 'ALL' && p.stage !== filterStage) return false;
+      if (filterSource !== 'ALL' && p.source !== filterSource) return false;
       return true;
-    });
-  }, [batchProspects, searchQuery, filterCity, filterCategory, filterPriority, filterStage]);
+    }).sort((a, b) => byUrgency(a, b, now)); // work queue order: overdue first
+  }, [batchProspects, searchQuery, filterCity, filterCategory, filterPriority, filterStage, filterSource, now]);
 
   // Barbara commission calculations
-  const barbaraLeads = prospects.filter((p) => p.source === 'BARBARA' && p.stage === 'CLOSED');
-  const barbaraEstimatedEarned = Math.min(500, barbaraLeads.length * 25);
+  // Official waterfall (finance.ts): $25 for clients 1-5, $15 for 6-30, $0 referrals, $500 cap.
+  const barbaraEstimatedEarned = useMemo(() => commissionLedgerTotal(prospects), [prospects]);
 
   const stages: { key: ProspectItem['stage']; label: string; badge: string }[] = [
     { key: 'LISTED', label: '1. Lista en Google', badge: 'bg-slate-100 text-slate-700' },
@@ -453,6 +453,10 @@ export default function AdminCrmPage() {
           </div>
         </div>
 
+        {/* Today's work queue, then funnel, commission and batch projection */}
+        <WorkQueue prospects={batchProspects} now={now} onOpen={setSelectedLead} />
+        <FunnelAndMoney prospects={prospects} batch={selectedBatch} />
+
         {/* View Tabs & Actions */}
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 border-b border-lumo-niebla pb-3">
           <div className="flex flex-wrap items-center gap-2">
@@ -532,6 +536,17 @@ export default function AdminCrmPage() {
                   <Download className="w-4 h-4 text-emerald-700" />
                   <span className="hidden sm:inline">Exportar CSV</span>
                 </button>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => setIsImporting(true)}
+                    className="min-h-touch px-3 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                    title="Importar CSV"
+                  >
+                    <Upload className="w-4 h-4 text-sky-700" />
+                    <span className="hidden sm:inline">Importar CSV</span>
+                  </button>
+                )}
               </>
             )}
 
@@ -551,25 +566,25 @@ export default function AdminCrmPage() {
           <div className="space-y-4">
             {/* Search and Filters Bar */}
             <div className="bg-white rounded-2xl p-4 border border-lumo-niebla shadow-xs space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 items-center">
                 {/* Search query */}
-                <div className="sm:col-span-4 relative">
+                <div className="col-span-2 md:col-span-3 lg:col-span-5 relative">
                   <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Buscar por negocio, dueño o teléfono..."
-                    className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-lumo-niebla focus:border-lumo-ambar outline-none"
+                    className="w-full min-h-touch pl-9 pr-3 py-2 text-sm rounded-xl border border-lumo-niebla focus:border-lumo-ambar outline-none"
                   />
                 </div>
 
                 {/* City Filter */}
-                <div className="sm:col-span-2">
+                <div>
                   <select
                     value={filterCity}
                     onChange={(e) => setFilterCity(e.target.value as any)}
-                    className="w-full px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
+                    className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
                   >
                     <option value="ALL">Ciudad: Todas</option>
                     <option value="Midland">Midland, TX</option>
@@ -578,11 +593,11 @@ export default function AdminCrmPage() {
                 </div>
 
                 {/* Category Filter */}
-                <div className="sm:col-span-2">
+                <div>
                   <select
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
-                    className="w-full px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
+                    className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
                   >
                     <option value="ALL">Categoría: Todas</option>
                     {uniqueCategories.map((c) => (
@@ -594,11 +609,11 @@ export default function AdminCrmPage() {
                 </div>
 
                 {/* Priority Filter */}
-                <div className="sm:col-span-2">
+                <div>
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value as any)}
-                    className="w-full px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
+                    className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
                   >
                     <option value="ALL">Prioridad: Todas</option>
                     <option value="P1">P1 (4+ Señales)</option>
@@ -608,11 +623,11 @@ export default function AdminCrmPage() {
                 </div>
 
                 {/* Stage Filter */}
-                <div className="sm:col-span-2">
+                <div>
                   <select
                     value={filterStage}
                     onChange={(e) => setFilterStage(e.target.value)}
-                    className="w-full px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
+                    className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
                   >
                     <option value="ALL">Etapa: Todas</option>
                     {stages.map((s) => (
@@ -622,18 +637,46 @@ export default function AdminCrmPage() {
                     ))}
                   </select>
                 </div>
+
+                {/* Source Filter */}
+                <div>
+                  <select
+                    value={filterSource}
+                    onChange={(e) => setFilterSource(e.target.value as typeof filterSource)}
+                    aria-label="Origen"
+                    className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
+                  >
+                    <option value="ALL">Origen: Todos</option>
+                    <option value="BARBARA">Bárbara</option>
+                    <option value="LUIS">Luis</option>
+                    <option value="REFERRAL">Referido</option>
+                  </select>
+                </div>
               </div>
             </div>
 
             {/* View Mode: Kanban Grid */}
             {viewMode === 'kanban' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 overflow-x-auto pb-4">
+              <>
+              {/* Phones: one stage at a time, so the 6 columns never squeeze */}
+              <div className="md:hidden flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1" role="tablist" aria-label="Etapas">
+                {stages.map((st) => {
+                  const n = filteredProspects.filter((p) => p.stage === st.key).length;
+                  return (
+                    <button key={st.key} type="button" role="tab" aria-selected={mobileStage === st.key} onClick={() => setMobileStage(st.key)}
+                      className={`shrink-0 min-h-touch px-3 rounded-xl text-xs font-bold border ${mobileStage === st.key ? 'bg-lumo-noche text-white border-lumo-noche' : 'bg-white text-slate-700 border-slate-200'}`}>
+                      {st.label.replace(/^\d\.\s*/, '')} <span className="tabular-nums opacity-70">{n}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3 pb-4">
                 {stages.map((st) => {
                   const stageLeads = filteredProspects.filter((p) => p.stage === st.key);
                   return (
                     <div
                       key={st.key}
-                      className="bg-white rounded-2xl p-3 border border-lumo-niebla shadow-xs flex flex-col min-w-[240px]"
+                      className={`bg-white rounded-2xl p-3 border border-lumo-niebla shadow-xs flex-col min-w-0 ${mobileStage === st.key ? 'flex' : 'hidden'} md:flex`}
                     >
                       <div className="flex items-center justify-between pb-2 mb-2 border-b border-lumo-niebla">
                         <span className="text-xs font-black text-lumo-noche">{st.label}</span>
@@ -684,6 +727,7 @@ export default function AdminCrmPage() {
                                 Seg: {lead.followUpCount}/3
                               </span>
                             </div>
+                            <div className="mt-2"><CadenceBadge lead={lead} now={now} /></div>
                           </div>
                         ))}
                       </div>
@@ -691,6 +735,7 @@ export default function AdminCrmPage() {
                   );
                 })}
               </div>
+              </>
             ) : (
               /* View Mode: Compact Touch List (Optimized for Mobile) */
               <div className="bg-white rounded-3xl border border-lumo-niebla shadow-xs overflow-hidden divide-y divide-slate-100">
@@ -726,6 +771,7 @@ export default function AdminCrmPage() {
                         <p className="text-xs text-lumo-pizarra">
                           {lead.ownerName || 'Dueño por confirmar'} · {lead.phone} · {lead.city}, TX ({lead.category})
                         </p>
+                        <CadenceBadge lead={lead} now={now} />
                       </div>
 
                       <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
@@ -990,21 +1036,7 @@ export default function AdminCrmPage() {
               </p>
             </div>
 
-            <div className="space-y-3">
-              {OFFICIAL_SCRIPTS.objections.map((obj, i) => (
-                <div key={obj.id} className="p-4 rounded-2xl bg-slate-50 border border-lumo-niebla space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-lumo-ambar text-lumo-noche text-xs font-black flex items-center justify-center">
-                      {i + 1}
-                    </span>
-                    <h4 className="text-sm font-bold text-lumo-noche">&ldquo;{obj.objection}&rdquo;</h4>
-                  </div>
-                  <p className="text-xs text-slate-700 leading-relaxed pl-8">
-                    <strong>Respuesta:</strong> &ldquo;{obj.rebuttal}&rdquo;
-                  </p>
-                </div>
-              ))}
-            </div>
+            <ObjectionFinder />
           </div>
         )}
       </main>
@@ -1037,7 +1069,8 @@ export default function AdminCrmPage() {
             {/* Quick Actions Bar */}
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                href={`/diagnostico/${selectedLead.id}`}
+                href={diagnosisUrl ?? '#'}
+                aria-disabled={!diagnosisUrl}
                 target="_blank"
                 className="min-h-touch inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-lumo-ambar hover:bg-lumo-brillo text-lumo-noche text-xs font-black shadow-xs transition-transform active:scale-95"
               >
@@ -1055,6 +1088,18 @@ export default function AdminCrmPage() {
                 <span>Registrar Seguimiento ({selectedLead.followUpCount}/3)</span>
               </button>
             </div>
+
+            <ContactLauncher
+              lead={selectedLead}
+              now={now}
+              onSent={(m) => handleSent(selectedLead, m)}
+              onOptOut={(v) => handleOptOut(selectedLead, v)}
+            />
+
+            <details className="pt-2 border-t border-slate-200">
+              <summary className="min-h-touch flex items-center justify-between gap-2 text-xs font-black text-lumo-noche cursor-pointer">Objeciones durante la llamada<span className="text-[11px] font-bold text-lumo-pizarra">buscar respuesta</span></summary>
+              <div className="pt-2"><ObjectionFinder compact /></div>
+            </details>
 
             {/* Stage Selector */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1229,6 +1274,8 @@ export default function AdminCrmPage() {
           </div>
         </div>
       )}
+
+      {isImporting && <CsvImport batch={selectedBatch} onClose={() => setIsImporting(false)} onDone={fetchLeads} />}
 
       {/* CREATE LEAD MODAL */}
       {isCreatingLead && (

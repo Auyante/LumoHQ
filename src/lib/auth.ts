@@ -312,3 +312,14 @@ export function verifyClientKey(clientId: unknown, key: unknown): boolean {
   const expected = clientAccessKey(clientId);
   return crypto.timingSafeEqual(Buffer.from(key), Buffer.from(expected));
 }
+
+/* ---------- 1-page diagnosis share keys ---------- */
+
+/** The diagnosis link sent to a business carries this key. Without it the page shows nothing. */
+export function diagnosisKey(prospectId: string): string {
+  return crypto.createHmac('sha256', requireSecret()).update(`diagnosis:${prospectId}`).digest('base64url').slice(0, 24);
+}
+export function verifyDiagnosisKey(prospectId: string, key: unknown): boolean {
+  if (typeof key !== 'string' || key.length !== 24) return false;
+  return crypto.timingSafeEqual(Buffer.from(key), Buffer.from(diagnosisKey(prospectId)));
+}
