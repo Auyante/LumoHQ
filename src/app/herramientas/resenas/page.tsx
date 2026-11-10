@@ -13,8 +13,6 @@ import {
   ShieldCheck,
   Sparkles,
   ArrowLeft,
-  Star,
-  ExternalLink,
 } from 'lucide-react';
 
 interface TemplateMessage {
@@ -66,8 +64,8 @@ export default function ReviewKitGeneratorPage() {
 
       setShortLink(data.shortReviewLink);
       setTemplates(data.templates);
-    } catch (err: any) {
-      alert(err.message || 'Error al generar kit');
+    } catch (err) {
+      alert((err instanceof Error ? err.message : '') || 'Error al generar kit');
     } finally {
       setLoading(false);
     }

@@ -5,7 +5,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
-import { MapPin, Mail, Phone, Shield, Scissors, Utensils, QrCode } from 'lucide-react';
+import {
+  MapPin,
+  Shield,
+  Scissors,
+  Utensils,
+  QrCode,
+} from 'lucide-react';
 
 export function Footer() {
   const { locale, setLocale, t } = useI18n();

@@ -25,8 +25,11 @@ function passwords() {
   };
 }
 
+// Fresh addresses every run (198.18.0.0/15 is reserved for testing), so blocks left by an earlier run never leak in.
+const RUN = Math.random().toString(36).slice(2, 8);
+const ipNet = `198.${18 + Math.floor(Math.random() * 2)}.${Math.floor(Math.random() * 256)}`;
 let ipSeq = 10;
-const newIp = () => `203.0.113.${ipSeq++}`;
+const newIp = () => `${ipNet}.${ipSeq++}`;
 async function call(p, { ip = newIp(), method = 'GET', body, cookie, ua = UA, headers = {}, raw } = {}) {
   const h = { 'x-real-ip': ip, 'user-agent': ua, ...headers };
   if (cookie) h.cookie = cookie;
@@ -69,6 +72,8 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok((await call('/api/crm/prospects', { cookie: barb.cookie, ua: 'Stolen-Cookie-Browser' })).status === 401, 'Same cookie from another browser (fingerprint): 401');
 
   const luis = await login('luis@lumohq.com', pw.luis);
+  // Clear a lockout an earlier run may have left on the account the brute-force test uses.
+  await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohq.com' } });
   ok(luis.status === 200, 'Luis signs in');
   ok((await call('/admin/finanzas', { cookie: luis.cookie })).status === 200, 'Luis: Finances 200');
   ok((await call('/api/admin/users', { cookie: luis.cookie })).status === 200, 'Luis: Users API 200');
@@ -87,10 +92,15 @@ async function login(email, password, ip = newIp(), ua = UA) {
   for (let i = 0; i < 6; i++) codes.push((await call('/api/auth/login', { ip: bfIp, method: 'POST', body: { email: 'luis@lumohq.com', password: 'wrong-' + i } })).status);
   ok(codes.slice(0, 5).every((c) => c === 401), '5 wrong passwords: 401 each, same generic message');
   ok(codes[5] === 403, '6th attempt from that IP: blocked (403)');
-  const unk = await call('/api/auth/login', { method: 'POST', body: { email: 'nobody@lumohq.com', password: 'x' } });
+  const unk = await call('/api/auth/login', { method: 'POST', body: { email: `nobody-${RUN}@lumohq.com`, password: 'x' } });
   ok(unk.status === 401 && unk.json?.error === 'Correo o contraseña incorrectos.', 'Unknown account answers exactly like a wrong password');
   const locked = await call('/api/auth/login', { method: 'POST', body: { email: 'luis@lumohq.com', password: pw.luis } });
   ok(locked.status === 429, 'Account locked after 5 failures, even with the right password from a new IP');
+  const barbNow = await login('barbara@lumohq.com', pw.barbara);
+  const barbUnlock = await call('/api/admin/security', { cookie: barbNow.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohq.com' } });
+  ok(barbUnlock.status === 403, `Sales cannot unlock accounts (${barbUnlock.status})`);
+  ok((await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohq.com' } })).json?.success === true, 'Another admin session unlocks the account');
+  ok((await call('/api/auth/login', { method: 'POST', body: { email: 'luis@lumohq.com', password: pw.luis } })).status === 200, 'Unlocked account signs in again');
 
   console.log('\n--- 5. WAF / IDS ---');
   const sqli = await call("/?q=' OR 1=1 --");
@@ -158,7 +168,9 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok(mass.status === 400, 'Mass assignment (score, priority, follow-up count) rejected');
   ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: target.id, action: 'update_stage', stage: 'HACKED' } })).status === 400, 'Unknown stage rejected');
   ok((await call('/api/crm/prospects', { cookie: barb2.cookie, method: 'POST', body: { action: 'import_csv', csv: 'negocio,teléfono\nX,4325550199' } })).status === 403, 'Bárbara cannot bulk-import');
-  const imp = await call('/api/crm/prospects', { cookie: luis.cookie, method: 'POST', body: { action: 'import_csv', batchNumber: 5, csv: 'negocio,teléfono,ciudad\n=cmd|calc,(432) 555-0777,Midland\nDup,(432) 555-0777,Odessa\nMal,12,Midland' } });
+  // A new number each run: the CRM keeps earlier imports while the server runs.
+  const testPhone = `(432) 555-${1000 + Math.floor(Math.random() * 9000)}`;
+  const imp = await call('/api/crm/prospects', { cookie: luis.cookie, method: 'POST', body: { action: 'import_csv', batchNumber: 5, csv: `negocio,teléfono,ciudad\n=cmd|calc ${RUN},${testPhone},Midland\nDup,${testPhone},Odessa\nMal,12,Midland` } });
   ok(imp.status === 200 && imp.json.created === 1 && imp.json.skipped.length === 1 && imp.json.errors.length === 1, 'CSV import: creates valid rows, skips duplicates, reports bad ones');
   const exported = (await call('/api/crm/prospects', { cookie: luis.cookie })).json.prospects.find((x) => x.phone.includes('0777'));
   ok(exported && exported.businessName.startsWith('=cmd'), 'Imported name stored as text (export neutralizes it)');
@@ -174,7 +186,7 @@ async function login(email, password, ip = newIp(), ua = UA) {
   const withKey = await call(diagPath + new URL(dlink).search);
   ok(withKey.text.includes(target.businessName.replace(/&/g, '&amp;')), 'Diagnosis with the key shows that business');
   ok(!withKey.text.includes(target.phone) && !(target.ownerName && withKey.text.includes(target.ownerName)), 'Diagnosis never prints the owner name or phone');
-  const other = crmList.find((x) => x.id !== target.id);
+  const other = crmList.find((x) => x.id !== target.id && !x.businessName.includes(target.businessName) && !target.businessName.includes(x.businessName));
   ok(!withKey.text.includes(other.businessName), 'Diagnosis page leaks no other prospect');
   ok((await call(`/diagnostico/${encodeURIComponent(other.id)}${new URL(dlink).search}`)).text.includes('no es válido'), "One business's key does not open another's diagnosis");
 

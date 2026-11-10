@@ -14,9 +14,6 @@ import {
   AlertCircle,
   RefreshCw,
   Sparkles,
-  Lock,
-  Mail,
-  User,
   X,
 } from 'lucide-react';
 
@@ -56,8 +53,8 @@ export default function AdminUsuariosPage() {
       if (!res.ok) throw new Error('Error al cargar la lista de colaboradores.');
       const data = await res.json();
       setUsers(data.users || []);
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : ''));
     } finally {
       setLoading(false);
     }
@@ -83,8 +80,8 @@ export default function AdminUsuariosPage() {
         prev.map((u) => (u.id === user.id ? { ...u, active: data.active } : u))
       );
       setSuccessMessage(`Estado de ${user.name} actualizado exitosamente.`);
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : ''));
     }
   };
 
@@ -108,8 +105,8 @@ export default function AdminUsuariosPage() {
       if (!res.ok) throw new Error(data.error || 'La acción falló.');
       setSuccessMessage(okMsg);
       await loadUsers();
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : ''));
     }
   };
 
@@ -143,8 +140,8 @@ export default function AdminUsuariosPage() {
         setNewPassword('');
       }
       loadUsers();
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : ''));
     }
   };
 
@@ -176,8 +173,8 @@ export default function AdminUsuariosPage() {
       setSuccessMessage(`Contraseña actualizada para ${changePasswordUser.name}.`);
       setChangePasswordUser(null);
       setChangePasswordInput('');
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : ''));
     }
   };
 

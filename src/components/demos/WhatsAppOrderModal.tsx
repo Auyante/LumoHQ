@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, MessageCircle, Send, CheckCircle2, ShoppingBag, Car } from 'lucide-react';
+import {
+  X,
+  MessageCircle,
+  Send,
+  ShoppingBag,
+  Car,
+} from 'lucide-react';
 import type { Locale } from '@/lib/types';
 
 interface MenuItem {

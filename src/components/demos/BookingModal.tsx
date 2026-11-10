@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Calendar, Clock, User, CheckCircle2, ChevronRight, Phone } from 'lucide-react';
+import {
+  X,
+  Calendar,
+  Clock,
+  User,
+  CheckCircle2,
+  ChevronRight,
+} from 'lucide-react';
 import type { Locale } from '@/lib/types';
 import { DEMO_BARBERS } from './demo-seeds';
 

@@ -15,7 +15,7 @@ type Msg = { from: 'me' | 'biz'; text: string };
 const CHANNEL_ICON = { booking: CalendarCheck, whatsapp: MessageCircle, social: Instagram } as const;
 
 /** Chat thread with a scripted business on the other end. */
-function Chat({ head, first, chips, replies, fallback, placeholder, sendLabel, variant }: {
+function Chat({ head, first, chips, replies, fallback, placeholder, sendLabel }: {
   head: string; first: string; chips: string[]; replies: Record<string, string>; fallback: string;
   placeholder: string; sendLabel: string; variant?: 'sms' | 'wa' | 'ig';
 }) {

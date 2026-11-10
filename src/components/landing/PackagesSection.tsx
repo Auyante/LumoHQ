@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
-import { Check, Flame, ArrowRight, Star, ShieldCheck, Sparkles } from 'lucide-react';
+import { Check, Flame, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export function PackagesSection() {
   const { t } = useI18n();
-  const [founderSlots, setFounderSlots] = useState(2); // Dynamic founder counter
+  const [founderSlots] = useState(2); // Dynamic founder counter
 
   return (
     <section id="paquetes" className="py-16 md:py-24 bg-white border-b border-lumo-niebla">

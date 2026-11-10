@@ -4,34 +4,19 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { AdminNav } from '@/components/admin/AdminNav';
 import {
-  Users,
   Search,
-  Filter,
   Plus,
-  Phone,
-  MessageSquare,
-  CheckCircle2,
-  XCircle,
   Copy,
   ExternalLink,
-  ChevronRight,
-  ShieldAlert,
   Flame,
   Clock,
-  Sparkles,
-  BookOpen,
   LayoutGrid,
   List,
   Download,
   CheckSquare,
   Square,
   Printer,
-  Calendar,
-  Send,
   X,
-  MapPin,
-  Tag,
-  DollarSign,
   Upload,
 } from 'lucide-react';
 import {
@@ -583,7 +568,7 @@ export default function AdminCrmPage() {
                 <div>
                   <select
                     value={filterCity}
-                    onChange={(e) => setFilterCity(e.target.value as any)}
+                    onChange={(e) => setFilterCity(e.target.value as typeof filterCity)}
                     className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
                   >
                     <option value="ALL">Ciudad: Todas</option>
@@ -612,7 +597,7 @@ export default function AdminCrmPage() {
                 <div>
                   <select
                     value={filterPriority}
-                    onChange={(e) => setFilterPriority(e.target.value as any)}
+                    onChange={(e) => setFilterPriority(e.target.value as typeof filterPriority)}
                     className="w-full min-h-touch px-2.5 py-2 text-xs rounded-xl border border-lumo-niebla bg-white focus:border-lumo-ambar outline-none"
                   >
                     <option value="ALL">Prioridad: Todas</option>
@@ -1109,7 +1094,7 @@ export default function AdminCrmPage() {
                 </label>
                 <select
                   value={selectedLead.stage}
-                  onChange={(e) => handleUpdateStage(selectedLead.id, e.target.value as any)}
+                  onChange={(e) => handleUpdateStage(selectedLead.id, e.target.value as ProspectItem['stage'])}
                   className="w-full px-3 py-2 text-xs rounded-xl border border-lumo-niebla outline-none font-bold bg-white"
                 >
                   {stages.map((st) => (
@@ -1127,7 +1112,7 @@ export default function AdminCrmPage() {
                 <select
                   value={selectedLead.preferredChannel || 'WhatsApp'}
                   onChange={(e) =>
-                    setSelectedLead({ ...selectedLead, preferredChannel: e.target.value as any })
+                    setSelectedLead({ ...selectedLead, preferredChannel: e.target.value as ProspectItem['preferredChannel'] })
                   }
                   className="w-full px-3 py-2 text-xs rounded-xl border border-lumo-niebla outline-none font-bold bg-white"
                 >

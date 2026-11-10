@@ -1,10 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Clock,
   PauseCircle,
   PlayCircle,
   CheckCircle2,
@@ -13,11 +13,8 @@ import {
   UploadCloud,
   FileCheck,
   ShieldCheck,
-  QrCode,
-  Lock,
   Download,
   Building2,
-  Calendar,
   Sparkles,
   ChevronDown,
   ChevronUp,
@@ -524,7 +521,7 @@ function PortalContent() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold mb-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Política "Cero Contraseñas" de Lumo HQ</span>
+                <span>Política &ldquo;Cero Contraseñas&rdquo; de Lumo HQ</span>
               </div>
               <h2 className="text-xl font-heading font-bold text-lumo-noche">
                 Tú mantienes el control total de tus cuentas
@@ -682,8 +679,10 @@ function PortalContent() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-3">
-                <img
+                <Image
                   src="/images/sticker_resenas_1200x1200.png"
+                  width={192}
+                  height={192}
                   alt="Sticker de Reseñas Lumo HQ"
                   className="w-48 h-48 mx-auto rounded-xl shadow-md object-contain bg-white p-2"
                 />
@@ -711,7 +710,7 @@ function PortalContent() {
                 <div className="space-y-2">
                   <h4 className="font-bold text-lumo-noche">¿Cómo usarlo en tu local?</h4>
                   <p>• Pégalo en tu caja registradora, mostrador de cobro o espejos de corte.</p>
-                  <p>• Di al cliente: <em>"Si te gustó el servicio, ¿nos regalas una reseña en Google con tu celular escaneando este código?"</em></p>
+                  <p>• Di al cliente: <em>&ldquo;Si te gustó el servicio, ¿nos regalas una reseña en Google con tu celular escaneando este código?&rdquo;</em></p>
                   <p className="text-[11px] text-slate-500 italic">
                     Cumplimiento FTC: No ofrezcas descuentos a cambio de reseñas de 5 estrellas. Solo experiencias auténticas.
                   </p>

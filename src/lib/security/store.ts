@@ -16,7 +16,7 @@ export type Severity = 'INFO' | 'WARN' | 'CRITICAL';
 export type AuditType =
   | 'LOGIN_OK' | 'LOGIN_FAIL' | 'LOGIN_LOCKED' | 'LOGOUT'
   | 'ACCESS_DENIED' | 'SESSION_INVALID'
-  | 'WAF_BLOCK' | 'HONEYPOT' | 'IP_BLOCKED' | 'IP_UNBLOCKED'
+  | 'WAF_BLOCK' | 'HONEYPOT' | 'IP_BLOCKED' | 'IP_UNBLOCKED' | 'ACCOUNT_UNLOCKED'
   | 'USER_CREATED' | 'PASSWORD_ROTATED' | 'USER_SUSPENDED' | 'USER_REACTIVATED' | 'SESSIONS_REVOKED' | 'ROLE_CHANGED'
   | 'CONTRACT_SIGNED' | 'TAMPERING' | 'WEBHOOK_REJECTED' | 'UPLOAD_REJECTED'
   | 'CRM_IMPORT' | 'CRM_OPT_OUT'
@@ -185,4 +185,9 @@ export function lockAccount(email: string): number {
   locks.set(email, { until, strikes });
   return until;
 }
-export function clearAccountLock(email: string) { locks.delete(email); }
+export function clearAccountLock(email: string): boolean { return locks.delete(email.trim().toLowerCase()); }
+/** Accounts locked right now, for the security center. */
+export function listAccountLocks(): { email: string; until: number; strikes: number }[] {
+  const now = Date.now();
+  return [...locks.entries()].filter(([, l]) => l.until > now).map(([email, l]) => ({ email, ...l }));
+}

@@ -19,7 +19,7 @@ interface DemoBadgeProps {
 
 }
 
-export function DemoBadge({ businessName, locale, onToggleLocale, ownerToggle }: DemoBadgeProps) {
+export function DemoBadge({ locale, onToggleLocale, ownerToggle }: DemoBadgeProps) {
   return (
     <div className="sticky top-0 z-50 bg-lumo-noche text-white border-b border-lumo-ambar/40 px-3 py-2 text-xs font-semibold shadow-md">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">

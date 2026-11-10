@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { TemplateConfig } from '@/lib/templates';
 import { DemoBadge } from '@/components/demos/DemoBadge';
 import { BookingModal } from '@/components/demos/BookingModal';
@@ -10,14 +9,10 @@ import { ReviewQrCard } from '@/components/demos/ReviewQrCard';
 import type { Locale } from '@/lib/types';
 import {
   Phone,
-  MessageSquare,
   Calendar,
   MessageCircle,
   MapPin,
   Clock,
-  Instagram,
-  CheckCircle2,
-  Sparkles,
 } from 'lucide-react';
 
 interface MasterTemplateViewProps {
@@ -41,7 +36,6 @@ export function MasterTemplateView({ config, ownerToggle, onBooked, onOrdered, l
     setLocale(locale === 'es' ? 'en' : 'es');
   };
 
-  const categories = Array.from(new Set(config.items.map((i) => i.category)));
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col antialiased selection:bg-amber-200">

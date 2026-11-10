@@ -3,19 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { AdminNav } from '@/components/admin/AdminNav';
-import {
-  Layers,
-  CheckCircle2,
-  Clock,
-  PauseCircle,
-  AlertTriangle,
-  ExternalLink,
-  ChevronRight,
-  ShieldCheck,
-  UserCheck,
-  Building2,
-  FileText,
-} from 'lucide-react';
+import { Layers, AlertTriangle, ExternalLink } from 'lucide-react';
 import { clientProjectStore, ClientProject } from '@/lib/client-portal';
 
 export default function AdminProduccionPage() {

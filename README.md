@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 Visión General
+## Visión General
 
 **Lumo HQ** es una solución "llave en mano" diseñada para resolver el problema de invisibilidad digital que sufren miles de negocios en la cuenca Pérmica (Midland-Odessa, TX). La plataforma integra:
 1. **Landing Page Bilingüe de Alta Conversión (ES/EN):** Optimizada con Mobile-First Responsive Design, simulación interactiva de canales de contacto (WhatsApp, SMS, llamadas, reservas) y comparador interactivo "Antes y Después".
@@ -17,7 +17,7 @@
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 - **Framework Web:** [Next.js 15](https://nextjs.org/) (App Router, Server & Client Components)
 - **Lenguaje:** TypeScript (Strict mode)
@@ -30,7 +30,7 @@
 
 ---
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### 1. Clonar el repositorio e instalar dependencias
 ```bash
@@ -59,25 +59,21 @@ npm start
 
 ---
 
-## 🧪 Pruebas y Certificación de Calidad
+## Pruebas y Certificación de Calidad
 
-El sistema cuenta con una batería de **223 pruebas automatizadas** que certifican cada regla de negocio y blindaje de seguridad:
+Todo se corre con un solo comando. Necesita el servidor de desarrollo en marcha (`npx next dev -p 3100`) para la suite de seguridad en vivo:
 
 ```bash
-# Ejecutar la suite completa de los 5 Sprints
-node scripts/verify-all.js
-
-# O ejecutar por Sprint específico:
-node scripts/verify-sprint1.js  # Infraestructura, Landing Page & Cabeceras CSP/HSTS
-node scripts/verify-sprint2.js  # Motor de Plantillas, Demos y Kit QR de Reseñas
-node scripts/verify-sprint3.js  # Checkout Stripe, Texas Sales Tax & Contratos Digitales
-node scripts/verify-sprint4.js  # CRM de 8 Señales, Portal del Cliente & Línea de 5 Días
-node scripts/verify-sprint5.js  # Motor Financiero, Tablero Dominical & Hardening
+BASE_URL=http://localhost:3100 node scripts/verify-all.js
 ```
+
+Corre, en orden: TypeScript (`tsc`), ESLint, las pruebas de unidad (`npm test`: login cifrado, RBAC, WAF y honeypots, cero emojis, 8 señales y 8 objeciones, 3D y responsive, CRM, libro del IRS, tablero dominical), los 5 sprints (`scripts/verify-sprint1.js` a `verify-sprint5.js`) y la suite de seguridad en vivo (`npm run test:security`: ataques reales contra el servidor).
+
+`npm run build` se corre aparte: detén antes el servidor de desarrollo, porque el build y `next dev` comparten la carpeta `.next`.
 
 ---
 
-## 🔐 Cuentas de Acceso y Roles (RBAC)
+## Cuentas de Acceso y Roles (RBAC)
 
 Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca** van en el código:
 
@@ -90,11 +86,11 @@ Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca*
 | **Luis Barbera** | `luis@lumohq.com` | `ADMIN_LUIS` |
 | **Bárbara** | `barbara@lumohq.com` | `SALES_BARBARA` |
 
-*Acceso al panel administrativo:* [`/login`](http://localhost:3000/login)
+*Acceso al panel administrativo:* [`/login`](http://localhost:3100/login)
 
 ---
 
-## 🗺️ Mapa de Rutas Principales
+## Mapa de Rutas Principales
 
 ### Plataforma Pública
 - `/` — Landing Page principal bilingüe con simulador de contacto y diagnóstico FTC/TCPA.
@@ -109,14 +105,15 @@ Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca*
 - `/login` — Inicio de sesión encriptado con rate-limiting y RBAC.
 - `/admin/crm` — CRM con 5 lotes, 8 señales de calificación y guiones oficiales de objeciones.
 - `/admin/produccion` — Gestión de la línea de montaje de 5 días (Carlos y Luis).
-- `/admin/finanzas` — Cascada matemática de reparto financiero y aprobación dual de gastos >$100.
-- `/admin/tablero-dominical` — Monitor del Riesgo #1 y metas semanales de prospección.
+- `/admin/finanzas` — Cascada de reparto y libro de millas y gastos del IRS (Schedule C) con doble firma de Luis y Carlos para gastos de más de $100.
+- `/admin/tablero-dominical` — Revisión semanal de 15 minutos: horas, Riesgo #1 y metas por hito, guardada en el servidor.
 - `/admin/retencion` — Reporte mensual de métricas y gestión de tickets de cambios.
 - `/admin/usuarios` — Gestión de cuentas, roles y restablecimiento de credenciales.
+- `/admin/seguridad` — Centro de seguridad (SOC): bitácora con cadena de hashes, IPs bloqueadas, sesiones.
 
 ---
 
-## 🛡️ Cumplimiento Legal y Normativo
+## Cumplimiento Legal y Normativo
 
 - **FTC Act (Federal Trade Commission):** Políticas explícitas anti-promesas falsas (cero afirmaciones de "te pondremos de #1 en Google" o "duplicarás tus ventas").
 - **TCPA (Telephone Consumer Protection Act):** Consentimiento previo obligatorio en todos los formularios de captación de leads.
@@ -125,7 +122,7 @@ Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca*
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Propiedad exclusiva de **Lumo HQ LLC / Luis Barbera DBA Lumo HQ (Midland, Texas)**. Todos los derechos reservados.
 

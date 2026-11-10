@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { ADMIN_ROLES, getAllUsers, revokeSessions } from '@/lib/auth';
 import { requireSession, isGuardResponse } from '@/lib/security/guard';
-import { audit, readAudit, listBlocks, unblockIp } from '@/lib/security/store';
+import { audit, readAudit, listBlocks, unblockIp, clearAccountLock } from '@/lib/security/store';
 
 /** Security operations center data: audit log (with chain integrity), IP blocks, user sessions. */
 
@@ -34,6 +34,13 @@ export async function POST(request: NextRequest) {
 
   if (body.action === 'unblock-ip' && typeof body.ip === 'string') {
     const ok = unblockIp(body.ip.slice(0, 45), g.session.email, g.ip);
+    return NextResponse.json({ success: ok });
+  }
+  // A partner locked out after 5 failed logins can be let back in by another admin (the lock otherwise grows with each strike).
+  if (body.action === 'unlock-account' && typeof body.email === 'string') {
+    const email = body.email.trim().toLowerCase().slice(0, 120);
+    const ok = clearAccountLock(email);
+    if (ok) audit('ACCOUNT_UNLOCKED', 'WARN', g.ip, `unlocked ${email}`, g.session.email);
     return NextResponse.json({ success: ok });
   }
   if (body.action === 'purge-sessions') {

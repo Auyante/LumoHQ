@@ -5,7 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
-import { Menu, X, Globe, PhoneCall, Scissors, Utensils, QrCode } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Globe,
+  Scissors,
+  Utensils,
+  QrCode,
+} from 'lucide-react';
 
 export function Navbar() {
   const { locale, setLocale, t } = useI18n();

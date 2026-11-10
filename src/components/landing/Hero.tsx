@@ -3,7 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
-import { ArrowRight, CheckCircle2, Sparkles, MapPin, ShieldCheck, Clock } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Sparkles,
+  ShieldCheck,
+  Clock,
+} from 'lucide-react';
 
 export function Hero() {
   const { t } = useI18n();

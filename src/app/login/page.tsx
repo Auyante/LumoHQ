@@ -9,10 +9,8 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
-  Sparkles,
   ArrowRight,
   AlertCircle,
-  CheckCircle2,
 } from 'lucide-react';
 
 function LoginForm() {
@@ -55,8 +53,8 @@ function LoginForm() {
       // Successful login
       router.push(redirectPath);
       router.refresh();
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Error de autenticación.');
+    } catch (err) {
+      setErrorMessage((err instanceof Error ? err.message : '') || 'Error de autenticación.');
     } finally {
       setLoading(false);
     }

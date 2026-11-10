@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CreateCheckoutSessionSchema } from '@/lib/schemas';
-import {
-  getPackageAmounts,
-  createStripeDepositSession,
-  PRICING_CONSTANTS,
-} from '@/lib/stripe';
+import { getPackageAmounts, createStripeDepositSession } from '@/lib/stripe';
 import { contractStore } from '@/lib/contract-store';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { getClientIp } from '@/lib/security/client-ip';

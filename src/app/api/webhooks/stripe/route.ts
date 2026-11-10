@@ -35,7 +35,12 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Parse payload
-    let event: any;
+    /** The fields this handler reads from a Stripe event; everything is optional and checked below. */
+    let event: {
+      id?: string;
+      type?: string;
+      data?: { object?: { id?: string; metadata?: Record<string, string>; client_reference_id?: string; amount_total?: number; payment_intent?: string } };
+    };
     try {
       event = JSON.parse(rawBody);
     } catch {

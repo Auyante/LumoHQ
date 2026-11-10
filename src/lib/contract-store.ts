@@ -4,7 +4,6 @@
  */
 
 import { SignedContractResult, ContractData } from './contracts';
-import { getPackageAmounts } from './stripe';
 
 export interface StoredContract {
   id: string;

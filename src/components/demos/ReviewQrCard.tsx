@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Star, QrCode, Copy, Check, Download, ShieldCheck } from 'lucide-react';
+import { Star, Copy, Check, ShieldCheck } from 'lucide-react';
 import type { Locale } from '@/lib/types';
 
 interface ReviewQrCardProps {
@@ -14,7 +14,6 @@ interface ReviewQrCardProps {
 }
 
 export function ReviewQrCard({
-  businessName,
   shortLink,
   rating,
   reviewCount,
