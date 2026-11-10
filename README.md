@@ -125,3 +125,4 @@ El sistema cuenta con 3 usuarios preconfigurados con contraseñas seguras PBKDF2
 ## 📄 Licencia
 
 Propiedad exclusiva de **Lumo HQ LLC / Luis Barbera DBA Lumo HQ (Midland, Texas)**. Todos los derechos reservados.
+
