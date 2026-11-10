@@ -17,7 +17,8 @@ export function Navbar() {
   };
 
   // The landing draws its own desk header.
-  if (pathname === '/' || pathname.startsWith('/diagnostico')) return null;
+  // Admin and demo pages draw their own bars; the demos are a client's site, not Lumo's.
+  if (pathname === '/' || ['/diagnostico', '/admin', '/demo'].some((p) => pathname.startsWith(p))) return null;
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-lumo-niebla shadow-xs">

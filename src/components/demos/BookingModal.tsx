@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { X, Calendar, Clock, User, CheckCircle2, ChevronRight, Phone } from 'lucide-react';
 import type { Locale } from '@/lib/types';
+import { DEMO_BARBERS } from './demo-seeds';
 
 interface ServiceItem {
   id: string;
@@ -17,6 +18,8 @@ interface BookingModalProps {
   services: ServiceItem[];
   locale: Locale;
   businessName: string;
+  /** Called when the visitor confirms; the demo page saves it for the owner view. */
+  onBooked?: (b: { service: string; price: number; barber: string; time: string; clientName: string; clientPhone: string }) => void;
 }
 
 export function BookingModal({
@@ -25,26 +28,40 @@ export function BookingModal({
   services,
   locale,
   businessName,
+  onBooked,
 }: BookingModalProps) {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(services[0] || null);
-  const [selectedBarber, setSelectedBarber] = useState('Luis (Master Barber)');
+  const [selectedBarber, setSelectedBarber] = useState<string>(DEMO_BARBERS[0].name);
+  const [formError, setFormError] = useState('');
   const [selectedTime, setSelectedTime] = useState('3:30 PM');
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
 
   if (!isOpen) return null;
 
-  const barbers = [
-    { name: 'Luis (Master Barber)', role: locale === 'es' ? 'Especialista en Fades & Navaja' : 'Fade & Razor Specialist' },
-    { name: 'Carlos', role: locale === 'es' ? 'Barbero Clásico' : 'Classic Cuts' },
-    { name: locale === 'es' ? 'Cualquiera disponible' : 'First available barber', role: locale === 'es' ? 'Atención más rápida' : 'Fastest service' },
-  ];
+  const barbers = DEMO_BARBERS.map((b) => ({ name: b.name, role: locale === 'es' ? b.roleEs : b.roleEn }));
+
+  const confirm = () => {
+    const digits = clientPhone.replace(/\D/g, '');
+    if (clientName.trim().length < 2) { setFormError(locale === 'es' ? 'Escribe tu nombre.' : 'Enter your name.'); return; }
+    if (digits.length < 10 || digits.length > 11) { setFormError(locale === 'es' ? 'Escribe un teléfono de 10 dígitos.' : 'Enter a 10-digit phone number.'); return; }
+    setFormError('');
+    onBooked?.({
+      service: (locale === 'es' ? selectedService?.nameEs : selectedService?.nameEn) || '',
+      price: selectedService?.price ?? 0, barber: selectedBarber, time: selectedTime,
+      clientName: clientName.trim(), clientPhone: clientPhone.trim(),
+    });
+    setStep(4);
+  };
 
   const timeSlots = ['10:00 AM', '11:30 AM', '1:00 PM', '2:15 PM', '3:30 PM', '4:45 PM', '6:00 PM'];
 
   const resetAndClose = () => {
     setStep(1);
+    setClientName('');
+    setClientPhone('');
+    setFormError('');
     onClose();
   };
 
@@ -213,6 +230,7 @@ export function BookingModal({
                 </div>
               </div>
 
+              {formError && <p role="alert" className="text-xs font-bold text-red-700">{formError}</p>}
               <div className="flex gap-2 pt-2">
                 <button
                   type="button"
@@ -223,7 +241,7 @@ export function BookingModal({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStep(4)}
+                  onClick={confirm}
                   className="min-h-touch grow flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-lumo-ambar hover:bg-[#e09129] active:bg-[#c97e1e] text-lumo-noche font-black text-sm shadow-md transition-all"
                 >
                   <Clock className="w-4 h-4" />
@@ -268,8 +286,8 @@ export function BookingModal({
               </div>
               <p className="text-xs text-lumo-pizarra max-w-xs mx-auto">
                 {locale === 'es'
-                  ? 'Se envió confirmación y recordatorio automático por SMS. ¡Así es como Square Appointments y Booksy automatizan tu agenda!'
-                  : 'Automatic SMS reminder sent. This is how Square Appointments & Booksy keep your calendar full!'}
+                  ? 'Te llegará un recordatorio por SMS antes de tu cita. Es una demostración: abre la Vista del Dueño arriba para ver cómo le llega la cita al negocio.'
+                  : 'You will get an SMS reminder before your appointment. This is a demo: open the Owner View above to see how the shop receives it.'}
               </p>
               <button
                 type="button"

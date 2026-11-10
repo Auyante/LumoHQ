@@ -20,6 +20,7 @@ function passwords() {
   if (fs.existsSync(file)) for (const line of fs.readFileSync(file, 'utf8').split('\n')) { const m = line.match(/^(\S+@\S+)\s+(\S+)$/); if (m) map[m[1]] = m[2]; }
   return {
     luis: process.env.ADMIN_LUIS_PASSWORD || map['luis@lumohq.com'],
+    carlos: process.env.ADMIN_CARLOS_PASSWORD || map['carlos@lumohq.com'],
     barbara: process.env.SALES_BARBARA_PASSWORD || map['barbara@lumohq.com'],
   };
 }
@@ -186,6 +187,25 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok(!!blocked, 'Blocked IP listed in the SOC');
   ok((await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unblock-ip', ip: wafIp } })).json?.success === true, 'Admin unblocks an IP');
   ok((await call('/', { ip: wafIp })).status === 200, 'Unblocked IP gets through again');
+
+  console.log('\n--- 10. IRS ledger and Sunday board ---');
+  const carlos = await login('carlos@lumohq.com', pw.carlos);
+  const L = '/api/admin/ledger';
+  ok((await call(L)).status === 401 || (await call(L)).status === 403, 'Ledger without a session: refused');
+  ok((await call(L, { cookie: barb2.cookie })).status === 403, 'Ledger for sales: 403');
+  ok((await call('/api/admin/sunday', { cookie: barb2.cookie })).status === 403, 'Sunday board for sales: 403');
+  ok((await call(L, { cookie: luis.cookie, method: 'POST', body: { kind: 'trip', date: '2026-11-01', client: 'Prueba', city: 'Midland', miles: 9999 } })).status === 400, 'Trip over 500 miles: rejected');
+  ok((await call(L, { cookie: luis.cookie, method: 'POST', body: { kind: 'trip', date: '2999-01-01', client: 'Prueba', city: 'Midland', miles: 10 } })).status === 400, 'Trip dated in the future: rejected');
+  ok((await call(L, { cookie: luis.cookie, method: 'POST', body: { kind: 'expense', date: '2026-11-01', concept: 'Prueba', category: 'Otro', amount: 150, signatures: { carlos: { by: 'x', at: 'y' } } } })).status === 400, 'Expense with forged signatures in the body: rejected');
+  const made = await call(L, { cookie: luis.cookie, method: 'POST', body: { kind: 'expense', date: '2026-11-01', concept: 'Suite: gasto doble firma', category: 'Otro', amount: 150 } });
+  const big = made.json?.expenses?.find((e) => e.concept === 'Suite: gasto doble firma');
+  ok(made.status === 201 && big && big.signatures.luis && !big.signatures.carlos, 'Expense over $100 starts with only the creator signature');
+  ok((await call(L, { cookie: luis.cookie, method: 'PATCH', body: { action: 'sign', id: big.id } })).status === 409, 'Same partner cannot sign twice');
+  ok((await call(L, { cookie: barb2.cookie, method: 'PATCH', body: { action: 'sign', id: big.id } })).status === 403, 'Sales cannot sign');
+  const signed = await call(L, { cookie: carlos.cookie, method: 'PATCH', body: { action: 'sign', id: big.id } });
+  ok(signed.status === 200 && signed.json.expenses.find((e) => e.id === big.id).signatures.carlos, 'Second partner signs: expense approved');
+  ok((await call('/api/admin/sunday', { cookie: luis.cookie, method: 'POST', body: { action: 'save', review: { milestone: 14, hours: { luisHours: 9.3, carlosHours: 1, barbaraHours: 1, contactsThisWeek: 1 }, metrics: { contacts: 1, diagnoses: 1, meetings: 1, closedClients: 1, mrr: 100 }, notes: '' } } })).status === 400, 'Sunday hours must be in halves');
+  ok((await call('/api/admin/sunday', { cookie: luis.cookie, method: 'POST', body: { action: 'save', review: { milestone: 15, hours: {}, metrics: {}, notes: '' } } })).status === 400, 'Sunday review with a bad milestone: rejected');
 
   console.log(`\nSECURITY SUITE: ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

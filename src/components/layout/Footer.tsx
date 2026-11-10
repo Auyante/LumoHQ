@@ -12,7 +12,8 @@ export function Footer() {
   const pathname = usePathname();
 
   // The landing draws its own footer.
-  if (pathname === '/' || pathname.startsWith('/diagnostico')) return null;
+  // Admin and demo pages draw their own bars; the demos are a client's site, not Lumo's.
+  if (pathname === '/' || ['/diagnostico', '/admin', '/demo'].some((p) => pathname.startsWith(p))) return null;
 
   return (
     <footer className="bg-lumo-noche text-white pt-16 pb-28 md:pb-16 border-t border-lumo-pizarra/30">
