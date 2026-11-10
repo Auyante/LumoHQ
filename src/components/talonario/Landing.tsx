@@ -328,7 +328,7 @@ function Faq({ t }: { t: Copy }) {
 
 type Channel = 'whatsapp' | 'sms' | 'call';
 
-function Request({ t }: { t: Copy }) {
+export function Request({ t }: { t: Copy }) {
   const [f, setF] = useState({ ownerName: '', businessName: '', phone: '', preferredChannel: 'whatsapp' as Channel, sourceOfCustomers: '', currentContactMethod: '', tcpaConsent: false, website: '' });
   const [err, setErr] = useState<{ field?: string; msg: string } | null>(null);
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');

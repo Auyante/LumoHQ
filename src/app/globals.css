@@ -51,6 +51,37 @@
   --color-arena: #FFF7EC;
   --color-pizarra: #5B6375;
   --color-niebla: #E6E8EE;
+
+  /* shadcn/ui semantic tokens as RGB triplets (used by tailwind.config.ts).
+     Light set: Arena page, white cards, Noche ink. */
+  --ui-background: 255 247 236;
+  --ui-foreground: 27 33 48;
+  --ui-card: 255 255 255;
+  --ui-muted: 230 232 238;
+  --ui-muted-foreground: 91 99 117;
+  --ui-border: 220 223 230;
+  --ui-ring: 242 163 58;
+}
+
+/* Dark set: Noche page, raised Noche cards, Arena ink. */
+.dark {
+  --ui-background: 27 33 48;
+  --ui-foreground: 255 247 236;
+  --ui-card: 35 42 59;
+  --ui-muted: 46 54 73;
+  --ui-muted-foreground: 169 176 192;
+  --ui-border: 52 60 80;
+}
+
+/* Components written for Tailwind v4 read colors as --color-* variables. */
+:root,
+.dark {
+  --color-background: rgb(var(--ui-background));
+  --color-foreground: rgb(var(--ui-foreground));
+  --color-card: rgb(var(--ui-card));
+  --color-muted: rgb(var(--ui-muted));
+  --color-muted-foreground: rgb(var(--ui-muted-foreground));
+  --color-border: rgb(var(--ui-border));
 }
 
 html {

@@ -27,6 +27,22 @@ const config: Config = {
           pizarra: '#5B6375',
           niebla: '#E6E8EE',
         },
+        // shadcn/ui semantic tokens, mapped to the Lumo palette so
+        // components copied into src/components/ui render on-brand.
+        // Values come from CSS variables (src/app/globals.css) so a section
+        // can switch to the dark set by adding the `dark` class.
+        background: 'rgb(var(--ui-background) / <alpha-value>)',
+        foreground: 'rgb(var(--ui-foreground) / <alpha-value>)',
+        card: {
+          DEFAULT: 'rgb(var(--ui-card) / <alpha-value>)',
+          foreground: 'rgb(var(--ui-foreground) / <alpha-value>)',
+        },
+        muted: {
+          DEFAULT: 'rgb(var(--ui-muted) / <alpha-value>)',
+          foreground: 'rgb(var(--ui-muted-foreground) / <alpha-value>)',
+        },
+        border: 'rgb(var(--ui-border) / <alpha-value>)',
+        ring: 'rgb(var(--ui-ring) / <alpha-value>)',
       },
       fontFamily: {
         heading: ['var(--font-bricolage)', 'sans-serif'],
