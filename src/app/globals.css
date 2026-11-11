@@ -61,6 +61,11 @@
   --ui-muted-foreground: 91 99 117;
   --ui-border: 220 223 230;
   --ui-ring: 242 163 58;
+  --ui-primary: 242 163 58;
+  --ui-primary-foreground: 27 33 48;
+  --ui-secondary: 230 232 238;
+  --ui-secondary-foreground: 27 33 48;
+  --ui-destructive: 212 64 47;
 }
 
 /* Dark set: Noche page, raised Noche cards, Arena ink. */
@@ -71,6 +76,9 @@
   --ui-muted: 46 54 73;
   --ui-muted-foreground: 169 176 192;
   --ui-border: 52 60 80;
+  --ui-secondary: 46 54 73;
+  --ui-secondary-foreground: 255 247 236;
+  --ui-destructive: 255 120 102;
 }
 
 /* Components written for Tailwind v4 read colors as --color-* variables. */
@@ -82,6 +90,15 @@
   --color-muted: rgb(var(--ui-muted));
   --color-muted-foreground: rgb(var(--ui-muted-foreground));
   --color-border: rgb(var(--ui-border));
+  --color-primary: rgb(var(--ui-primary));
+  --color-primary-foreground: rgb(var(--ui-primary-foreground));
+  --primary: var(--color-primary);
+  /* Raw shadcn v4 names, read by catalog pieces that style with var(--x) directly. */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --secondary: rgb(var(--ui-secondary));
+  --muted-foreground: var(--color-muted-foreground);
+  --border: var(--color-border);
 }
 
 html {
