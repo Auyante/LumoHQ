@@ -1,0 +1,71 @@
+/* Switch styles on Kernel tokens (missing from the prompt; written to match its class names). */
+.root {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kernel-space-3);
+  min-height: 44px; /* touch target */
+  font-family: var(--kernel-font-sans);
+  color: inherit; /* adopt the surrounding text color (was --kernel-color-text, invisible on some themes) */
+  cursor: pointer;
+  user-select: none;
+}
+.root[data-disabled] { cursor: not-allowed; color: var(--kernel-color-text-muted); }
+
+.label { flex: 1; min-width: 0; font-size: 0.9375rem; line-height: 1.4; }
+
+.control {
+  --track-w: 2.75rem;
+  --track-h: 1.5rem;
+  --pad: 3px;
+  --thumb: calc(var(--track-h) - var(--pad) * 2);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--track-w);
+  height: var(--track-h);
+  padding: 0;
+  border: 0;
+  border-radius: var(--kernel-radius-full);
+  background: var(--kernel-color-fill-strong);
+  box-shadow: inset 0 0 0 var(--kernel-border-width) var(--kernel-color-border-interactive);
+  cursor: inherit;
+  transition:
+    background-color var(--kernel-duration-base) var(--kernel-ease-out),
+    box-shadow var(--kernel-duration-base) var(--kernel-ease-out),
+    transform var(--kernel-duration-fast) var(--kernel-ease-out);
+}
+.control:hover:not(:disabled) { box-shadow: inset 0 0 0 var(--kernel-border-width) var(--kernel-color-border-hover); }
+.control:active:not(:disabled) { transform: scale(var(--kernel-scale-press)); }
+.control:focus-visible {
+  outline: 2px solid var(--kernel-color-focus-ring);
+  outline-offset: 2px;
+}
+.control[data-state="checked"] {
+  background: var(--kernel-color-accent);
+  box-shadow: inset 0 0 0 var(--kernel-border-width) transparent;
+}
+.control[data-state="checked"]:hover:not(:disabled) { background: var(--kernel-color-accent-hover); }
+.control:disabled { opacity: 0.5; }
+
+.thumb {
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
+  width: var(--thumb);
+  height: var(--thumb);
+  border-radius: var(--kernel-radius-full);
+  background: var(--kernel-color-thumb);
+  box-shadow: var(--kernel-shadow-sm);
+  transition:
+    translate var(--kernel-duration-slow) var(--kernel-ease-spring),
+    width var(--kernel-duration-fast) var(--kernel-ease-out);
+}
+.control[data-state="checked"] .thumb { translate: calc(var(--track-w) - var(--thumb) - var(--pad) * 2) 0; }
+/* Squash: the thumb stretches while pressed, then springs into place. */
+.control:active:not(:disabled) .thumb { width: calc(var(--thumb) + 4px); }
+.control[data-state="checked"]:active:not(:disabled) .thumb { translate: calc(var(--track-w) - var(--thumb) - var(--pad) * 2 - 4px) 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .control, .thumb { transition: none; }
+}
