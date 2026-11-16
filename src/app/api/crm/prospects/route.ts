@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { crmStore, type ProspectItem } from '@/lib/crm';
+import { type ProspectItem } from '@/lib/crm';
+import { crmStore } from '@/lib/crm-store';
 import { SIGNAL_KEYS, STAGES, SOURCES, rowsFromCsv } from '@/lib/crm-engine';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { STAFF_ROLES, ADMIN_ROLES } from '@/lib/auth';
@@ -46,6 +47,11 @@ const PatchSchema = z.discriminatedUnion('action', [
 ]);
 
 const bad = (error: string, status = 400) => NextResponse.json({ error }, { status });
+/** 409 with the existing business, so the team opens it instead of adding a second copy. */
+const duplicate = (p: ProspectItem) => NextResponse.json({
+  error: `Ese teléfono ya está en el CRM: ${p.businessName}${p.optedOut ? ' (pidió no ser contactado)' : ''}.`,
+  existingId: p.id,
+}, { status: 409 });
 const firstIssue = (e: z.ZodError) => e.issues[0]?.message || 'Datos no válidos.';
 
 export async function GET(req: NextRequest) {
@@ -78,6 +84,8 @@ export async function POST(req: NextRequest) {
   const parsed = CreateSchema.safeParse(body);
   if (!parsed.success) return bad(firstIssue(parsed.error));
   const d = parsed.data;
+  const dup = crmStore.findByPhone(d.phone);
+  if (dup) return duplicate(dup);
   const item = crmStore.create({
     ...d,
     stage: 'LISTED',
@@ -108,15 +116,16 @@ export async function PATCH(req: NextRequest) {
       if (!res.success) return NextResponse.json({ error: res.error, count: res.count }, { status: 409 });
       return ok(crmStore.getById(b.id));
     }
-    case 'add_note': {
-      const item = crmStore.getById(b.id)!;
-      item.contactNotes = [`[${new Date().toLocaleDateString('es-US')}] (${g.session.name}): ${b.note}`, ...(item.contactNotes ?? [])].slice(0, 200);
-      return ok(item);
-    }
+    case 'add_note':
+      return ok(crmStore.addNote(b.id, `[${new Date().toLocaleDateString('es-US')}] (${g.session.name}): ${b.note}`));
     case 'update_signals':
       return ok(crmStore.updateSignals(b.id, b.signals));
-    case 'update_details':
+    case 'update_details': {
+      const phone = b.details.phone;
+      const dup = phone ? crmStore.findByPhone(phone) : undefined;
+      if (dup && dup.id !== b.id) return duplicate(dup);
       return ok(crmStore.updateDetails(b.id, b.details));
+    }
     case 'opt_out': {
       const item = crmStore.setOptOut(b.id, b.optedOut);
       audit('CRM_OPT_OUT', 'INFO', g.ip, `${item?.businessName}: ${b.optedOut ? 'no contactar' : 'contacto reactivado'}`, g.session.email);

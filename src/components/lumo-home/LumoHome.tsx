@@ -14,6 +14,7 @@ import { ContactPanel, GooglePanel, PagePanel, ReviewsPanel } from './panels';
 import Header from '@/components/ui/hero-01-utils/header';
 import Velaris from '@/components/ui/velaris';
 import { LiquidHero, MOOD } from './LiquidHero';
+import Examples from './Examples';
 import { ContainerScroll } from '@/components/ui/container-scroll-animation';
 import { LumoBento } from '@/components/lumo/LumoBento';
 import FeaturesWithPanel, { type FeatureItem } from '@/components/ui/features-with-panel';
@@ -284,6 +285,9 @@ export function LumoHome() {
           </div>
         </section>
 
+        {/* Real sites we built for fictional businesses: open the full demo. */}
+        <Examples title={t.exTitle} lede={t.exLede} demoNote={t.exNote} cta={t.exCta} items={t.examples} />
+
         <Days t={t} />
 
         {/* 20 over 21a: prices on a night sky that leans toward your cursor. */}
@@ -338,7 +342,8 @@ export function LumoHome() {
         marquee={t.footMarquee}
         primaryLinks={[{ label: t.footCta, href: '#diagnostico' }]}
         links={t.footLinks.map(([href, label]) => ({ href, label }))}
-        copyright={t.footCopy}
+        // The © line doubles as the team's quiet way into /login: no button, same look as text.
+        copyright={<a href="/login" rel="nofollow" className="text-inherit no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F2A33A]">{t.footCopy}</a>}
         credit={null}
         backToTopLabel={t.footTop}
         accent={[AMBAR, '#5B6375']}

@@ -55,6 +55,7 @@ export default function AdminCrmPage() {
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
   const [copiedScript, setCopiedScript] = useState<string | null>(null);
   const [isCreatingLead, setIsCreatingLead] = useState(false);
+  const [createError, setCreateError] = useState('');
 
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -221,6 +222,7 @@ export default function AdminCrmPage() {
 
   const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCreateError('');
     try {
       const res = await fetch('/api/crm/prospects', {
         method: 'POST',
@@ -251,9 +253,13 @@ export default function AdminCrmPage() {
         setNewOwnerName('');
         setNewPhone('');
         fetchLeads();
+      } else {
+        // e.g. 409 "Ese teléfono ya está en el CRM: …" or a validation message
+        const j = await res.json().catch(() => null);
+        setCreateError(j?.error || 'No se pudo guardar. Revisa los datos.');
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
+      setCreateError('No se pudo guardar. Revisa tu conexión.');
     }
   };
 
@@ -537,7 +543,7 @@ export default function AdminCrmPage() {
 
             <button
               type="button"
-              onClick={() => setIsCreatingLead(true)}
+              onClick={() => { setCreateError(''); setIsCreatingLead(true); }}
               className="min-h-touch px-4 py-2 bg-lumo-ambar hover:bg-lumo-brillo text-lumo-noche rounded-xl text-xs font-black flex items-center gap-1.5 shadow-xs transition-transform active:scale-95 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
@@ -635,6 +641,7 @@ export default function AdminCrmPage() {
                     <option value="BARBARA">Bárbara</option>
                     <option value="LUIS">Luis</option>
                     <option value="REFERRAL">Referido</option>
+                    <option value="WEB">Página web</option>
                   </select>
                 </div>
               </div>
@@ -1350,6 +1357,9 @@ export default function AdminCrmPage() {
                 </div>
               </div>
 
+              {createError && (
+                <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">{createError}</p>
+              )}
               <div className="pt-2">
                 <button
                   type="submit"

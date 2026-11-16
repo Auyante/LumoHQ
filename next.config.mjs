@@ -13,6 +13,7 @@ const productionHeaders = [
       "font-src 'self' data:",
       "connect-src 'self' https://api.stripe.com",
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://maps.google.com https://www.google.com",
+      "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -64,12 +65,24 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   devIndicators: false,
-  allowedDevOrigins: ['192.168.1.108', 'localhost', '127.0.0.1'],
+  allowedDevOrigins: ['192.168.1.108', '192.168.0.193', 'localhost', '127.0.0.1'],
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/((?!ejemplos/).*)',
         headers: isProduction ? productionHeaders : developmentHeaders
+      },
+      // The example sites in /public/ejemplos are self-contained HTML files that load
+      // Google Fonts. Same policy, plus those two font hosts, only for that folder.
+      {
+        source: '/ejemplos/:path*',
+        headers: (isProduction ? productionHeaders : developmentHeaders)
+          .map((h) => h.key !== 'Content-Security-Policy' ? h : {
+            key: h.key,
+            value: h.value
+              .replace("style-src 'self' 'unsafe-inline'", "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com")
+              .replace("font-src 'self' data:", "font-src 'self' data: https://fonts.gstatic.com")
+          })
       }
     ];
   }

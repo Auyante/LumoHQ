@@ -1,3 +1,4 @@
+import { publicOrigin } from '@/lib/public-origin';
 import { NextResponse, type NextRequest } from 'next/server';
 import { ADMIN_ROLES, clientAccessKey } from '@/lib/auth';
 import { clientProjectStore } from '@/lib/client-portal';
@@ -7,7 +8,7 @@ import { requireSession, isGuardResponse } from '@/lib/security/guard';
 export async function GET(request: NextRequest) {
   const g = requireSession(request, ADMIN_ROLES);
   if (isGuardResponse(g)) return g;
-  const origin = request.nextUrl.origin;
+  const origin = publicOrigin(request);
   const links = clientProjectStore.getAll().map((p) => ({
     clientId: p.id,
     businessName: p.businessName,

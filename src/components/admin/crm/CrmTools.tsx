@@ -271,7 +271,7 @@ export function FunnelAndMoney({ prospects, batch }: { prospects: ProspectItem[]
           {ledger.lines.map((l) => (
             <li key={l.id} className="py-1.5 flex justify-between gap-2 text-xs">
               <span className="min-w-0 truncate"><span className="tabular-nums text-slate-500 mr-1">#{l.clientNumber}</span>{l.businessName}{l.founder && <span className="ml-1 text-amber-800 font-bold">fundador</span>}</span>
-              <span className="font-bold tabular-nums shrink-0">{l.source === 'BARBARA' ? money(l.barbara) : l.source === 'REFERRAL' ? 'referido · $0' : 'Luis · $0'}</span>
+              <span className="font-bold tabular-nums shrink-0">{l.source === 'BARBARA' ? money(l.barbara) : l.source === 'REFERRAL' ? 'referido · $0' : l.source === 'WEB' ? 'página web · $0' : 'Luis · $0'}</span>
             </li>
           ))}
         </ul>

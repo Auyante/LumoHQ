@@ -2,6 +2,9 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getClientIp } from '@/lib/security/client-ip';
 import { honeypotTripped } from '@/lib/security/guard';
 import { z } from 'zod';
+import { crmStore } from '@/lib/crm-store';
+import { SIGNAL_KEYS } from '@/lib/crm-engine';
+import type { ProspectItem } from '@/lib/crm';
 
 // Zod Schema with strict input validation
 const diagnosisSchema = z.object({
@@ -21,8 +24,8 @@ const diagnosisSchema = z.object({
     .max(20, 'Teléfono inválido')
     .regex(/^[+0-9\s().-]+$/, 'Formato de teléfono no válido'),
   preferredChannel: z.enum(['whatsapp', 'sms', 'call']),
-  sourceOfCustomers: z.string().min(2, 'Selecciona una opción'),
-  currentContactMethod: z.string().min(2, 'Selecciona una opción'),
+  sourceOfCustomers: z.string().trim().min(2, 'Selecciona una opción').max(200),
+  currentContactMethod: z.string().trim().min(2, 'Selecciona una opción').max(200),
   tcpaConsent: z.literal(true, {
     errorMap: () => ({ message: 'Debes aceptar el consentimiento TCPA' }),
   }),
@@ -73,15 +76,33 @@ export async function POST(request: NextRequest) {
 
     const data = result.data;
 
-    // Log the valid audit request (In Sprint 4 this attaches to Prisma Prospect Lot)
-    console.log('[LUMO HQ] Diagnóstico Solicitado:', {
-      businessName: data.businessName,
-      ownerName: data.ownerName,
-      phone: data.phone,
-      channel: data.preferredChannel,
-      timestamp: new Date().toISOString(),
-      ip,
-    });
+    // Into the CRM as a web lead. Same phone already there: add a note instead of a second copy.
+    // An opted-out business stays opted out; the team sees the new request and decides.
+    const channel: Record<typeof data.preferredChannel, string> = { whatsapp: 'WhatsApp', sms: 'texto (SMS)', call: 'llamada' };
+    const note = `[${new Date().toLocaleDateString('es-US')}] Pidió diagnóstico en la página web. Prefiere ${channel[data.preferredChannel]}. `
+      + `Clientes nuevos hoy: ${data.sourceOfCustomers}. Lo contactan por: ${data.currentContactMethod}. `
+      + `Consentimiento TCPA marcado: ${new Date().toISOString()}.`;
+    const existing = crmStore.findByPhone(data.phone);
+    if (existing) {
+      crmStore.addNote(existing.id, existing.optedOut ? `${note} OJO: este negocio había pedido no ser contactado.` : note);
+    } else {
+      crmStore.create({
+        businessName: data.businessName,
+        ownerName: data.ownerName,
+        phone: data.phone,
+        city: 'Midland', // the form does not ask; the team corrects it after the first contact
+        category: 'Servicios Locales',
+        source: 'WEB',
+        batchNumber: 1,
+        stage: 'LISTED',
+        signals: Object.fromEntries(SIGNAL_KEYS.map((k) => [k, false])) as ProspectItem['signals'],
+        followUpCount: 0,
+        contactNotes: [note],
+        preferredChannel: data.preferredChannel === 'whatsapp' ? 'WhatsApp' : data.preferredChannel === 'call' ? 'Llamada' : undefined,
+        questionSource: data.sourceOfCustomers,
+      });
+    }
+    console.log('[LUMO HQ] Diagnóstico solicitado por la web:', data.businessName, existing ? '(ya estaba en el CRM)' : '(nuevo en el CRM)');
 
     return NextResponse.json({
       success: true,

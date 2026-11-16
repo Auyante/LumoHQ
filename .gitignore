@@ -63,6 +63,8 @@ Thumbs.db
 /data/uploads/
 /data/INITIAL-PASSWORDS.txt
 /data/ledger.json
+/data/crm-prospects.json
+/data/crm-prospects.json.*.tmp
 /data/ledger.json.*.tmp
 /data/sunday.json
 /data/sunday.json.*.tmp

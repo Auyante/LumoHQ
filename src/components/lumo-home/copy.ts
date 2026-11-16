@@ -5,7 +5,7 @@
  */
 
 const es = {
-  nav: [['#plaza', 'Qué incluye'], ['#ruta', 'Cómo te llegan'], ['#precios', 'Precios'], ['#dias', '5 días'], ['#preguntas', 'Preguntas']] as [string, string][],
+  nav: [['#plaza', 'Qué incluye'], ['#ejemplos', 'Ejemplos'], ['#ruta', 'Cómo te llegan'], ['#precios', 'Precios'], ['#dias', '5 días'], ['#preguntas', 'Preguntas']] as [string, string][],
   navCta: 'Diagnóstico gratis',
   langLabel: 'Idioma',
   skip: 'Saltar al contenido',
@@ -17,6 +17,14 @@ const es = {
   reportTitle: 'Así se ve tu negocio cada mes.',
   reportLede: 'Cada mes te llega un reporte con cuánta gente te vio y te contactó. Tócalo: es interactivo.',
   includedTitle: 'Qué incluye.',
+  exTitle: 'Así se ven las páginas que hacemos.',
+  exLede: 'Dos ejemplos completos para negocios ficticios de Midland–Odessa. Ábrelos en tu celular: cada uno tiene su propia identidad, en español e inglés.',
+  exNote: 'Ejemplo · negocio ficticio',
+  exCta: 'Ver la página completa',
+  examples: [
+    { slug: 'casa-brasa', name: 'Casa Brasa', trade: 'Barbería', accent: '#A8742F', href: '/ejemplos/casa-brasa.html', image: '/ejemplos/casa-brasa.jpg', alt: 'Primera pantalla de la página de ejemplo de Casa Brasa, una barbería', blurb: 'Una barbería de autor: servicios con precio, el equipo, galería de trabajos y reservas en línea.', tags: ['Reservas', 'Galería', 'ES / EN'] },
+    { slug: 'kelvin', name: 'Kelvin', trade: 'Electricidad y aire acondicionado', accent: '#1A4DF5', href: '/ejemplos/kelvin.html', image: '/ejemplos/kelvin.jpg', alt: 'Primera pantalla de la página de ejemplo de Kelvin, electricistas y técnicos de aire acondicionado', blurb: 'Electricistas y técnicos de aire: servicios explicados con diagramas interactivos y presupuesto en 3 pasos.', tags: ['Presupuesto', 'Emergencias', 'ES / EN'] },
+  ],
   footHeading: '¿Prendemos tu negocio?',
   footMarquee: ['Perfil de Google completo', 'Página bilingüe', 'Llamar, texto y reservar', 'Reseñas reales', 'Listo en 5 días'],
   footCta: 'Pedir diagnóstico gratis',
@@ -145,13 +153,13 @@ const es = {
   foot: 'Negocios locales, visibles · Midland–Odessa, Texas',
   ftcTitle: 'Compromiso de honestidad (FTC y TCPA)',
   ftc: 'No prometemos el primer lugar en Google ni un número de clientes. No compramos, vendemos ni inventamos reseñas: toda reseña viene de clientes reales. No hacemos llamadas automáticas ni mensajes masivos.',
-  footLinks: [['/demo/barberia', 'Demo: barbería'], ['/demo/taqueria', 'Demo: taquería'], ['/herramientas/resenas', 'Kit QR de reseñas'], ['/portal', 'Portal de clientes'], ['/login', 'Acceso del equipo']] as [string, string][],
+  footLinks: [['/ejemplos/casa-brasa.html', 'Ejemplo: barbería'], ['/ejemplos/kelvin.html', 'Ejemplo: electricidad y aire'], ['/demo/taqueria', 'Ejemplo: taquería'], ['/herramientas/resenas', 'Kit QR de reseñas'], ['/portal', 'Portal de clientes']] as [string, string][],
 };
 
 type Copy = typeof es;
 
 const en: Copy = {
-  nav: [['#plaza', 'What you get'], ['#ruta', 'How customers reach you'], ['#precios', 'Pricing'], ['#dias', '5 days'], ['#preguntas', 'FAQ']],
+  nav: [['#plaza', 'What you get'], ['#ejemplos', 'Examples'], ['#ruta', 'How customers reach you'], ['#precios', 'Pricing'], ['#dias', '5 days'], ['#preguntas', 'FAQ']],
   navCta: 'Free review',
   langLabel: 'Language',
   skip: 'Skip to content',
@@ -163,6 +171,14 @@ const en: Copy = {
   reportTitle: 'What your business looks like every month.',
   reportLede: 'Every month you get a report with how many people saw and contacted you. Tap it: it’s interactive.',
   includedTitle: 'What you get.',
+  exTitle: 'This is what the pages we build look like.',
+  exLede: 'Two complete examples for fictional Midland–Odessa businesses. Open them on your phone: each one has its own identity, in English and Spanish.',
+  exNote: 'Example · fictional business',
+  exCta: 'See the full page',
+  examples: [
+    { slug: 'casa-brasa', name: 'Casa Brasa', trade: 'Barber shop', accent: '#A8742F', href: '/ejemplos/casa-brasa.html', image: '/ejemplos/casa-brasa.jpg', alt: 'First screen of the Casa Brasa example page, a barber shop', blurb: 'A signature barber shop: priced services, the team, a work gallery and online booking.', tags: ['Booking', 'Gallery', 'EN / ES'] },
+    { slug: 'kelvin', name: 'Kelvin', trade: 'Electrical and HVAC', accent: '#1A4DF5', href: '/ejemplos/kelvin.html', image: '/ejemplos/kelvin.jpg', alt: 'First screen of the Kelvin example page, electricians and HVAC technicians', blurb: 'Electricians and AC technicians: services explained with interactive diagrams and a 3-step quote.', tags: ['Quotes', 'Emergencies', 'EN / ES'] },
+  ],
   footHeading: 'Ready to switch your business on?',
   footMarquee: ['Complete Google profile', 'Bilingual page', 'Call, text and book', 'Real reviews', 'Ready in 5 days'],
   footCta: 'Get your free review',
@@ -291,7 +307,7 @@ const en: Copy = {
   foot: 'Local businesses, visible · Midland–Odessa, Texas',
   ftcTitle: 'Honesty commitment (FTC and TCPA)',
   ftc: 'We don’t promise #1 on Google or a number of customers. We never buy, sell or make up reviews: every review comes from real customers. No robocalls, no mass messages.',
-  footLinks: [['/demo/barberia', 'Demo: barber shop'], ['/demo/taqueria', 'Demo: taquería'], ['/herramientas/resenas', 'Review QR kit'], ['/portal', 'Client portal'], ['/login', 'Team login']],
+  footLinks: [['/ejemplos/casa-brasa.html', 'Example: barber shop'], ['/ejemplos/kelvin.html', 'Example: electrical & HVAC'], ['/demo/taqueria', 'Example: taquería'], ['/herramientas/resenas', 'Review QR kit'], ['/portal', 'Client portal']],
 };
 
 export const HOME_COPY = { es, en };
