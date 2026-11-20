@@ -1,0 +1,74 @@
+# LUMO HQ — TOPOLOGÍA DE MICROSERVICIOS DESACOPLADOS (listo para despliegue distribuido)
+#
+# Los seis microservicios lógicos comparten hoy el proceso Next.js (EDA en-proceso vía EventBus
+# tipado, con HMAC, X-Correlation-ID, idempotencia y circuit breaker). Este compose define el
+# despliegue objetivo: un gateway, los almacenes de cada dominio y el bus de eventos distribuido.
+#
+#   svc-iam-gateway   -> postgres (usuarios, RBAC, auditoría)
+#   svc-crm-sales     -> postgres (prospectos, lotes de 30, 8 señales)
+#   svc-erp-billing   -> postgres (contratos UETA, pagos) + Stripe webhooks
+#   svc-erp-ops       -> postgres (producción 5 días, SLA)
+#   svc-erp-finance   -> postgres (ledger, cascada, IRS)
+#   svc-erp-bi        -> postgres (métricas, retención, dominical)
+#   API Gateway       -> /api/v1/* (autentica, valida Zod y enruta)
+#   redis             -> backbone del EventBus en modo distribuido (pub/sub)
+
+services:
+  gateway:
+    build:
+      context: .
+    image: lumohq-gateway:latest
+    command: ["sh", "-c", "npx prisma migrate deploy && npm start"]
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET de 32+ caracteres es obligatorio}
+      EVENT_BUS_SECRET: ${EVENT_BUS_SECRET:-${SESSION_SECRET}}
+      DATABASE_URL: postgresql://lumohq:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD}@postgres:5432/lumohq
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/v1/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: lumohq
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}
+      POSTGRES_DB: lumohq
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lumohq -d lumohq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

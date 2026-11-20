@@ -21,7 +21,7 @@ const VIOLATION = 'Forbidden - Security Violation Logged';
 const forbidden = () => new NextResponse(VIOLATION, { status: 403, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
 
 /** APIs anyone may call (each one validates and rate-limits on its own). */
-const PUBLIC_API = ['/api/auth/login', '/api/auth/logout', '/api/diagnosis', '/api/checkout/create-session', '/api/contracts/sign', '/api/webhooks/stripe', '/api/reviews/generate', '/api/client'];
+const PUBLIC_API = ['/api/auth/login', '/api/auth/logout', '/api/diagnosis', '/api/checkout/create-session', '/api/contracts/sign', '/api/webhooks/stripe', '/api/reviews/generate', '/api/client', '/api/v1/health'];
 const isPublicApi = (p: string) => PUBLIC_API.some((x) => p === x || p.startsWith(x + '/'));
 /** The Stripe signature covers the exact raw body; it is never parsed or rewritten here. */
 const SKIP_BODY_SCAN = ['/api/webhooks/stripe'];

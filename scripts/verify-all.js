@@ -19,6 +19,7 @@ const suites = [
   { name: 'SPRINT 3: Stripe Checkout, Contratos Criptográficos & UETA', script: 'node scripts/verify-sprint3.js' },
   { name: 'SPRINT 4: CRM de 8 Señales, Portal del Cliente & Línea 5 Días', script: 'node scripts/verify-sprint4.js' },
   { name: 'SPRINT 5: Motor Financiero, Tablero Dominical & Hardening', script: 'node scripts/verify-sprint5.js' },
+  { name: 'MICROSERVICIOS: EventBus EDA, /api/v1, cascada y cero emojis', script: 'node scripts/verify-microservices.js' },
   { name: `Seguridad en vivo contra ${BASE} (necesita el servidor en marcha)`, script: 'node scripts/verify-security.js', env: { BASE_URL: BASE } },
 ];
 

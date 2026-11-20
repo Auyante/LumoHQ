@@ -27,6 +27,14 @@ export const ROUTE_POLICY: { prefix: string; roles: readonly UserRole[] }[] = [
   { prefix: '/api/admin/sunday', roles: [...ADMIN_ROLES, 'DEVELOPER'] },
   { prefix: '/api/admin', roles: ADMIN_ROLES },
   { prefix: '/api/auth/me', roles: ROLES },
+  // Microservices API Gateway (/api/v1/*). Health is public (handled in middleware).
+  { prefix: '/api/v1/crm', roles: STAFF_ROLES },
+  { prefix: '/api/v1/ops', roles: STAFF_ROLES },
+  { prefix: '/api/v1/billing', roles: ADMIN_ROLES },
+  { prefix: '/api/v1/finance', roles: ADMIN_ROLES },
+  { prefix: '/api/v1/bi', roles: [...ADMIN_ROLES, 'DEVELOPER'] },
+  { prefix: '/api/v1/events', roles: ADMIN_ROLES },
+  { prefix: '/api/v1', roles: ADMIN_ROLES },
 ];
 
 export function canAccessRoute(role: UserRole, pathname: string): boolean {

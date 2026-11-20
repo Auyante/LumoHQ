@@ -172,7 +172,7 @@ async function login(email, password, ip = newIp(), ua = UA) {
   const testPhone = `(432) 555-${1000 + Math.floor(Math.random() * 9000)}`;
   const imp = await call('/api/crm/prospects', { cookie: luis.cookie, method: 'POST', body: { action: 'import_csv', batchNumber: 5, csv: `negocio,teléfono,ciudad\n=cmd|calc ${RUN},${testPhone},Midland\nDup,${testPhone},Odessa\nMal,12,Midland` } });
   ok(imp.status === 200 && imp.json.created === 1 && imp.json.skipped.length === 1 && imp.json.errors.length === 1, 'CSV import: creates valid rows, skips duplicates, reports bad ones');
-  const exported = (await call('/api/crm/prospects', { cookie: luis.cookie })).json.prospects.find((x) => x.phone.includes('0777'));
+  const exported = (await call('/api/crm/prospects', { cookie: luis.cookie })).json.prospects.find((x) => x.phone === testPhone);
   ok(exported && exported.businessName.startsWith('=cmd'), 'Imported name stored as text (export neutralizes it)');
   ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: exported.id, action: 'opt_out', optedOut: true } })).status === 200, 'Opt-out recorded');
   ok((await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: exported.id, action: 'follow_up' } })).status === 409, 'Follow-up to an opted-out business: refused (TCPA)');
