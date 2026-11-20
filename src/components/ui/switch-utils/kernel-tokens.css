@@ -1,0 +1,87 @@
+/* Kernel design tokens (from prompt 04). OKLCH 12-step scales driven by hue + chroma vars; light-dark() for themes. */
+:root {
+  color-scheme: light dark;
+  --kernel-hue-accent: 70; /* Lumo ámbar */
+  --kernel-hue-danger: 25;
+  --kernel-hue-success: 145;
+  --kernel-hue-warning: 45;
+  --kernel-hue-neutral: var(--kernel-hue-accent);
+  --kernel-chroma-accent: 0.16;
+  --kernel-chroma-neutral: 0.015;
+  --kernel-chroma-danger: 0.19;
+  --kernel-chroma-success: 0.14;
+  --kernel-chroma-warning: 0.16;
+  --kernel-gray-1: light-dark(oklch(99% calc(var(--kernel-chroma-neutral) * 0.2) var(--kernel-hue-neutral)), oklch(14% calc(var(--kernel-chroma-neutral) * 0.6) var(--kernel-hue-neutral)));
+  --kernel-gray-2: light-dark(oklch(97% calc(var(--kernel-chroma-neutral) * 0.4) var(--kernel-hue-neutral)), oklch(18% calc(var(--kernel-chroma-neutral) * 0.7) var(--kernel-hue-neutral)));
+  --kernel-gray-3: light-dark(oklch(95% calc(var(--kernel-chroma-neutral) * 0.6) var(--kernel-hue-neutral)), oklch(23% calc(var(--kernel-chroma-neutral) * 0.8) var(--kernel-hue-neutral)));
+  --kernel-gray-4: light-dark(oklch(92% var(--kernel-chroma-neutral) var(--kernel-hue-neutral)), oklch(27% calc(var(--kernel-chroma-neutral) * 0.9) var(--kernel-hue-neutral)));
+  --kernel-gray-5: light-dark(oklch(89% var(--kernel-chroma-neutral) var(--kernel-hue-neutral)), oklch(31% var(--kernel-chroma-neutral) var(--kernel-hue-neutral)));
+  --kernel-gray-6: light-dark(oklch(86% var(--kernel-chroma-neutral) var(--kernel-hue-neutral)), oklch(36% var(--kernel-chroma-neutral) var(--kernel-hue-neutral)));
+  --kernel-gray-7: light-dark(oklch(81% calc(var(--kernel-chroma-neutral) * 1.2) var(--kernel-hue-neutral)), oklch(42% calc(var(--kernel-chroma-neutral) * 1.2) var(--kernel-hue-neutral)));
+  --kernel-gray-8: light-dark(oklch(73% calc(var(--kernel-chroma-neutral) * 1.4) var(--kernel-hue-neutral)), oklch(50% calc(var(--kernel-chroma-neutral) * 1.4) var(--kernel-hue-neutral)));
+  --kernel-gray-9: light-dark(oklch(59% calc(var(--kernel-chroma-neutral) * 1.6) var(--kernel-hue-neutral)), oklch(58% calc(var(--kernel-chroma-neutral) * 1.6) var(--kernel-hue-neutral)));
+  --kernel-gray-10: light-dark(oklch(54% calc(var(--kernel-chroma-neutral) * 1.6) var(--kernel-hue-neutral)), oklch(64% calc(var(--kernel-chroma-neutral) * 1.6) var(--kernel-hue-neutral)));
+  --kernel-gray-11: light-dark(oklch(46% calc(var(--kernel-chroma-neutral) * 2) var(--kernel-hue-neutral)), oklch(72% calc(var(--kernel-chroma-neutral) * 1.8) var(--kernel-hue-neutral)));
+  --kernel-gray-12: light-dark(oklch(22% calc(var(--kernel-chroma-neutral) * 2.4) var(--kernel-hue-neutral)), oklch(94% calc(var(--kernel-chroma-neutral) * 1.4) var(--kernel-hue-neutral)));
+  --kernel-accent-1: light-dark(oklch(99% calc(var(--kernel-chroma-accent) * 0.04) var(--kernel-hue-accent)), oklch(15% calc(var(--kernel-chroma-accent) * 0.3) var(--kernel-hue-accent)));
+  --kernel-accent-2: light-dark(oklch(97% calc(var(--kernel-chroma-accent) * 0.08) var(--kernel-hue-accent)), oklch(19% calc(var(--kernel-chroma-accent) * 0.4) var(--kernel-hue-accent)));
+  --kernel-accent-3: light-dark(oklch(94% calc(var(--kernel-chroma-accent) * 0.18) var(--kernel-hue-accent)), oklch(24% calc(var(--kernel-chroma-accent) * 0.55) var(--kernel-hue-accent)));
+  --kernel-accent-4: light-dark(oklch(90% calc(var(--kernel-chroma-accent) * 0.3) var(--kernel-hue-accent)), oklch(28% calc(var(--kernel-chroma-accent) * 0.7) var(--kernel-hue-accent)));
+  --kernel-accent-5: light-dark(oklch(86% calc(var(--kernel-chroma-accent) * 0.4) var(--kernel-hue-accent)), oklch(32% calc(var(--kernel-chroma-accent) * 0.8) var(--kernel-hue-accent)));
+  --kernel-accent-6: light-dark(oklch(81% calc(var(--kernel-chroma-accent) * 0.5) var(--kernel-hue-accent)), oklch(37% calc(var(--kernel-chroma-accent) * 0.85) var(--kernel-hue-accent)));
+  --kernel-accent-7: light-dark(oklch(74% calc(var(--kernel-chroma-accent) * 0.6) var(--kernel-hue-accent)), oklch(43% calc(var(--kernel-chroma-accent) * 0.9) var(--kernel-hue-accent)));
+  --kernel-accent-8: light-dark(oklch(65% calc(var(--kernel-chroma-accent) * 0.75) var(--kernel-hue-accent)), oklch(50% calc(var(--kernel-chroma-accent) * 0.95) var(--kernel-hue-accent)));
+  --kernel-accent-9: light-dark(oklch(56% var(--kernel-chroma-accent) var(--kernel-hue-accent)), oklch(58% var(--kernel-chroma-accent) var(--kernel-hue-accent)));
+  --kernel-accent-10: light-dark(oklch(50% calc(var(--kernel-chroma-accent) * 0.95) var(--kernel-hue-accent)), oklch(64% calc(var(--kernel-chroma-accent) * 0.9) var(--kernel-hue-accent)));
+  --kernel-accent-11: light-dark(oklch(46% calc(var(--kernel-chroma-accent) * 0.9) var(--kernel-hue-accent)), oklch(76% calc(var(--kernel-chroma-accent) * 0.75) var(--kernel-hue-accent)));
+  --kernel-accent-12: light-dark(oklch(24% calc(var(--kernel-chroma-accent) * 0.6) var(--kernel-hue-accent)), oklch(93% calc(var(--kernel-chroma-accent) * 0.35) var(--kernel-hue-accent)));
+  --kernel-color-canvas: var(--kernel-gray-1);
+  --kernel-color-surface: var(--kernel-gray-2);
+  --kernel-color-surface-raised: var(--kernel-gray-3);
+  --kernel-color-fill-subtle: var(--kernel-gray-2);
+  --kernel-color-fill: var(--kernel-gray-3);
+  --kernel-color-fill-strong: var(--kernel-gray-4);
+  --kernel-color-border: var(--kernel-gray-6);
+  --kernel-color-border-interactive: var(--kernel-gray-7);
+  --kernel-color-border-hover: var(--kernel-gray-8);
+  --kernel-color-border-strong: var(--kernel-color-border-hover);
+  --kernel-color-text: var(--kernel-gray-12);
+  --kernel-color-text-muted: var(--kernel-gray-11);
+  --kernel-color-accent: var(--kernel-accent-9);
+  --kernel-color-accent-hover: var(--kernel-accent-10);
+  --kernel-color-accent-active: color-mix(in oklch, var(--kernel-accent-10) 88%, black);
+  --kernel-color-accent-subtle: var(--kernel-accent-3);
+  --kernel-color-accent-text: var(--kernel-accent-11);
+  --kernel-color-on-accent: oklch(15% 0 0); /* fallback */
+  --kernel-color-on-accent: contrast-color(var(--kernel-color-accent));
+  --kernel-color-focus-ring: var(--kernel-color-accent);
+  --kernel-color-thumb: oklch(99% 0 0);
+  --kernel-radius-base: 0.5rem;
+  --kernel-radius-sm: calc(var(--kernel-radius-base) * 0.5);
+  --kernel-radius-md: var(--kernel-radius-base);
+  --kernel-radius-lg: calc(var(--kernel-radius-base) * 1.5);
+  --kernel-radius-full: 999px;
+  --kernel-radius-control: var(--kernel-radius-md);
+  --kernel-control-inset: var(--kernel-space-1);
+  --kernel-border-width: 1px;
+  --kernel-space-unit: 0.25rem;
+  --kernel-space-1: calc(var(--kernel-space-unit) * 1);
+  --kernel-space-2: calc(var(--kernel-space-unit) * 2);
+  --kernel-space-3: calc(var(--kernel-space-unit) * 3);
+  --kernel-space-4: calc(var(--kernel-space-unit) * 4);
+  --kernel-space-6: calc(var(--kernel-space-unit) * 6);
+  --kernel-space-8: calc(var(--kernel-space-unit) * 8);
+  --kernel-space-12: calc(var(--kernel-space-unit) * 12);
+  --kernel-font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kernel-font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --kernel-duration-fast: 120ms;
+  --kernel-duration-base: 200ms;
+  --kernel-duration-slow: 320ms;
+  --kernel-scale-press: 0.96;
+  --kernel-ease-spring: var(--kernel-ease-out);
+  --kernel-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --kernel-shadow-edge: 0 0 0 1px light-dark(oklch(0% 0 0 / 0.055), oklch(100% 0 0 / 0.075));
+  --kernel-shadow-sm: var(--kernel-shadow-edge),
+      0 1px 2px -1px light-dark(oklch(0% 0 0 / 0.14), oklch(0% 0 0 / 0.38)),
+      0 3px 6px -3px light-dark(oklch(0% 0 0 / 0.09), oklch(0% 0 0 / 0.28));
+}

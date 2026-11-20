@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AlertTriangle, CheckCircle2, MessageCircle, ArrowRight, Languages } from 'lucide-react';
-import { crmStore, type ProspectItem } from '@/lib/crm';
+import { type ProspectItem } from '@/lib/crm';
+import { crmStore } from '@/lib/crm-store';
 import { verifyDiagnosisKey } from '@/lib/auth';
 import { CONTACT } from '@/components/talonario/copy';
 import { PrintButton } from './PrintButton';

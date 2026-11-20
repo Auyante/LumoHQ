@@ -43,6 +43,15 @@ const config: Config = {
         },
         border: 'rgb(var(--ui-border) / <alpha-value>)',
         ring: 'rgb(var(--ui-ring) / <alpha-value>)',
+        primary: {
+          DEFAULT: 'rgb(var(--ui-primary) / <alpha-value>)',
+          foreground: 'rgb(var(--ui-primary-foreground) / <alpha-value>)',
+        },
+        secondary: {
+          DEFAULT: 'rgb(var(--ui-secondary) / <alpha-value>)',
+          foreground: 'rgb(var(--ui-secondary-foreground) / <alpha-value>)',
+        },
+        destructive: 'rgb(var(--ui-destructive) / <alpha-value>)',
       },
       fontFamily: {
         heading: ['var(--font-bricolage)', 'sans-serif'],

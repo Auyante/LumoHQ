@@ -14,7 +14,7 @@ export interface ProspectItem {
   googleMapsUrl?: string;
   category: string;
   stage: 'LISTED' | 'CONTACTED' | 'DIAGNOSED' | 'MET' | 'CLOSED' | 'FOLLOW_UP';
-  source: 'BARBARA' | 'LUIS' | 'REFERRAL';
+  source: 'BARBARA' | 'LUIS' | 'REFERRAL' | 'WEB'; // WEB: came in through the diagnosis form on the site
   
   // 1.1 Las 8 Señales Exactas de Calificación (1 punto c/u)
   signals: {
@@ -384,6 +384,20 @@ export const crmStore = {
 
   getById(id: string): ProspectItem | undefined {
     return (globalCrm.__lumo_prospects || []).find((p) => p.id === id);
+  },
+
+  /** Same business by phone (last 10 digits), so nobody is added twice or re-added after opting out. */
+  findByPhone(phone: string): ProspectItem | undefined {
+    const d = phone.replace(/\D/g, '').slice(-10);
+    if (d.length < 10) return undefined;
+    return this.getAll().find((p) => p.phone.replace(/\D/g, '').slice(-10) === d);
+  },
+
+  addNote(id: string, line: string): ProspectItem | null {
+    const item = this.getById(id);
+    if (!item) return null;
+    item.contactNotes = [line, ...(item.contactNotes ?? [])].slice(0, 200);
+    return item;
   },
 
   create(prospect: Omit<ProspectItem, 'id' | 'totalScore' | 'priority' | 'createdAt'>): ProspectItem {

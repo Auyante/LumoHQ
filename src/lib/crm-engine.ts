@@ -15,7 +15,7 @@ export const SIGNAL_KEYS: SignalKey[] = [
   'scoreDescription', 'scoreReviewResponse', 'scoreBooking', 'scoreSpanish',
 ];
 export const STAGES: Stage[] = ['LISTED', 'CONTACTED', 'DIAGNOSED', 'MET', 'CLOSED', 'FOLLOW_UP'];
-export const SOURCES: ProspectItem['source'][] = ['BARBARA', 'LUIS', 'REFERRAL'];
+export const SOURCES: ProspectItem['source'][] = ['BARBARA', 'LUIS', 'REFERRAL', 'WEB'];
 export const MAX_FOLLOW_UPS = 3;
 export const BATCH_SIZE = 30;
 
@@ -341,7 +341,7 @@ export function rowsFromCsv(text: string, defaultBatch: number): { rows: ImportR
     const city = cityRaw.startsWith('odes') ? 'Odessa' : cityRaw === '' || cityRaw.startsWith('mid') ? 'Midland' : null;
     if (!city) return errors.push({ line, error: `Ciudad fuera de Midland-Odessa: "${get('ciudad')}".` });
     const src = norm(get('origen'));
-    const source: ProspectItem['source'] = src.startsWith('lui') ? 'LUIS' : src.startsWith('ref') ? 'REFERRAL' : 'BARBARA';
+    const source: ProspectItem['source'] = src.startsWith('lui') ? 'LUIS' : src.startsWith('ref') ? 'REFERRAL' : src.startsWith('web') || src.startsWith('pág') || src.startsWith('pag') ? 'WEB' : 'BARBARA';
     const lote = parseInt(get('lote'), 10);
     const batchNumber = Number.isInteger(lote) && lote >= 1 && lote <= 5 ? lote : defaultBatch;
     rows.push({ businessName, ownerName: get('dueño').slice(0, 80) || undefined, phone, city, category: get('giro').slice(0, 60) || 'Servicios Locales', address: get('dirección').slice(0, 120) || undefined, source, batchNumber });

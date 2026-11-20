@@ -450,7 +450,6 @@ export function Landing() {
             {t.nav.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
           </nav>
           <LangSwitch away={!headAway} />
-          <Link className="desk-login" href="/login">{t.login}</Link>
           <a className="desk-cta" href="#diagnostico">{t.navCta}</a>
         </div>
       </header>

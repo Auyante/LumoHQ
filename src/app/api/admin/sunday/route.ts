@@ -4,7 +4,7 @@ import { ADMIN_ROLES } from '@/lib/auth';
 import { requireSession, isGuardResponse } from '@/lib/security/guard';
 import { audit } from '@/lib/security/store';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { crmStore } from '@/lib/crm';
+import { crmStore } from '@/lib/crm-store';
 import { funnel } from '@/lib/crm-engine';
 import { metricsFromFunnel } from '@/lib/sunday-dashboard';
 import { sundayStore } from '@/lib/sunday-store';

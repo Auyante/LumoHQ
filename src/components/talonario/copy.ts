@@ -112,7 +112,7 @@ const es = {
   foot: 'Negocios locales, visibles · Midland–Odessa, Texas',
   ftcTitle: 'Compromiso de honestidad (FTC y TCPA).',
   ftc: 'No prometemos el primer lugar en Google ni un número de clientes. No compramos, vendemos ni inventamos reseñas: toda reseña viene de clientes reales. No hacemos llamadas automáticas ni mensajes masivos.',
-  footLinks: [['/herramientas/resenas', 'Kit QR de reseñas'], ['/portal', 'Portal de clientes'], ['/login', 'Acceso del equipo']],
+  footLinks: [['/herramientas/resenas', 'Kit QR de reseñas'], ['/portal', 'Portal de clientes']],
   dockCall: 'Llamar',
 };
 
@@ -224,7 +224,7 @@ const en: Copy = {
   foot: 'Local businesses, visible · Midland–Odessa, Texas',
   ftcTitle: 'Honesty commitment (FTC and TCPA).',
   ftc: 'We don’t promise #1 on Google or a number of customers. We never buy, sell or make up reviews: every review comes from real customers. No robocalls, no mass messages.',
-  footLinks: [['/herramientas/resenas', 'Review QR kit'], ['/portal', 'Client portal'], ['/login', 'Team login']],
+  footLinks: [['/herramientas/resenas', 'Review QR kit'], ['/portal', 'Client portal']],
   dockCall: 'Call',
 };
 

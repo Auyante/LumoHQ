@@ -138,6 +138,7 @@ export async function middleware(request: NextRequest) {
       "font-src 'self' data:",
       "connect-src 'self' https://api.stripe.com",
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://maps.google.com https://www.google.com",
+      "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -157,6 +158,7 @@ export async function middleware(request: NextRequest) {
       "font-src 'self' data:",
       "connect-src 'self' https://api.stripe.com ws: wss:",
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://maps.google.com https://www.google.com",
+      "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -177,7 +179,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt, etc.
+     * - ejemplos/ (static example sites; their headers come from next.config.mjs)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2)).*)',
+    '/((?!_next/static|_next/image|ejemplos/|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2)).*)',
   ],
 };
