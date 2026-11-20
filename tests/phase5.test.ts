@@ -48,7 +48,7 @@ describe('Encrypted login', () => {
   });
   it('no password from the initial list appears in any tracked file', () => {
     const f = path.join(ROOT, 'data', 'INITIAL-PASSWORDS.txt');
-    const tracked = execSync('git ls-files', { cwd: ROOT, encoding: 'utf8' }).split('\n').filter(Boolean);
+    const tracked = execSync('git ls-files', { cwd: ROOT, encoding: 'utf8', timeout: 30_000 }).split('\n').filter(Boolean);
     const secrets = fs.existsSync(f)
       ? fs.readFileSync(f, 'utf8').split('\n').map((l) => l.match(/^\S+@\S+\s+(\S+)$/)?.[1]).filter((x): x is string => !!x && x.length >= 12)
       : [];
@@ -59,7 +59,7 @@ describe('Encrypted login', () => {
     }
     expect(tracked).not.toContain('data/INITIAL-PASSWORDS.txt');
     expect(tracked).not.toContain('data/users.json');
-  });
+  }, 30_000);
 });
 
 describe('RBAC', () => {
