@@ -60,7 +60,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-lumo-noche flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-lumo-noche flex flex-col justify-center items-center px-4 py-6 relative overflow-hidden">
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-lumo-ambar/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
