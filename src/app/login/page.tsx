@@ -2,7 +2,6 @@
 
 import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import {
   Lock,
   Mail,
@@ -69,14 +68,6 @@ function LoginForm() {
       <div className="max-w-md w-full relative z-10 space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-block transition-transform active:scale-95">
-            <span className="font-heading font-black text-3xl tracking-tight text-white flex items-center justify-center gap-2">
-              <span className="text-lumo-ambar">LUMO</span>
-              <span className="text-xs bg-lumo-ambar/20 text-lumo-brillo px-2 py-0.5 rounded-sm border border-lumo-ambar/40">
-                HQ
-              </span>
-            </span>
-          </Link>
           <h1 className="text-xl font-black text-white">Panel Interno de Operaciones</h1>
           <p className="text-xs text-gray-400">
             Acceso encriptado y restringido para el equipo oficial de Midland-Odessa
