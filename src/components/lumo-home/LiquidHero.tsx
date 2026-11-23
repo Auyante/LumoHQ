@@ -19,10 +19,11 @@ export const MOODS = [
   { id: 'atardecer', bg: '#1a0c0a', colors: ['#fecaca', '#fb7185', '#9a3412', '#fde68a'], es: 'Atardecer', en: 'Sunset' },
   { id: 'violeta', bg: '#05030c', colors: ['#c4b5fd', '#8b5cf6', '#312e81', '#0ea5e9'], es: 'Violeta', en: 'Violet' },
   { id: 'menta', bg: '#020806', colors: ['#86efac', '#4ade80', '#059669', '#0d111b'], es: 'Menta', en: 'Mint' },
+  { id: 'grafito', bg: '#08090b', colors: ['#4a505c', '#2a2e36', '#14161b', '#6b7280'], es: 'Grafito', en: 'Graphite' },
 ] as const;
 
-/** The page's final palette, chosen by the owner on 2026-11-10. */
-export const MOOD = MOODS[1];
+/** The page's palette: graphite (dark grey), owner's change 2026-11-22 (was atardecer, MOODS[1]). */
+export const MOOD = MOODS[4];
 
 export function LiquidHero({ t }: { t: HomeCopy }) {
   const m = MOOD;
@@ -36,7 +37,7 @@ export function LiquidHero({ t }: { t: HomeCopy }) {
         <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(closest-side at 50% 50%, rgba(10,12,18,0.55), rgba(10,12,18,0) 100%)' }} aria-hidden />
         <div className="relative z-10 flex h-full flex-col items-center justify-center [text-shadow:0_2px_30px_rgba(0,0,0,0.45)]">
           <Hero
-            badge={{ label: t.heroBadge, href: '#diagnostico' }}
+            badge={null}
             prefix={t.heroPrefix}
             words={t.heroWords}
             description={t.heroLede2}
