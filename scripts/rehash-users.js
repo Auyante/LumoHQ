@@ -19,9 +19,9 @@ if (fs.existsSync(envPath)) {
 }
 
 const USERS = [
-  { id: 'usr-carlos', name: 'Carlos', email: 'carlos@lumohq.com', role: 'SUPER_ADMIN',   password: envVars.ADMIN_CARLOS_PASSWORD },
-  { id: 'usr-luis',   name: 'Luis',   email: 'luis@lumohq.com',   role: 'ADMIN_LUIS',    password: envVars.ADMIN_LUIS_PASSWORD   },
-  { id: 'usr-barbara',name: 'Bárbara',email: 'barbara@lumohq.com',role: 'SALES_BARBARA', password: envVars.SALES_BARBARA_PASSWORD },
+  { id: 'usr-carlos', name: 'Carlos', email: 'carlos@lumohp.com', role: 'SUPER_ADMIN',   password: envVars.ADMIN_CARLOS_PASSWORD },
+  { id: 'usr-luis',   name: 'Luis',   email: 'luis@lumohp.com',   role: 'ADMIN_LUIS',    password: envVars.ADMIN_LUIS_PASSWORD   },
+  { id: 'usr-barbara',name: 'Bárbara',email: 'barbara@lumohp.com',role: 'SALES_BARBARA', password: envVars.SALES_BARBARA_PASSWORD },
 ];
 
 function hashPassword(password) {

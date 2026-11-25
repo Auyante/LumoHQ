@@ -96,7 +96,7 @@ export function AdminNav() {
       <nav aria-label="Administración" className="bg-lumo-noche text-white sticky top-0 z-40 border-b border-white/10 print:hidden">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center gap-4">
           <Link href="/admin/crm" className="shrink-0 inline-flex items-baseline gap-1.5 font-heading font-black text-lg tracking-tight">
-            <span>lumo</span><span className="text-[10px] font-bold text-lumo-ambar tracking-widest">HQ</span>
+            <span>lumo</span><span className="text-[10px] font-bold text-lumo-ambar tracking-widest">HP</span>
           </Link>
 
           <ul className="hidden xl:flex items-center gap-0.5 min-w-0">

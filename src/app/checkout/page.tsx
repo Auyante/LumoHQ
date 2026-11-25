@@ -199,14 +199,14 @@ function CheckoutContent() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-3">
             <span className="font-heading font-extrabold text-2xl tracking-tight text-lumo-noche">
-              LUMO<span className="text-lumo-ambar">HQ</span>
+              LUMO<span className="text-lumo-ambar">HP</span>
             </span>
           </Link>
           <h1 className="text-2xl sm:text-3xl font-heading font-bold text-lumo-noche">
             Contratación y Activación Oficial
           </h1>
           <p className="text-sm text-lumo-pizarra mt-1">
-            Luis Barbera (DBA Lumo HQ, Midland, TX) · Garantía de entrega en 5 días hábiles
+            Luis Barbera (DBA Lumo HP, Midland, TX) · Garantía de entrega en 5 días hábiles
           </p>
         </div>
 
@@ -604,11 +604,11 @@ function CheckoutContent() {
             {/* Read-only contract scrollable viewer */}
             <div className="rounded-2xl border border-lumo-niebla bg-slate-50 p-4 max-h-64 overflow-y-auto text-xs leading-relaxed font-mono text-slate-700 shadow-inner">
               <p className="font-bold text-lumo-noche mb-2">
-                CONTRATO DE SERVICIOS DIGITALES Y PRESENCIA LOCAL — LUMO HQ
+                CONTRATO DE SERVICIOS DIGITALES Y PRESENCIA LOCAL — LUMO HP
               </p>
               <p>LUGAR: Midland, Texas, EE. UU. | FECHA: {new Date().toISOString().split('T')[0]}</p>
               <p className="mt-2">
-                <strong>1. PARTES:</strong> Luis Barbera (DBA &ldquo;Lumo HQ&rdquo;) y {ownerName || '[TITULAR]'} ({businessName || '[NEGOCIO]'}, {address}, {city}, TX {zipCode}).
+                <strong>1. PARTES:</strong> Luis Barbera (DBA &ldquo;Lumo HP&rdquo;) y {ownerName || '[TITULAR]'} ({businessName || '[NEGOCIO]'}, {address}, {city}, TX {zipCode}).
               </p>
               <p className="mt-2">
                 <strong>2. OBJETO:</strong> Montaje de presencia digital {packageType} con canal {extraChannel}.
@@ -620,7 +620,7 @@ function CheckoutContent() {
                 <strong>4. PLAZO DE ENTREGA:</strong> 5 días hábiles a partir de contar con el anticipo del 50% acreditado Y los materiales completos del Día 1.
               </p>
               <p className="mt-2">
-                <strong>5. CERO CONTRASEÑAS:</strong> Lumo HQ jamás te pedirá contraseñas; los accesos son por invitación de usuario administrador.
+                <strong>5. CERO CONTRASEÑAS:</strong> Lumo HP jamás te pedirá contraseñas; los accesos son por invitación de usuario administrador.
               </p>
               <p className="mt-2">
                 <strong>6. DERECHOS DE AUTOR:</strong> El Cliente declara tener los derechos sobre fotografías, marcas y logotipos entregados.
@@ -645,7 +645,7 @@ function CheckoutContent() {
                   className="mt-0.5 w-4 h-4 rounded text-lumo-ambar focus:ring-lumo-ambar"
                 />
                 <span>
-                  He leído y acepto el contrato de servicios de Lumo HQ y sus términos en Midland, TX.
+                  He leído y acepto el contrato de servicios de Lumo HP y sus términos en Midland, TX.
                 </span>
               </label>
 

@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — SPRINT 4 VERIFICATION & SECURITY AUDIT SUITE
+ * LUMO HP — SPRINT 4 VERIFICATION & SECURITY AUDIT SUITE
  * Agents: [AGENTE 4: QA & RESPONSIVE TESTER] & [AGENTE 5: SECOPS & PENTESTER]
  */
 
@@ -20,7 +20,7 @@ function assert(condition, testName) {
 }
 
 console.log('====================================================');
-console.log('LUMO HQ — SPRINT 4 AUTOMATED VERIFICATION SUITE');
+console.log('LUMO HP — SPRINT 4 AUTOMATED VERIFICATION SUITE');
 console.log('CRM de Prospección, Portal del Cliente & Línea 5 Días');
 console.log('====================================================\n');
 

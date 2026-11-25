@@ -236,7 +236,7 @@ export function InteractiveContactDemo() {
                               <h5 className="font-bold text-sm text-lumo-noche leading-tight">Barbería El Rey / Taquería Los Compadres</h5>
                             </div>
                             <div className="w-7 h-7 rounded-full bg-lumo-ambar/20 flex items-center justify-center text-xs font-bold text-lumo-noche">
-                              HQ
+                              HP
                             </div>
                           </div>
                         </div>

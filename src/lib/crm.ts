@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — CRM DE PROSPECCIÓN LOCAL & MOTOR DE 8 SEÑALES
+ * LUMO HP — CRM DE PROSPECCIÓN LOCAL & MOTOR DE 8 SEÑALES
  * Fuente de Verdad: Documento 03 (LUMO-SOP-003 · Versión 2)
  */
 
@@ -90,14 +90,14 @@ export const OFFICIAL_SCRIPTS = {
     const d = vars.dueno || '[dueño]';
     const tipo = vars.tipoDeNegocio || 'tu categoría de negocio';
     const falta = vars.queLeFalta || 'pocas fotos y sin botón de llamada directo';
-    return `— "Hola, ¿tú eres ${d}? Mucho gusto, soy Luis, de Lumo HQ. Ayudo a negocios latinos aquí en Midland a que los encuentren en Google y que sus clientes los puedan llamar, escribir o reservar en un clic. Busqué ${tipo} y vi que ${vars.negocio} sale con ${falta}. Eso hace que mucha gente se vaya con otro. Te hago gratis un diagnóstico de una página con lo que te falta. ¿A dónde te lo mando?"`;
+    return `— "Hola, ¿tú eres ${d}? Mucho gusto, soy Luis, de Lumo HP. Ayudo a negocios latinos aquí en Midland a que los encuentren en Google y que sus clientes los puedan llamar, escribir o reservar en un clic. Busqué ${tipo} y vi que ${vars.negocio} sale con ${falta}. Eso hace que mucha gente se vaya con otro. Te hago gratis un diagnóstico de una página con lo que te falta. ¿A dónde te lo mando?"`;
   },
 
   // Primer contacto (Bárbara por mensaje / Luis en persona)
   primerContacto: (vars: { nombre?: string; negocio: string; queLeFalta?: string }) => {
     const nom = vars.nombre || '[nombre]';
     const falta = vars.queLeFalta || 'sale con pocas fotos y sin botón de llamada directo';
-    return `Hola ${nom}, buenas. Le escribo de Lumo HQ, ayudamos a negocios latinos de Midland a salir completos en Google y a que sus clientes los puedan llamar, escribir o reservar en un clic. Vi que ${vars.negocio} ${falta}. Le podemos mandar gratis un diagnóstico de una página. ¿Se lo envío por aquí?`;
+    return `Hola ${nom}, buenas. Le escribo de Lumo HP, ayudamos a negocios latinos de Midland a salir completos en Google y a que sus clientes los puedan llamar, escribir o reservar en un clic. Vi que ${vars.negocio} ${falta}. Le podemos mandar gratis un diagnóstico de una página. ¿Se lo envío por aquí?`;
   },
 
   // Envío del diagnóstico (Bárbara)

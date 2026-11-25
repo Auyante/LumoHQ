@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('LUMO HQ — RESPONSIVE & MOBILE-FIRST E2E AUDIT', () => {
+test.describe('LUMO HP — RESPONSIVE & MOBILE-FIRST E2E AUDIT', () => {
   test('Landing Page renders with no horizontal overflow on mobile', async ({ page }) => {
     await page.goto('/');
 

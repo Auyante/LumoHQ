@@ -29,7 +29,7 @@ export function DemoBadge({ locale, onToggleLocale, ownerToggle }: DemoBadgeProp
             className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-lumo-brillo transition-colors min-h-[36px]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Volver a</span> Lumo HQ
+            <span className="hidden sm:inline">Volver a</span> Lumo HP
           </Link>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-lumo-ambar text-lumo-noche font-black text-[10px] tracking-wider uppercase">
             <Sparkles className="w-3 h-3" />

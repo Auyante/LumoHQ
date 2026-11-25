@@ -12,7 +12,7 @@ export async function GET() {
   return NextResponse.json(
     {
       ok: true,
-      gateway: 'Lumo HQ API Gateway',
+      gateway: 'Lumo HP API Gateway',
       version: 'v1',
       services: serviceHealth(),
       registry: listServices().map((s) => ({ name: s.name, description: s.description, subscribesTo: s.subscribesTo, emits: s.emits })),

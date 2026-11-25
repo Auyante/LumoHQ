@@ -1,11 +1,11 @@
 /**
- * LUMO HQ — MASTER SUITE VERIFICATION RUNNER (ALL SPRINTS 1 TO 5)
+ * LUMO HP — MASTER SUITE VERIFICATION RUNNER (ALL SPRINTS 1 TO 5)
  */
 
 const { execSync } = require('child_process');
 
 console.log('================================================================');
-console.log('       LUMO HQ — EJECUCIÓN MAESTRA DE TODAS LAS PRUEBAS         ');
+console.log('       LUMO HP — EJECUCIÓN MAESTRA DE TODAS LAS PRUEBAS         ');
 console.log('                TIPOS, LINT, UNIDAD, SPRINTS 1-5 Y SEGURIDAD EN VIVO                 ');
 console.log('================================================================\n');
 

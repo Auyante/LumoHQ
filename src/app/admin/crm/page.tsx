@@ -276,7 +276,7 @@ export default function AdminCrmPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `LumoHQ_Lote_${selectedBatch}_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `LumoHP_Lote_${selectedBatch}_${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -1024,7 +1024,7 @@ export default function AdminCrmPage() {
                 Manejo de las 8 Objeciones Oficiales (Doc 03 Sección 1.3)
               </h3>
               <p className="text-xs text-lumo-pizarra mt-1">
-                Lo que dice el dueño vs la respuesta exacta aprobada para el equipo de Lumo HQ.
+                Lo que dice el dueño vs la respuesta exacta aprobada para el equipo de Lumo HP.
               </p>
             </div>
 

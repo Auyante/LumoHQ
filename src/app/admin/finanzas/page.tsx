@@ -132,7 +132,7 @@ export default function AdminFinanzasPage() {
             <div className="p-4 bg-slate-50 rounded-2xl border flex flex-col justify-between">
               <div>
                 <strong className="block text-lumo-noche text-sm mb-1">Nombre Comercial (DBA Midland)</strong>
-                <span className="text-[11px] text-slate-500">Titular legal: Luis Barbera · DBA Midland County &ldquo;Lumo HQ&rdquo;</span>
+                <span className="text-[11px] text-slate-500">Titular legal: Luis Barbera · DBA Midland County &ldquo;Lumo HP&rdquo;</span>
               </div>
               <span className="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded text-[11px] mt-3 inline-block w-fit">
                 Activo

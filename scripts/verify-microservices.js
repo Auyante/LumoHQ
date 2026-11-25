@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — VERIFICACIÓN DE ARQUITECTURA DE MICROSERVICIOS
+ * LUMO HP — VERIFICACIÓN DE ARQUITECTURA DE MICROSERVICIOS
  * Comprueba la estructura src/microservices/*, el EventBus tipado (HMAC, correlación, idempotencia,
  * circuit breaker), el API Gateway /api/v1/*, la cascada al centavo y la política de cero emojis.
  */
@@ -25,7 +25,7 @@ const exists = (p) => fs.existsSync(path.join(ROOT, p));
 const read = (p) => (exists(p) ? fs.readFileSync(path.join(ROOT, p), 'utf8') : '');
 
 console.log('====================================================');
-console.log('LUMO HQ — ARQUITECTURA DE MICROSERVICIOS (EDA)');
+console.log('LUMO HP — ARQUITECTURA DE MICROSERVICIOS (EDA)');
 console.log('====================================================\n');
 
 /* --- 1. Estructura --- */

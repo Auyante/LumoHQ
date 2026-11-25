@@ -1,4 +1,4 @@
-# Lumo HQ — Negocios Locales, Visibles
+# Lumo HP — Negocios Locales, Visibles
 
 > **Plataforma web integral, comercial, operativa y financiera para digitalizar y posicionar negocios locales latinos en Midland-Odessa, Texas.**
 
@@ -6,12 +6,12 @@
 
 ## Visión General
 
-**Lumo HQ** es una solución "llave en mano" diseñada para resolver el problema de invisibilidad digital que sufren miles de negocios en la cuenca Pérmica (Midland-Odessa, TX). La plataforma integra:
+**Lumo HP** es una solución "llave en mano" diseñada para resolver el problema de invisibilidad digital que sufren miles de negocios en la cuenca Pérmica (Midland-Odessa, TX). La plataforma integra:
 1. **Landing Page Bilingüe de Alta Conversión (ES/EN):** Optimizada con Mobile-First Responsive Design, simulación interactiva de canales de contacto (WhatsApp, SMS, llamadas, reservas) y comparador interactivo "Antes y Después".
 2. **Motor de Demos Interactivas en Vivo:** Experiencias reales para nichos de alta rotación (Barbería El Rey con simulador de reservas y Taquería Los Compadres con menú digital).
 3. **Generador y Kit QR de Reseñas de Google:** Herramienta para generar códigos QR directos y stickers descargables de mostrador.
 4. **Pasarela de Pagos Stripe con Cumplimiento Legal de Texas:** Anticipo 50/50 ($250 / $500), suscripciones de mantenimiento mensual ($50 / $99), cálculo automático del **Texas Sales Tax (8.25%)**, firma electrónica de contratos y cláusulas anti-chargeback.
-5. **CRM Comercial de 8 Señales de Calificación:** Sistema operativo basado en el Manual de Operaciones de Lumo HQ, con 5 lotes de prospección (30 negocios c/u), guiones oficiales de contacto y manejo de las 8 objeciones reales de venta.
+5. **CRM Comercial de 8 Señales de Calificación:** Sistema operativo basado en el Manual de Operaciones de Lumo HP, con 5 lotes de prospección (30 negocios c/u), guiones oficiales de contacto y manejo de las 8 objeciones reales de venta.
 6. **Portal de Clientes Autogestionado:** Guía interactiva "Cero Contraseñas" con delegación de acceso a Google Business Profile (Doc 02) y checklist de 5 días de lanzamiento.
 7. **Panel Financiero y Tablero Dominical (Doc 04):** Cascada de reparto exacta (comisiones Stripe, comisiones escalonadas de Bárbara con tope de $500, reserva del 8%, regla de doble aprobación para gastos >$100 y monitor semanal del Riesgo #1).
 
@@ -35,7 +35,7 @@
 ### 1. Clonar el repositorio e instalar dependencias
 ```bash
 git clone <URL_DEL_REPOSITORIO>
-cd LumoHQ
+cd LumoHP
 npm install
 ```
 
@@ -82,9 +82,9 @@ Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca*
 
 | Usuario | Correo Electrónico | Rol |
 | :--- | :--- | :--- |
-| **Carlos Gómez** | `carlos@lumohq.com` | `SUPER_ADMIN` |
-| **Luis Barbera** | `luis@lumohq.com` | `ADMIN_LUIS` |
-| **Bárbara** | `barbara@lumohq.com` | `SALES_BARBARA` |
+| **Carlos Gómez** | `carlos@lumohp.com` | `SUPER_ADMIN` |
+| **Luis Barbera** | `luis@lumohp.com` | `ADMIN_LUIS` |
+| **Bárbara** | `barbara@lumohp.com` | `SALES_BARBARA` |
 
 *Acceso al panel administrativo:* [`/login`](http://localhost:3100/login)
 
@@ -124,5 +124,5 @@ Los 3 usuarios del equipo se crean al primer arranque. Las contraseñas **nunca*
 
 ## Licencia
 
-Propiedad exclusiva de **Lumo HQ LLC / Luis Barbera DBA Lumo HQ (Midland, Texas)**. Todos los derechos reservados.
+Propiedad exclusiva de **Lumo HP LLC / Luis Barbera DBA Lumo HP (Midland, Texas)**. Todos los derechos reservados.
 

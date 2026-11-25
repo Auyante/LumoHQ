@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — TABLERO DOMINICAL DE 15 MINUTOS & MONITOR DE RIESGO #1
+ * LUMO HP — TABLERO DOMINICAL DE 15 MINUTOS & MONITOR DE RIESGO #1
  * Fuente de Verdad: Documento 04 (LUMO-FIN-004 · Sección 4 y Tablero Semanal)
  */
 

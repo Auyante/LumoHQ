@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Lumo HQ homepage, composed from the web catalog (lab-3d pieces):
+ * Lumo HP homepage, composed from the web catalog (lab-3d pieces):
  * 24a sticky header · 16 image-stream hero + 19 rotating headline · 12 container scroll
  * with the live 02 bento (LumoBento) · 18 features with live panels · 20 pricing over
  * 21a starfield · 25 FAQ (+ JSON-LD) · diagnosis form · 27 cinematic curtain footer.
@@ -30,12 +30,12 @@ const AMBAR = '#F2A33A';
 function Logo() {
   return (
     <span className="whitespace-nowrap font-heading text-[22px] font-extrabold tracking-tight text-[#FFF7EC]">
-      <span className="sr-only">Lumo HQ</span>
+      <span className="sr-only">Lumo HP</span>
       <span aria-hidden>lum</span>
       <span aria-hidden className="relative inline-block size-[0.62em] translate-y-[0.02em] rounded-full border-[0.14em] border-[#F2A33A] align-baseline">
         <span className="absolute left-1/2 top-1/2 size-[0.16em] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#F2A33A]" />
       </span>
-      <span aria-hidden className="ml-1 text-[0.7em] text-[#F2A33A]">HQ</span>
+      <span aria-hidden className="ml-1 text-[0.7em] text-[#F2A33A]">HP</span>
     </span>
   );
 }

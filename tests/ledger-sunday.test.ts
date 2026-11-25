@@ -33,9 +33,9 @@ describe('IRS Schedule C ledger', () => {
     expect(partnerFor('ADMIN_LUIS')).toBe('luis');
     expect(partnerFor('ADMIN_CARLOS')).toBe('carlos');
     expect(partnerFor('SUPER_ADMIN')).toBeNull();
-    expect(partnerFor('SUPER_ADMIN', 'Carlos@LumoHQ.com')).toBe('carlos');
-    expect(partnerFor('SALES_BARBARA', 'carlos@lumohq.com')).toBeNull();
-    expect(partnerFor('ADMIN_LUIS', 'carlos@lumohq.com')).toBe('carlos');
+    expect(partnerFor('SUPER_ADMIN', 'Carlos@LumoHP.com')).toBe('carlos');
+    expect(partnerFor('SALES_BARBARA', 'carlos@lumohp.com')).toBeNull();
+    expect(partnerFor('ADMIN_LUIS', 'carlos@lumohp.com')).toBe('carlos');
     expect(partnerFor('SALES_BARBARA')).toBeNull();
     const e = exp(250, { signatures: { luis: sig } });
     expect(canSign(e, 'luis').ok).toBe(false);

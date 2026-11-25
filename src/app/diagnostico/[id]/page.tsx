@@ -14,7 +14,7 @@ import { PrintButton } from './PrintButton';
  */
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'Diagnóstico · Lumo HQ', robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: 'Diagnóstico · Lumo HP', robots: { index: false, follow: false } };
 
 type Lang = 'es' | 'en';
 type Key = keyof ProspectItem['signals'];
@@ -32,7 +32,7 @@ const ITEMS: { key: Key; es: [string, string, string]; en: [string, string, stri
 
 const T = {
   es: {
-    title: 'Diagnóstico de tu negocio en Google', prepared: 'Preparado por Lumo HQ', date: 'Fecha',
+    title: 'Diagnóstico de tu negocio en Google', prepared: 'Preparado por Lumo HP', date: 'Fecha',
     score: (n: number) => `${n} de 7 puntos que hoy te pueden hacer perder clientes`,
     fixFirst: 'Lo que conviene arreglar primero', allGood: 'En orden', spanish: 'Tus clientes hablan español: tu perfil y tu página deben estar en inglés y en español.',
     why: 'Por qué importa: cuando alguien te recomienda, la otra persona te busca en Google antes de llamarte. Si ve renglones vacíos, duda y llama al de al lado.',
@@ -42,7 +42,7 @@ const T = {
     invalidT: 'Este enlace no es válido', invalidP: 'Pide a quien te lo mandó un enlace nuevo.',
   },
   en: {
-    title: 'Your business on Google: diagnosis', prepared: 'Prepared by Lumo HQ', date: 'Date',
+    title: 'Your business on Google: diagnosis', prepared: 'Prepared by Lumo HP', date: 'Date',
     score: (n: number) => `${n} of 7 things that can cost you customers today`,
     fixFirst: 'What to fix first', allGood: 'In order', spanish: 'Your customers speak Spanish: your profile and page should be in both English and Spanish.',
     why: 'Why it matters: when someone recommends you, the other person looks you up on Google before calling. If they see blank lines, they hesitate and call the place next door.',
@@ -95,7 +95,7 @@ export default async function DiagnosisPage({ params, searchParams }: { params: 
             <p className="text-sm text-lumo-pizarra">{lead.city}, TX · {lead.category}</p>
           </div>
           <div className="text-right shrink-0">
-            <svg viewBox="-28 -28 604 216" className="h-7 w-auto ml-auto" aria-label="Lumo HQ" role="img">
+            <svg viewBox="-28 -28 604 216" className="h-7 w-auto ml-auto" aria-label="Lumo HP" role="img">
               <path d="M12 12V148M60 72V110A38 38 0 0 0 136 110M136 72V148M184 72V148M184 106A34 34 0 0 1 252 106V148M252 106A34 34 0 0 1 320 106V148" fill="none" stroke="#1B2130" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="400" cy="110" r="38" fill="none" stroke="#F2A33A" strokeWidth="24" /><circle cx="400" cy="110" r="11" fill="#F2A33A" />
             </svg>

@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — SPRINT 1 AUTOMATED GATE AUDIT SCRIPT
+ * LUMO HP — SPRINT 1 AUTOMATED GATE AUDIT SCRIPT
  * Verified by [AGENTE 4: QA] and [AGENTE 5: SECOPS]
  */
 
@@ -21,12 +21,12 @@ function assert(condition, message) {
 }
 
 console.log('\n======================================================');
-console.log('🛡️  LUMO HQ — SPRINT 1 GATE AUDIT & CERTIFICATION');
+console.log('🛡️  LUMO HP — SPRINT 1 GATE AUDIT & CERTIFICATION');
 console.log('======================================================\n');
 
 // 1. BRAND COLORS AUDIT
 console.log('--- 1. AUDITORÍA DE IDENTIDAD Y COLORES ---');
-const coloresTxtPath = path.join(ROOT, 'docs/LumoHQ_Identidad_Organizada/09_Colores_y_Tipografia/colores.txt');
+const coloresTxtPath = path.join(ROOT, 'docs/LumoHP_Identidad_Organizada/09_Colores_y_Tipografia/colores.txt');
 const tailwindConfigPath = path.join(ROOT, 'tailwind.config.ts');
 const globalsCssPath = path.join(ROOT, 'src/styles/globals.css');
 

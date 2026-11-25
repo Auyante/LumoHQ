@@ -25,7 +25,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check saved preference or browser language
     try {
-      const saved = localStorage.getItem('lumohq_locale') as Locale | null;
+      const saved = localStorage.getItem('lumohp_locale') as Locale | null;
       if (saved && (saved === 'es' || saved === 'en')) {
         setLocaleState(saved);
         return;
@@ -44,8 +44,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
     try {
-      localStorage.setItem('lumohq_locale', newLocale);
-      document.cookie = `lumohq_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+      localStorage.setItem('lumohp_locale', newLocale);
+      document.cookie = `lumohp_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
       document.documentElement.lang = newLocale;
     } catch {
       // ignore in SSR

@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — Arquitectura de microservicios desacoplados (punto de entrada público).
+ * LUMO HP — Arquitectura de microservicios desacoplados (punto de entrada público).
  * src/microservices/* expone el EventBus tipado, los seis servicios y el gateway de composición.
  */
 

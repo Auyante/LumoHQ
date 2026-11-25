@@ -5,7 +5,7 @@ primary_target: "src/app/page.tsx"
 related_targets: []
 ---
 
-# Surface: Lumo HQ landing (src/app/page.tsx)
+# Surface: Lumo HP landing (src/app/page.tsx)
 
 Mode: Persuade. Audience: Latino business owners in Midland-Odessa on their phone (320-430px), arriving from a 1:1 message or a visit; secondary: English-speaking owners from search. Action: request the free diagnosis (POST /api/diagnosis, TCPA consent). Proof: none real; example businesses labeled as examples. Pinned by user: "El talonario de notas" direction (chosen on ~/lumo-hq-web, roll seed:d3178a396913b223); Carlos's v2 brief adds a 3D hero phone, a live phone simulator (call / SMS / third channel run inside the screen), links to /demo/barberia and /demo/taqueria, zero emojis, sticky bar only on "/". User decision: 3D only on hero phone and simulator; no glassmorphism, no card tilt.
 

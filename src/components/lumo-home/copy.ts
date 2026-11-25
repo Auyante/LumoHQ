@@ -1,5 +1,5 @@
 /**
- * Copy for the Lumo HQ homepage, in Spanish and English.
+ * Copy for the Lumo HP homepage, in Spanish and English.
  * Facts (prices, terms, days, promises) mirror src/components/talonario/copy.ts
  * and PRODUCT.md. Do not add claims here that those sources don't make.
  */
@@ -29,7 +29,7 @@ const es = {
   footMarquee: ['Perfil de Google completo', 'Página bilingüe', 'Llamar, texto y reservar', 'Reseñas reales', 'Listo en 5 días'],
   footCta: 'Pedir diagnóstico gratis',
   footTop: 'Volver arriba',
-  footCopy: '© 2026 Lumo HQ · Midland–Odessa, Texas',
+  footCopy: '© 2026 Lumo HP · Midland–Odessa, Texas',
   faqDesc: 'Si no encuentras tu respuesta, pide el diagnóstico y te contestamos por mensaje.',
   formHead: 'Pide tu diagnóstico gratis.',
 
@@ -137,7 +137,7 @@ const es = {
   choose: 'Elige una opción',
   sourceOpts: ['De boca en boca', 'Me buscan en Google Maps', 'Por Facebook o Instagram', 'Pasan por enfrente', 'Otro'],
   contactOpts: ['Me llaman', 'Me mandan texto', 'Me escriben por WhatsApp', 'Por Instagram o Facebook', 'Llegan en persona'],
-  consent: 'Acepto recibir mi diagnóstico gratis por mensaje o WhatsApp de Lumo HQ. Nada de spam ni mensajes masivos.',
+  consent: 'Acepto recibir mi diagnóstico gratis por mensaje o WhatsApp de Lumo HP. Nada de spam ni mensajes masivos.',
   fmSend: 'Mandar y prender',
   fmSending: 'Mandando…',
   errName: 'Escribe tu nombre (2 letras o más).',
@@ -183,7 +183,7 @@ const en: Copy = {
   footMarquee: ['Complete Google profile', 'Bilingual page', 'Call, text and book', 'Real reviews', 'Ready in 5 days'],
   footCta: 'Get your free review',
   footTop: 'Back to top',
-  footCopy: '© 2026 Lumo HQ · Midland–Odessa, Texas',
+  footCopy: '© 2026 Lumo HP · Midland–Odessa, Texas',
   faqDesc: 'Can’t find your answer? Ask for the review and we’ll reply by message.',
   formHead: 'Get your free review.',
 
@@ -291,7 +291,7 @@ const en: Copy = {
   choose: 'Pick one',
   sourceOpts: ['Word of mouth', 'They search Google Maps', 'Facebook or Instagram', 'They drive by', 'Other'],
   contactOpts: ['They call me', 'They text me', 'They message on WhatsApp', 'Instagram or Facebook', 'They walk in'],
-  consent: 'I agree to get my free review by text or WhatsApp from Lumo HQ. No spam, no mass messages.',
+  consent: 'I agree to get my free review by text or WhatsApp from Lumo HP. No spam, no mass messages.',
   fmSend: 'Send and switch on',
   fmSending: 'Sending…',
   errName: 'Add your name (2 letters or more).',

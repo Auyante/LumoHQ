@@ -35,7 +35,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2 group focus:outline-hidden focus:ring-2 focus:ring-lumo-ambar rounded-lg p-1">
             <Image
               src="/logos/logo-encabezado_fondo-claro.svg"
-              alt="Lumo HQ — Negocios Locales, Visibles"
+              alt="Lumo HP — Negocios Locales, Visibles"
               width={160}
               height={44}
               priority

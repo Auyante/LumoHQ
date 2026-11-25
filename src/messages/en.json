@@ -139,7 +139,7 @@
         "They DM on Instagram / Facebook",
         "They walk in person"
       ],
-      "tcpaConsent": "I agree to receive my free 1-page business audit via text message or WhatsApp from Lumo HQ. We never send spam or automated cold bulk messages (strict TCPA compliance).",
+      "tcpaConsent": "I agree to receive my free 1-page business audit via text message or WhatsApp from Lumo HP. We never send spam or automated cold bulk messages (strict TCPA compliance).",
       "submit": "Submit Request & Get Audit in 24h",
       "sending": "Submitting secure request...",
       "successTitle": "Audit Request Received!",
@@ -187,10 +187,10 @@
   },
   "ftc": {
     "title": "Commitment to Honesty and Legal Compliance (FTC & TCPA)",
-    "text": "Lumo HQ operates in strict compliance with the Federal Trade Commission (FTC) guidelines and the Telephone Consumer Protection Act (TCPA). We do not promise 'number one ranking on Google', we do not guarantee inflated customer counts, and we never sell, buy, or generate fake 5-star reviews. All customer reviews must originate from genuine experiences with real patrons. We do not engage in automated cold-calling or unsolicited bulk messaging."
+    "text": "Lumo HP operates in strict compliance with the Federal Trade Commission (FTC) guidelines and the Telephone Consumer Protection Act (TCPA). We do not promise 'number one ranking on Google', we do not guarantee inflated customer counts, and we never sell, buy, or generate fake 5-star reviews. All customer reviews must originate from genuine experiences with real patrons. We do not engage in automated cold-calling or unsolicited bulk messaging."
   },
   "footer": {
-    "rights": "All rights reserved. Lumo HQ operates under the registered Assumed Business Name (DBA) of Luis Barbera in Midland, Texas, USA.",
+    "rights": "All rights reserved. Lumo HP operates under the registered Assumed Business Name (DBA) of Luis Barbera in Midland, Texas, USA.",
     "links": {
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
