@@ -6,6 +6,7 @@ import {
   PackageTypeSchema,
   type EventContext,
   type LeadConvertedPayload,
+  type LeadSource,
   type PackageType,
 } from './events';
 import { calculateContractSha256, generateContractLegalText } from '@/lib/contracts';
@@ -23,7 +24,7 @@ export interface BillingContract {
   ownerName: string;
   clientNumber: number;
   packageType: PackageType;
-  source: 'BARBARA' | 'LUIS' | 'REFERRAL';
+  source: LeadSource;
   depositAmount: number;
   finalAmount: number;
   monthlyAmount: number;

@@ -47,7 +47,7 @@ export interface EventContext {
 export const PackageTypeSchema = z.enum(['FOUNDER', 'BASE', 'PREMIUM']);
 export type PackageType = z.infer<typeof PackageTypeSchema>;
 
-export const LeadSourceSchema = z.enum(['BARBARA', 'LUIS', 'REFERRAL']);
+export const LeadSourceSchema = z.enum(['BARBARA', 'LUIS', 'REFERRAL', 'WEB']);
 export type LeadSource = z.infer<typeof LeadSourceSchema>;
 
 export interface LeadCreatedPayload {
