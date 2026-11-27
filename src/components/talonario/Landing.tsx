@@ -18,7 +18,7 @@ function LumoMark({ className }: { className?: string }) {
       <path d="M12 12V148M60 72V110A38 38 0 0 0 136 110M136 72V148M184 72V148M184 106A34 34 0 0 1 252 106V148M252 106A34 34 0 0 1 320 106V148" fill="none" stroke="currentColor" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="400" cy="110" r="38" fill="none" stroke="#F2A33A" strokeWidth="24" />
       <circle cx="400" cy="110" r="11" fill="#F2A33A" />
-      <path d="M470.5 64.5V95.5M495.5 64.5V95.5M470.5 80H495.5M522 64.5A15.5 15.5 0 1 0 522.01 64.5ZM528 88L538 98" fill="none" stroke="#F2A33A" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M470.5 64.5 V95.5 M495.5 64.5 V95.5 M470.5 80 H495.5 M511 95.5 V64.5 H521 A9.5 9.5 0 0 1 521 83.5 H511" fill="none" stroke="#F2A33A" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -445,7 +445,7 @@ export function Landing() {
     <div className="tal" lang={locale}>
       <header className={`desk-top${headAway ? '' : ' bare'}`}>
         <div className="wrap">
-          <Link className={`logo${headAway ? '' : ' away'}`} href="/" aria-label="Lumo HQ"><LumoMark /></Link>
+          <Link className={`logo${headAway ? '' : ' away'}`} href="/" aria-label="Lumo HP"><LumoMark /></Link>
           <nav className="desk-nav" aria-label={locale === 'es' ? 'Secciones' : 'Sections'}>
             {t.nav.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
           </nav>
@@ -479,7 +479,7 @@ export function Landing() {
       <footer className="foot">
         <div className="wrap">
           <div className="row"><LumoMark className="lg" /><span>{t.foot}</span></div>
-          <nav aria-label="Lumo HQ">{t.footLinks.map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}</nav>
+          <nav aria-label="Lumo HP">{t.footLinks.map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}</nav>
           <p className="ftc"><b>{t.ftcTitle}</b> {t.ftc}</p>
         </div>
       </footer>

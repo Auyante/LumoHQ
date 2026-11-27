@@ -9,7 +9,7 @@ import {
 } from './events';
 
 /**
- * LUMO HQ — EVENT BUS INTERNO TIPADO (EDA)
+ * LUMO HP — EVENT BUS INTERNO TIPADO (EDA)
  * Comunicación exclusiva entre microservicios. Cada evento va firmado con HMAC-SHA256, lleva un
  * X-Correlation-ID (UUID v4) para trazabilidad distribuida, timestamp UTC, actorId y rol. Los
  * endpoints transaccionales pasan un Idempotency-Key que el bus deduplica, y cada subscriptor queda

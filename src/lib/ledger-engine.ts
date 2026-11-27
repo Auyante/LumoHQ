@@ -53,7 +53,7 @@ export const needsDualApproval = (amount: number) => amount > DUAL_APPROVAL_OVER
 export const deductiblePart = (e: Pick<Expense, 'amount' | 'category'>) =>
   cents(e.category === 'Comidas de negocio (50%)' ? e.amount * 0.5 : e.amount);
 
-export const DEFAULT_PARTNER_EMAILS: Record<Partner, string> = { luis: 'luis@lumohq.com', carlos: 'carlos@lumohq.com' };
+export const DEFAULT_PARTNER_EMAILS: Record<Partner, string> = { luis: 'luis@lumohp.com', carlos: 'carlos@lumohp.com' };
 const ADMIN = ['SUPER_ADMIN', 'ADMIN_LUIS', 'ADMIN_CARLOS'];
 
 /**

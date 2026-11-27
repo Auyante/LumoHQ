@@ -451,7 +451,7 @@ export default function AdminUsuariosPage() {
                     required
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
-                    placeholder="mateo@lumohq.com"
+                    placeholder="mateo@lumohp.com"
                     className="min-h-touch w-full px-4 py-2.5 rounded-xl border border-lumo-niebla text-sm text-lumo-noche focus:border-lumo-ambar outline-none"
                   />
                 </div>

@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — MOTOR FINANCIERO Y CASCADA DE REPARTO
+ * LUMO HP — MOTOR FINANCIERO Y CASCADA DE REPARTO
  * Fuente de Verdad: Documento 04 (LUMO-FIN-004 · Versión 2)
  */
 

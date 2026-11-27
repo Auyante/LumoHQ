@@ -155,9 +155,9 @@ function initializeDefaultUsers(): User[] {
     return { id, name, email, role, hash: h.hash, salt: h.salt, iter: h.iter, active: true, sessionVersion: 0, createdAt: new Date().toISOString() };
   };
   const users = [
-    seed('usr-carlos', 'Carlos Gómez', 'carlos@lumohq.com', 'SUPER_ADMIN', 'ADMIN_CARLOS_PASSWORD'),
-    seed('usr-luis', 'Luis Barbera', 'luis@lumohq.com', 'ADMIN_LUIS', 'ADMIN_LUIS_PASSWORD'),
-    seed('usr-barbara', 'Bárbara', 'barbara@lumohq.com', 'SALES_BARBARA', 'SALES_BARBARA_PASSWORD'),
+    seed('usr-carlos', 'Carlos Gómez', 'carlos@lumohp.com', 'SUPER_ADMIN', 'ADMIN_CARLOS_PASSWORD'),
+    seed('usr-luis', 'Luis Barbera', 'luis@lumohp.com', 'ADMIN_LUIS', 'ADMIN_LUIS_PASSWORD'),
+    seed('usr-barbara', 'Bárbara', 'barbara@lumohp.com', 'SALES_BARBARA', 'SALES_BARBARA_PASSWORD'),
   ];
   saveUsers(users);
   return users;

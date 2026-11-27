@@ -7,10 +7,10 @@ import { Footer } from '@/components/layout/Footer';
 import { TopProgressBar } from '@/components/layout/TopProgressBar';
 
 export const metadata: Metadata = {
-  title: 'Lumo HQ — Negocios Locales, Visibles | Midland-Odessa, Texas',
+  title: 'Lumo HP — Negocios Locales, Visibles | Midland-Odessa, Texas',
   description:
     'Que te encuentren en Google y te puedan llamar, escribir o reservar en un clic. Perfil de Google optimizado, web bilingüe ultra-rápida y contacto directo para negocios latinos en Midland-Odessa, TX.',
-  metadataBase: new URL('https://lumohq.com'),
+  metadataBase: new URL('https://lumohp.com'),
   manifest: '/site.webmanifest',
   icons: {
     icon: [
@@ -24,17 +24,17 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'Lumo HQ — Negocios Locales, Visibles',
+    title: 'Lumo HP — Negocios Locales, Visibles',
     description:
       'Que te encuentren en Google y te puedan llamar, escribir o reservar en un clic. Plataforma web y Google Maps para negocios locales en Midland-Odessa, TX.',
-    url: 'https://lumohq.com',
-    siteName: 'Lumo HQ',
+    url: 'https://lumohp.com',
+    siteName: 'Lumo HP',
     images: [
       {
         url: '/images/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Lumo HQ — Negocios Locales, Visibles',
+        alt: 'Lumo HP — Negocios Locales, Visibles',
       },
     ],
     locale: 'es_US',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lumo HQ — Negocios Locales, Visibles',
+    title: 'Lumo HP — Negocios Locales, Visibles',
     description:
       'Que te encuentren en Google y te puedan llamar, escribir o reservar en un clic.',
     images: ['/images/og-image.png'],

@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — SPRINT 5 VERIFICATION & FINAL SECURITY AUDIT SUITE
+ * LUMO HP — SPRINT 5 VERIFICATION & FINAL SECURITY AUDIT SUITE
  * Agents: [AGENTE 4: QA & RESPONSIVE TESTER] & [AGENTE 5: SECOPS & PENTESTER]
  */
 
@@ -20,7 +20,7 @@ function assert(condition, testName) {
 }
 
 console.log('====================================================');
-console.log('LUMO HQ — SPRINT 5 AUTOMATED VERIFICATION SUITE');
+console.log('LUMO HP — SPRINT 5 AUTOMATED VERIFICATION SUITE');
 console.log('Motor Financiero, Tablero Dominical, Retención & Hardening');
 console.log('====================================================\n');
 

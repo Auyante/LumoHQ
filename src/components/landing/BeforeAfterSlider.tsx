@@ -66,8 +66,8 @@ export function BeforeAfterSlider() {
           </h2>
           <p className="text-base sm:text-lg text-lumo-pizarra">
             {locale === 'es'
-              ? 'Desliza el control táctil para comparar cómo luce un negocio sin optimizar frente al estándar entregado por Lumo HQ.'
-              : 'Slide the touch handle to compare an unoptimized business listing versus the professional Lumo HQ standard.'}
+              ? 'Desliza el control táctil para comparar cómo luce un negocio sin optimizar frente al estándar entregado por Lumo HP.'
+              : 'Slide the touch handle to compare an unoptimized business listing versus the professional Lumo HP standard.'}
           </p>
 
           {/* Quick preset toggle buttons for mobile & fast comparison */}
@@ -103,7 +103,7 @@ export function BeforeAfterSlider() {
                   : 'bg-lumo-arena border border-lumo-niebla text-lumo-pizarra hover:text-lumo-noche'
               }`}
             >
-              {locale === 'es' ? 'Ver Con Lumo HQ (Después)' : 'View With Lumo HQ (After)'}
+              {locale === 'es' ? 'Ver Con Lumo HP (Después)' : 'View With Lumo HP (After)'}
             </button>
           </div>
         </div>
@@ -121,7 +121,7 @@ export function BeforeAfterSlider() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-500/40">
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
-                <span>{locale === 'es' ? 'DESPUÉS: CON LUMO HQ' : 'AFTER: WITH LUMO HQ'}</span>
+                <span>{locale === 'es' ? 'DESPUÉS: CON LUMO HP' : 'AFTER: WITH LUMO HP'}</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-extrabold font-heading text-white mb-2">
                 Barbería Los Compadres · Midland, TX

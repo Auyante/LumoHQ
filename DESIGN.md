@@ -1,5 +1,5 @@
 ---
-name: Lumo HQ
+name: Lumo HP
 description: Negocios locales, visibles / Local businesses, visible. The landing as Lumo's carbon-copy order book.
 colors:
   noche: "#1B2130"
@@ -142,7 +142,7 @@ components:
     padding: "22px"
 ---
 
-# Design System: Lumo HQ
+# Design System: Lumo HP
 
 ## Overview
 

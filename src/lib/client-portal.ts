@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — PORTAL DEL CLIENTE Y LÍNEA DE PRODUCCIÓN DE 5 DÍAS
+ * LUMO HP — PORTAL DEL CLIENTE Y LÍNEA DE PRODUCCIÓN DE 5 DÍAS
  * Fuente de Verdad: Documento 01, Documento 02 y Documento 03
  */
 

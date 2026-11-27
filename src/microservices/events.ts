@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { WaterfallResult } from '@/lib/finance';
 
 /**
- * LUMO HQ — CONTRATO DE EVENTOS TIPADO (EDA)
+ * LUMO HP — CONTRATO DE EVENTOS TIPADO (EDA)
  * Fuente de Verdad: Documento 01 (gobernanza) y Documento 03/04 (flujo CRM -> ERP).
  * Cada microservicio sólo conoce estos nombres y payloads: se comunican por el EventBus,
  * nunca llamando directamente a los stores de otro servicio.

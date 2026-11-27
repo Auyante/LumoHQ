@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — SPRINT 2 AUTOMATED GATE AUDIT SCRIPT
+ * LUMO HP — SPRINT 2 AUTOMATED GATE AUDIT SCRIPT
  * Verified by [AGENTE 4: QA] and [AGENTE 5: SECOPS]
  */
 
@@ -21,7 +21,7 @@ function assert(condition, message) {
 }
 
 console.log('\n======================================================');
-console.log('🛡️  LUMO HQ — SPRINT 2 GATE AUDIT & CERTIFICATION');
+console.log('🛡️  LUMO HP — SPRINT 2 GATE AUDIT & CERTIFICATION');
 console.log('======================================================\n');
 
 // 1. MASTER TEMPLATE ENGINE INTEGRITY

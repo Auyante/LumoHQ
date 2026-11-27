@@ -37,7 +37,7 @@ describe('Encrypted login', () => {
     expect(passwordProblem('Correcta-Larga-2026!')).toBeNull();
   });
   it('session tokens are signed, tied to the browser, and a forged role is refused', () => {
-    const user = getUserByEmail('luis@lumohq.com');
+    const user = getUserByEmail('luis@lumohp.com');
     if (!user) return; // fresh checkout without data/users.json: covered by the live security suite
     const t = createSessionToken(user, 'UA-1');
     expect(verifySessionToken(t, 'UA-1').valid).toBe(true);

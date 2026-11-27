@@ -139,7 +139,7 @@
         "Me mandan mensaje por Instagram / Facebook",
         "Llegan directo en persona"
       ],
-      "tcpaConsent": "Acepto recibir mi diagnóstico gratuito de 1 página por mensaje o WhatsApp de Lumo HQ. No enviamos spam ni mensajes automáticos masivos (cumplimiento estricto TCPA).",
+      "tcpaConsent": "Acepto recibir mi diagnóstico gratuito de 1 página por mensaje o WhatsApp de Lumo HP. No enviamos spam ni mensajes automáticos masivos (cumplimiento estricto TCPA).",
       "submit": "Enviar Solicitud y Recibir Diagnóstico en 24h",
       "sending": "Enviando solicitud segura...",
       "successTitle": "¡Solicitud Recibida con Éxito!",
@@ -187,10 +187,10 @@
   },
   "ftc": {
     "title": "Compromiso de Honestidad y Cumplimiento Legal (FTC y TCPA)",
-    "text": "Lumo HQ opera bajo estricto cumplimiento de las directrices de la Comisión Federal de Comercio (FTC) y la Ley de Protección al Consumidor Telefónico (TCPA). No garantizamos el 'primer lugar en Google', no prometemos volúmenes inflados de ventas ni vendemos o fabricamos reseñas falsas de 5 estrellas. Toda opinión de cliente debe provenir de experiencias auténticas de clientes reales. No realizamos llamadas automáticas en frío ni envíos de mensajes masivos no solicitados."
+    "text": "Lumo HP opera bajo estricto cumplimiento de las directrices de la Comisión Federal de Comercio (FTC) y la Ley de Protección al Consumidor Telefónico (TCPA). No garantizamos el 'primer lugar en Google', no prometemos volúmenes inflados de ventas ni vendemos o fabricamos reseñas falsas de 5 estrellas. Toda opinión de cliente debe provenir de experiencias auténticas de clientes reales. No realizamos llamadas automáticas en frío ni envíos de mensajes masivos no solicitados."
   },
   "footer": {
-    "rights": "Todos los derechos reservados. Lumo HQ opera bajo nombre comercial registrado (DBA) de Luis Barbera en Midland, Texas, EE. UU.",
+    "rights": "Todos los derechos reservados. Lumo HP opera bajo nombre comercial registrado (DBA) de Luis Barbera en Midland, Texas, EE. UU.",
     "links": {
       "terms": "Términos del Servicio",
       "privacy": "Política de Privacidad",

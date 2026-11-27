@@ -121,7 +121,7 @@ function PortalContent() {
         <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link href="/" className="font-heading font-extrabold text-xl text-lumo-noche">
-              LUMO<span className="text-lumo-ambar">HQ</span>
+              LUMO<span className="text-lumo-ambar">HP</span>
             </Link>
             <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900">
               Portal del Cliente
@@ -423,7 +423,7 @@ function PortalContent() {
                 Checklist de Recolección de Datos (Día 1)
               </h2>
               <p className="text-xs text-lumo-pizarra mt-1">
-                La regla operativa de Lumo HQ requiere completar estos puntos para activar el plazo de 5 días hábiles.
+                La regla operativa de Lumo HP requiere completar estos puntos para activar el plazo de 5 días hábiles.
               </p>
             </div>
 
@@ -521,13 +521,13 @@ function PortalContent() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold mb-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Política &ldquo;Cero Contraseñas&rdquo; de Lumo HQ</span>
+                <span>Política &ldquo;Cero Contraseñas&rdquo; de Lumo HP</span>
               </div>
               <h2 className="text-xl font-heading font-bold text-lumo-noche">
                 Tú mantienes el control total de tus cuentas
               </h2>
               <p className="text-xs text-lumo-pizarra mt-1">
-                Lumo HQ jamás te pedirá contraseñas personales o bancarias. Todo se gestiona por invitación de administrador.
+                Lumo HP jamás te pedirá contraseñas personales o bancarias. Todo se gestiona por invitación de administrador.
               </p>
             </div>
 
@@ -539,7 +539,7 @@ function PortalContent() {
                   onClick={() => setExpandedFaq(expandedFaq === 'google' ? null : 'google')}
                   className="w-full flex justify-between items-center text-left text-xs font-bold text-lumo-noche"
                 >
-                  <span>1. ¿Cómo invitar a Lumo HQ a tu Perfil de Google Business?</span>
+                  <span>1. ¿Cómo invitar a Lumo HP a tu Perfil de Google Business?</span>
                   {expandedFaq === 'google' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
                 {expandedFaq === 'google' && (
@@ -547,7 +547,7 @@ function PortalContent() {
                     <p>1. Entra a Google y busca el nombre exacto de tu negocio.</p>
                     <p>2. Haz clic en los tres puntos verticales (Menú) → <strong>Configuración del perfil de negocio</strong>.</p>
                     <p>3. Selecciona <strong>Administradores</strong> → <strong>Agregar</strong>.</p>
-                    <p>4. Ingresa el correo de Lumo HQ: <strong>operaciones@lumohq.com</strong> y asígnale el rol de <em>Administrador</em>.</p>
+                    <p>4. Ingresa el correo de Lumo HP: <strong>operaciones@lumohp.com</strong> y asígnale el rol de <em>Administrador</em>.</p>
                   </div>
                 )}
               </div>
@@ -618,7 +618,7 @@ function PortalContent() {
             {/* Embedded mockup view */}
             <div className="rounded-2xl border-2 border-lumo-niebla overflow-hidden bg-slate-900 shadow-inner">
               <div className="p-2 bg-slate-800 text-slate-300 text-xs flex items-center justify-between font-mono">
-                <span>https://lumohq.com{project.previewDemoUrl}</span>
+                <span>https://lumohp.com{project.previewDemoUrl}</span>
                 <span className="text-[10px] text-emerald-400">● 100% Responsive</span>
               </div>
               <iframe
@@ -638,7 +638,7 @@ function PortalContent() {
               </div>
 
               <p className="text-xs text-slate-700 leading-relaxed">
-                Al hacer clic en este botón confirmas que has revisado tu página web, verificado los botones de contacto y estás 100% satisfecho con el trabajo técnico entregado por Lumo HQ. Esto desbloquea el pago del 50% restante y activa el mantenimiento mensual.
+                Al hacer clic en este botón confirmas que has revisado tu página web, verificado los botones de contacto y estás 100% satisfecho con el trabajo técnico entregado por Lumo HP. Esto desbloquea el pago del 50% restante y activa el mantenimiento mensual.
               </p>
 
               {approvalSuccess || project.finalPaid ? (
@@ -683,7 +683,7 @@ function PortalContent() {
                   src="/images/sticker_resenas_1200x1200.png"
                   width={192}
                   height={192}
-                  alt="Sticker de Reseñas Lumo HQ"
+                  alt="Sticker de Reseñas Lumo HP"
                   className="w-48 h-48 mx-auto rounded-xl shadow-md object-contain bg-white p-2"
                 />
                 <span className="text-[11px] font-bold text-lumo-pizarra block">
@@ -691,7 +691,7 @@ function PortalContent() {
                 </span>
                 <a
                   href="/images/sticker_resenas_1200x1200.png"
-                  download="Sticker_Resenas_LumoHQ.png"
+                  download="Sticker_Resenas_LumoHP.png"
                   className="min-h-touch inline-flex items-center gap-2 px-4 py-2 bg-lumo-ambar text-lumo-noche font-bold text-xs rounded-xl shadow-sm hover:bg-lumo-brillo"
                 >
                   <Download className="w-4 h-4" />

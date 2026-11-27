@@ -29,7 +29,7 @@ export interface SignedContractResult {
 }
 
 /**
- * Genera el texto legal exacto del contrato de Lumo HQ
+ * Genera el texto legal exacto del contrato de Lumo HP
  * Resguardo Legal de Luis Barbera (DBA Midland, TX)
  */
 export function generateContractLegalText(data: ContractData): {
@@ -42,7 +42,7 @@ export function generateContractLegalText(data: ContractData): {
   const packageName = isFounder
     ? 'PAQUETE CLIENTE FUNDADOR (OFERTA SPRINT 1)'
     : data.packageType === 'BASE'
-    ? 'PAQUETE BASE (LUMO HQ)'
+    ? 'PAQUETE BASE (LUMO HP)'
     : 'PAQUETE PREMIUM (CONTRATISTAS Y SERVICIOS)';
 
   const extraChannelLabel =
@@ -52,17 +52,17 @@ export function generateContractLegalText(data: ContractData): {
       ? 'Respuestas Automáticas en Instagram y Facebook (Meta Business Suite)'
       : 'WhatsApp Business Completo (Bienvenida, Ausencia, Catálogo y Respuestas)';
 
-  const text = `CONTRATO DE SERVICIOS DIGITALES Y PRESENCIA LOCAL — LUMO HQ
+  const text = `CONTRATO DE SERVICIOS DIGITALES Y PRESENCIA LOCAL — LUMO HP
 
 FECHA: ${new Date().toISOString().split('T')[0]}
 LUGAR: Midland, Texas, Estados Unidos
 
 1. LAS PARTES
-1.1 PRESTADOR DEL SERVICIO: Luis Barbera, operando bajo el nombre comercial registrado (DBA) "Lumo HQ" en el Condado de Midland, Texas, Estados Unidos (en adelante, "Lumo HQ").
+1.1 PRESTADOR DEL SERVICIO: Luis Barbera, operando bajo el nombre comercial registrado (DBA) "Lumo HP" en el Condado de Midland, Texas, Estados Unidos (en adelante, "Lumo HP").
 1.2 CLIENTE: ${data.ownerName}, en representación de ${data.businessName}, ubicado en ${data.address}, ${data.city}, ${data.state} ${data.zipCode}, Teléfono: ${data.phone}, Correo: ${data.email} (en adelante, el "Cliente").
 
 2. OBJETO DEL CONTRATO Y PAQUETE SELECCIONADO
-El Cliente contrata a Lumo HQ para la optimización de su presencia digital local bajo la modalidad: ${packageName}.
+El Cliente contrata a Lumo HP para la optimización de su presencia digital local bajo la modalidad: ${packageName}.
 Canal de contacto adicional elegido: ${extraChannelLabel}.
 
 3. TÉRMINOS ECONÓMICOS Y CASCADA DE PAGO 50/50
@@ -72,28 +72,28 @@ Canal de contacto adicional elegido: ${extraChannelLabel}.
 3.4 Mensualidad de Mantenimiento: $${data.monthlyAmount} USD mensuales (más el impuesto sobre ventas de Texas aplicable al servicio de hosting, aprox. $6.60 USD), facturados automáticamente a través de Stripe a partir del mes siguiente a la entrega aprobada.
 
 4. LÍNEA DE PRODUCCIÓN DE 5 DÍAS HÁBILES Y CONDICIÓN DE RECOLECCIÓN
-El plazo de entrega técnica de 5 (cinco) días hábiles de Lumo HQ NO iniciará hasta que concurran dos condiciones obligatorias:
+El plazo de entrega técnica de 5 (cinco) días hábiles de Lumo HP NO iniciará hasta que concurran dos condiciones obligatorias:
 (a) Que el anticipo del 50% esté efectivamente acreditado en Stripe.
 (b) Que el Checklist de Recolección de Datos del Día 1 esté completado al 100% (fotos, logotipo, horarios y confirmación de accesos). Si faltan materiales por parte del Cliente, el reloj se mantendrá en pausa y se notificará por escrito.
 
 5. POLÍTICA "CERO CONTRASEÑAS" Y SEGURIDAD
-Lumo HQ NUNCA solicitará, almacenará ni manipulará contraseñas personales o bancarias del Cliente. Todo acceso a herramientas de Google, Meta o Square se realizará estrictamente mediante invitación de usuario administrador gestionada por el propio Cliente.
+Lumo HP NUNCA solicitará, almacenará ni manipulará contraseñas personales o bancarias del Cliente. Todo acceso a herramientas de Google, Meta o Square se realizará estrictamente mediante invitación de usuario administrador gestionada por el propio Cliente.
 
 6. DERECHOS DE AUTOR Y PROPIEDAD DE MATERIALES
-El Cliente declara bajo protesta de decir verdad que posee todos los derechos, autorizaciones y licencias sobre las fotografías, logotipos, marcas y textos suministrados a Lumo HQ para su inclusión en Google y la página web. El Cliente mantendrá indemne a Luis Barbera y a Lumo HQ frente a cualquier reclamación de terceros relativa a derechos de imagen o propiedad intelectual.
+El Cliente declara bajo protesta de decir verdad que posee todos los derechos, autorizaciones y licencias sobre las fotografías, logotipos, marcas y textos suministrados a Lumo HP para su inclusión en Google y la página web. El Cliente mantendrá indemne a Luis Barbera y a Lumo HP frente a cualquier reclamación de terceros relativa a derechos de imagen o propiedad intelectual.
 
 7. CUMPLIMIENTO LEGAL ESTRICTO DE LA FTC Y LEY TCPA
-7.1 COMISIÓN FEDERAL DE COMERCIO (FTC): Lumo HQ NO garantiza ni promete posicionamiento en el "primer lugar de Google", ni duplicación de volumen de ventas, ni garantiza puntuaciones o cantidad de reseñas. Toda reseña generada debe provenir de experiencias auténticas de clientes reales. Queda terminantemente prohibido comprar, fabricar o incentivar reseñas con premios o descuentos.
+7.1 COMISIÓN FEDERAL DE COMERCIO (FTC): Lumo HP NO garantiza ni promete posicionamiento en el "primer lugar de Google", ni duplicación de volumen de ventas, ni garantiza puntuaciones o cantidad de reseñas. Toda reseña generada debe provenir de experiencias auténticas de clientes reales. Queda terminantemente prohibido comprar, fabricar o incentivar reseñas con premios o descuentos.
 7.2 TELEPHONE CONSUMER PROTECTION ACT (TCPA): Queda prohibido el envío de mensajes masivos, listas de difusión frías o llamadas automatizadas no consentidas. Toda comunicación con prospectos se realizará de manera individual y personalizada.
 
 8. LÍMITE DE RESPONSABILIDAD
-La responsabilidad económica total acumulada de Luis Barbera y Lumo HQ frente al Cliente por cualquier causa derivada del presente contrato quedará estrictamente limitada a la cantidad total efectivamente abonada por el Cliente en concepto de montaje en los últimos 30 días.
+La responsabilidad económica total acumulada de Luis Barbera y Lumo HP frente al Cliente por cualquier causa derivada del presente contrato quedará estrictamente limitada a la cantidad total efectivamente abonada por el Cliente en concepto de montaje en los últimos 30 días.
 
 9. POLÍTICA DE CANCELACIÓN DEL SERVICIO MENSUAL
 El servicio de mantenimiento mensual de $${data.monthlyAmount} USD podrá ser cancelado por el Cliente en cualquier momento mediante notificación por escrito con 30 (treinta) días de antelación. A la cancelación, el dominio y los accesos completos del perfil de Google seguirán siendo propiedad exclusiva del Cliente.
 ${
   isFounder
-    ? `\n10. CLÁUSULA ESPECIAL CLIENTE FUNDADOR (OFERTA SPRINT 1)\nEn consideración al descuento del 50% otorgado en el montaje ($250 USD en lugar del precio regular de $500 USD), el Cliente autoriza expresamente a Lumo HQ a publicar capturas del "antes y después" de su perfil y página web en el portafolio público y redes sociales de Lumo HQ, y se compromete a brindar un testimonio honesto sobre el servicio recibido al completar los primeros 30 días.`
+    ? `\n10. CLÁUSULA ESPECIAL CLIENTE FUNDADOR (OFERTA SPRINT 1)\nEn consideración al descuento del 50% otorgado en el montaje ($250 USD en lugar del precio regular de $500 USD), el Cliente autoriza expresamente a Lumo HP a publicar capturas del "antes y después" de su perfil y página web en el portafolio público y redes sociales de Lumo HP, y se compromete a brindar un testimonio honesto sobre el servicio recibido al completar los primeros 30 días.`
     : ''
 }
 
@@ -104,13 +104,13 @@ Las partes acuerdan que la firma electrónica capturada en pantalla, vinculada a
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1B2130;">
       <h2 style="color: #1B2130; border-bottom: 2px solid #F2A33A; padding-bottom: 8px;">
-        CONTRATO DE SERVICIOS DIGITALES Y PRESENCIA LOCAL — LUMO HQ
+        CONTRATO DE SERVICIOS DIGITALES Y PRESENCIA LOCAL — LUMO HP
       </h2>
       <p><strong>FECHA:</strong> ${new Date().toISOString().split('T')[0]} | <strong>LUGAR:</strong> Midland, Texas, EE. UU.</p>
       
       <div style="background: #FFF7EC; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
         <strong>1. LAS PARTES:</strong><br/>
-        <strong>Prestador:</strong> Luis Barbera (DBA "Lumo HQ", Midland, TX)<br/>
+        <strong>Prestador:</strong> Luis Barbera (DBA "Lumo HP", Midland, TX)<br/>
         <strong>Cliente:</strong> ${data.ownerName} (${data.businessName}), ${data.address}, ${data.city}, ${data.state} ${data.zipCode}<br/>
         <strong>Contacto:</strong> Tel: ${data.phone} | Correo: ${data.email}
       </div>
@@ -130,7 +130,7 @@ Las partes acuerdan que la firma electrónica capturada en pantalla, vinculada a
       <p>El plazo de entrega técnica de 5 días hábiles inicia una vez acreditado el anticipo del 50% Y recibido el 100% de los datos del Día 1.</p>
 
       <h3>5. POLÍTICA CERO CONTRASEÑAS</h3>
-      <p>Lumo HQ nunca solicita ni almacena contraseñas; todo acceso es mediante invitación de administrador.</p>
+      <p>Lumo HP nunca solicita ni almacena contraseñas; todo acceso es mediante invitación de administrador.</p>
 
       <h3>6. DERECHOS DE AUTOR</h3>
       <p>El cliente garantiza la propiedad de todas las fotos y logos suministrados.</p>

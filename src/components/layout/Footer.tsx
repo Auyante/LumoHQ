@@ -30,7 +30,7 @@ export function Footer() {
             <Link href="/" className="inline-block">
               <Image
                 src="/logos/logo-encabezado_fondo-oscuro.svg"
-                alt="Lumo HQ"
+                alt="Lumo HP"
                 width={160}
                 height={44}
                 className="h-10 w-auto"

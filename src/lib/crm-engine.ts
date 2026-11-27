@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — CRM engine (pure functions, no I/O). Source of truth: Doc 03 (LUMO-SOP-003).
+ * LUMO HP — CRM engine (pure functions, no I/O). Source of truth: Doc 03 (LUMO-SOP-003).
  * Shared by the admin CRM (browser), the CRM API (server) and the test suite, so the cadence,
  * the TCPA limit, the scripts and the commissions are computed the same way everywhere.
  */

@@ -1,4 +1,4 @@
-# LUMO HQ — TOPOLOGÍA DE MICROSERVICIOS DESACOPLADOS (listo para despliegue distribuido)
+# LUMO HP — TOPOLOGÍA DE MICROSERVICIOS DESACOPLADOS (listo para despliegue distribuido)
 #
 # Los seis microservicios lógicos comparten hoy el proceso Next.js (EDA en-proceso vía EventBus
 # tipado, con HMAC, X-Correlation-ID, idempotencia y circuit breaker). Este compose define el
@@ -17,7 +17,7 @@ services:
   gateway:
     build:
       context: .
-    image: lumohq-gateway:latest
+    image: lumohp-gateway:latest
     command: ["sh", "-c", "npx prisma migrate deploy && npm start"]
     ports:
       - "3000:3000"
@@ -25,7 +25,7 @@ services:
       NODE_ENV: production
       SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET de 32+ caracteres es obligatorio}
       EVENT_BUS_SECRET: ${EVENT_BUS_SECRET:-${SESSION_SECRET}}
-      DATABASE_URL: postgresql://lumohq:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD}@postgres:5432/lumohq
+      DATABASE_URL: postgresql://lumohp:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD}@postgres:5432/lumohp
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
       REDIS_URL: redis://redis:6379
@@ -45,13 +45,13 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: lumohq
+      POSTGRES_USER: lumohp
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}
-      POSTGRES_DB: lumohq
+      POSTGRES_DB: lumohp
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U lumohq -d lumohq"]
+      test: ["CMD-SHELL", "pg_isready -U lumohp -d lumohp"]
       interval: 10s
       timeout: 5s
       retries: 5

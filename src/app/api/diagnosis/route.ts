@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
         questionSource: data.sourceOfCustomers,
       });
     }
-    console.log('[LUMO HQ] Diagnóstico solicitado por la web:', data.businessName, existing ? '(ya estaba en el CRM)' : '(nuevo en el CRM)');
+    console.log('[LUMO HP] Diagnóstico solicitado por la web:', data.businessName, existing ? '(ya estaba en el CRM)' : '(nuevo en el CRM)');
 
     return NextResponse.json({
       success: true,

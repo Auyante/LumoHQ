@@ -1,5 +1,5 @@
 /**
- * LUMO HQ — SPRINT 3 VERIFICATION & SECURITY AUDIT SUITE
+ * LUMO HP — SPRINT 3 VERIFICATION & SECURITY AUDIT SUITE
  * Agents: [AGENTE 4: QA & RESPONSIVE TESTER] & [AGENTE 5: SECOPS & PENTESTER]
  */
 
@@ -21,7 +21,7 @@ function assert(condition, testName) {
 }
 
 console.log('====================================================');
-console.log('LUMO HQ — SPRINT 3 AUTOMATED VERIFICATION SUITE');
+console.log('LUMO HP — SPRINT 3 AUTOMATED VERIFICATION SUITE');
 console.log('Stripe, Contratos Digitales, UETA & Blindaje Financiero');
 console.log('====================================================\n');
 
@@ -30,7 +30,7 @@ console.log('--- 1. Pruebas de Texto Legal y Cláusulas Protectoras ---');
 const contractsTs = fs.readFileSync(path.join(__dirname, '../src/lib/contracts.ts'), 'utf8');
 
 assert(contractsTs.includes('Luis Barbera'), 'Identifica a Luis Barbera como titular comercial');
-assert(contractsTs.includes('DBA "Lumo HQ"'), 'Registra el nombre comercial DBA Lumo HQ');
+assert(contractsTs.includes('DBA "Lumo HP"'), 'Registra el nombre comercial DBA Lumo HP');
 assert(contractsTs.includes('Midland, Texas'), 'Jurisdicción legal en Midland, Texas');
 assert(contractsTs.includes('50/50'), 'Incluye la cascada de pago 50/50');
 assert(contractsTs.includes('5 (cinco) días hábiles') || contractsTs.includes('5 días hábiles'), 'Estipula el plazo de entrega de 5 días hábiles');
@@ -44,7 +44,7 @@ assert(contractsTs.includes('CLIENTE FUNDADOR') && contractsTs.includes('testimo
 
 // 2. Cryptographic SHA-256 Inmutability Tests
 console.log('\n--- 2. Pruebas Criptográficas de Inmutabilidad SHA-256 ---');
-const dummyContract = "CONTRATO LUMO HQ TEST CLAUSES";
+const dummyContract = "CONTRATO LUMO HP TEST CLAUSES";
 const signer1 = "Roberto Sanchez";
 const ip1 = "192.168.1.50";
 const time1 = "2026-03-01T12:00:00.000Z";

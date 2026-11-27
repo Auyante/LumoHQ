@@ -30,7 +30,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
         {/* Navigation & Header */}
         <div className="flex items-center justify-between pb-4 border-b border-lumo-niebla">
           <Link href="/" className="font-heading font-extrabold text-xl tracking-tight text-lumo-noche">
-            LUMO<span className="text-lumo-ambar">HQ</span>
+            LUMO<span className="text-lumo-ambar">HP</span>
           </Link>
           <span className="text-xs font-bold text-lumo-pizarra bg-slate-200 px-3 py-1 rounded-full">
             Propuesta Exclusiva · Midland-Odessa
@@ -50,7 +50,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
             Propuesta para {businessName}
           </h1>
           <p className="text-sm text-lumo-pizarra mt-2">
-            Preparada por Luis Barbera (Lumo HQ). Diseñada para que las personas que busquen tus servicios en Google en Midland-Odessa te encuentren de inmediato y te llamen o escriban en un solo clic.
+            Preparada por Luis Barbera (Lumo HP). Diseñada para que las personas que busquen tus servicios en Google en Midland-Odessa te encuentren de inmediato y te llamen o escriban en un solo clic.
           </p>
         </div>
 
@@ -70,7 +70,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
               </ul>
             </div>
             <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900">
-              <p className="font-bold mb-1">Con el Sistema Lumo HQ:</p>
+              <p className="font-bold mb-1">Con el Sistema Lumo HP:</p>
               <ul className="space-y-1 list-disc list-inside text-emerald-800">
                 <li>Botones fijos de Llamada, SMS y WhatsApp en 1 toque.</li>
                 <li>Web rápida optimizada que carga en menos de 1.5s.</li>
@@ -156,7 +156,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
 
         {/* Footer info */}
         <div className="text-center text-xs text-lumo-pizarra space-y-1">
-          <p>Lumo HQ · Luis Barbera (Midland, TX) · (432) 200-8800</p>
+          <p>Lumo HP · Luis Barbera (Midland, TX) · (432) 200-8800</p>
           <p className="text-[11px] text-slate-400">
             Conforme a las directrices de la FTC y la ley TCPA. Sin falsas promesas.
           </p>

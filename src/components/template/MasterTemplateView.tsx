@@ -308,8 +308,8 @@ export function MasterTemplateView({ config, ownerToggle, onBooked, onOrdered, l
           <p>© {new Date().getFullYear()} {config.name}. {locale === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
           <p className="text-[11px] text-gray-400">
             {locale === 'es'
-              ? 'Página modelo desarrollada por Lumo HQ ("Negocios Locales, Visibles") Midland, TX'
-              : 'Sample page built by Lumo HQ ("Local Businesses, Visible") Midland, TX'}
+              ? 'Página modelo desarrollada por Lumo HP ("Negocios Locales, Visibles") Midland, TX'
+              : 'Sample page built by Lumo HP ("Local Businesses, Visible") Midland, TX'}
           </p>
         </div>
       </footer>

@@ -19,9 +19,9 @@ function passwords() {
   const map = {};
   if (fs.existsSync(file)) for (const line of fs.readFileSync(file, 'utf8').split('\n')) { const m = line.match(/^(\S+@\S+)\s+(\S+)$/); if (m) map[m[1]] = m[2]; }
   return {
-    luis: process.env.ADMIN_LUIS_PASSWORD || map['luis@lumohq.com'],
-    carlos: process.env.ADMIN_CARLOS_PASSWORD || map['carlos@lumohq.com'],
-    barbara: process.env.SALES_BARBARA_PASSWORD || map['barbara@lumohq.com'],
+    luis: process.env.ADMIN_LUIS_PASSWORD || map['luis@lumohp.com'],
+    carlos: process.env.ADMIN_CARLOS_PASSWORD || map['carlos@lumohp.com'],
+    barbara: process.env.SALES_BARBARA_PASSWORD || map['barbara@lumohp.com'],
   };
 }
 
@@ -59,7 +59,7 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok((await call('/api/admin/users', { cookie: forged })).status === 401, 'Forged token (bad HMAC): 401');
 
   console.log('\n--- 2. Login, cookie flags, RBAC ---');
-  const barb = await login('barbara@lumohq.com', pw.barbara);
+  const barb = await login('barbara@lumohp.com', pw.barbara);
   ok(barb.status === 200 && !!barb.cookie, 'Bárbara signs in');
   ok(/HttpOnly/i.test(barb.setCookie) && /SameSite=Strict/i.test(barb.setCookie) && /Path=\//i.test(barb.setCookie), 'Cookie is HttpOnly; SameSite=Strict; Path=/');
   ok((await call('/admin/crm', { cookie: barb.cookie })).status === 200, 'Bárbara: CRM 200');
@@ -71,9 +71,9 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok((await call('/api/crm/prospects', { cookie: barb.cookie })).status === 200, 'Bárbara: CRM API 200');
   ok((await call('/api/crm/prospects', { cookie: barb.cookie, ua: 'Stolen-Cookie-Browser' })).status === 401, 'Same cookie from another browser (fingerprint): 401');
 
-  const luis = await login('luis@lumohq.com', pw.luis);
+  const luis = await login('luis@lumohp.com', pw.luis);
   // Clear a lockout an earlier run may have left on the account the brute-force test uses.
-  await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohq.com' } });
+  await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohp.com' } });
   ok(luis.status === 200, 'Luis signs in');
   ok((await call('/admin/finanzas', { cookie: luis.cookie })).status === 200, 'Luis: Finances 200');
   ok((await call('/api/admin/users', { cookie: luis.cookie })).status === 200, 'Luis: Users API 200');
@@ -81,26 +81,26 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok(users.length >= 3 && users.every((u) => !('hash' in u) && !('salt' in u)), 'User list never exposes hashes or salts');
 
   console.log('\n--- 3. Revocation ---');
-  const barbId = users.find((u) => u.email === 'barbara@lumohq.com')?.id;
+  const barbId = users.find((u) => u.email === 'barbara@lumohp.com')?.id;
   ok((await call('/api/admin/users', { cookie: luis.cookie, method: 'PATCH', body: { userId: barbId, action: 'revoke-sessions' } })).status === 200, 'Luis revokes Bárbara’s sessions');
   ok((await call('/api/crm/prospects', { cookie: barb.cookie })).status === 401, 'Bárbara’s old cookie is dead: 401');
-  ok((await call('/api/admin/users', { cookie: luis.cookie, method: 'POST', body: { name: 'X', email: 'x@lumohq.com', role: 'GOD_MODE' } })).status === 400, 'Unknown role rejected');
+  ok((await call('/api/admin/users', { cookie: luis.cookie, method: 'POST', body: { name: 'X', email: 'x@lumohp.com', role: 'GOD_MODE' } })).status === 400, 'Unknown role rejected');
 
   console.log('\n--- 4. Brute force lockout ---');
   const bfIp = newIp();
   const codes = [];
-  for (let i = 0; i < 6; i++) codes.push((await call('/api/auth/login', { ip: bfIp, method: 'POST', body: { email: 'luis@lumohq.com', password: 'wrong-' + i } })).status);
+  for (let i = 0; i < 6; i++) codes.push((await call('/api/auth/login', { ip: bfIp, method: 'POST', body: { email: 'luis@lumohp.com', password: 'wrong-' + i } })).status);
   ok(codes.slice(0, 5).every((c) => c === 401), '5 wrong passwords: 401 each, same generic message');
   ok(codes[5] === 403, '6th attempt from that IP: blocked (403)');
-  const unk = await call('/api/auth/login', { method: 'POST', body: { email: `nobody-${RUN}@lumohq.com`, password: 'x' } });
+  const unk = await call('/api/auth/login', { method: 'POST', body: { email: `nobody-${RUN}@lumohp.com`, password: 'x' } });
   ok(unk.status === 401 && unk.json?.error === 'Correo o contraseña incorrectos.', 'Unknown account answers exactly like a wrong password');
-  const locked = await call('/api/auth/login', { method: 'POST', body: { email: 'luis@lumohq.com', password: pw.luis } });
+  const locked = await call('/api/auth/login', { method: 'POST', body: { email: 'luis@lumohp.com', password: pw.luis } });
   ok(locked.status === 429, 'Account locked after 5 failures, even with the right password from a new IP');
-  const barbNow = await login('barbara@lumohq.com', pw.barbara);
-  const barbUnlock = await call('/api/admin/security', { cookie: barbNow.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohq.com' } });
+  const barbNow = await login('barbara@lumohp.com', pw.barbara);
+  const barbUnlock = await call('/api/admin/security', { cookie: barbNow.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohp.com' } });
   ok(barbUnlock.status === 403, `Sales cannot unlock accounts (${barbUnlock.status})`);
-  ok((await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohq.com' } })).json?.success === true, 'Another admin session unlocks the account');
-  ok((await call('/api/auth/login', { method: 'POST', body: { email: 'luis@lumohq.com', password: pw.luis } })).status === 200, 'Unlocked account signs in again');
+  ok((await call('/api/admin/security', { cookie: luis.cookie, method: 'POST', body: { action: 'unlock-account', email: 'luis@lumohp.com' } })).json?.success === true, 'Another admin session unlocks the account');
+  ok((await call('/api/auth/login', { method: 'POST', body: { email: 'luis@lumohp.com', password: pw.luis } })).status === 200, 'Unlocked account signs in again');
 
   console.log('\n--- 5. WAF / IDS ---');
   const sqli = await call("/?q=' OR 1=1 --");
@@ -123,7 +123,7 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok(hp.status === 200, 'Honeypot filled: bot gets a fake success');
   ok((await call('/', { ip: hpIp })).status === 403, 'Honeypot IP is now blocked');
   const hpl = newIp();
-  await call('/api/auth/login', { ip: hpl, method: 'POST', body: { email: 'luis@lumohq.com', password: 'x', website: 'bot' } });
+  await call('/api/auth/login', { ip: hpl, method: 'POST', body: { email: 'luis@lumohp.com', password: 'x', website: 'bot' } });
   ok((await call('/', { ip: hpl })).status === 403, 'Login honeypot blocks the IP');
 
   console.log('\n--- 7. Payments, contracts, client portal ---');
@@ -161,7 +161,7 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok((await call('/api/client/photos', { method: 'POST', raw: 'x', headers: { 'content-type': 'multipart/form-data; boundary=z' } })).status >= 400, 'Malformed upload rejected');
 
   console.log('\n--- 8b. CRM (Phase 3) ---');
-  const barb2 = await login('barbara@lumohq.com', pw.barbara);
+  const barb2 = await login('barbara@lumohp.com', pw.barbara);
   const crmList = (await call('/api/crm/prospects', { cookie: luis.cookie })).json?.prospects || [];
   const target = crmList.find((x) => x.stage === 'LISTED') || crmList[0];
   const mass = await call('/api/crm/prospects', { cookie: luis.cookie, method: 'PATCH', body: { id: target.id, action: 'update_details', details: { totalScore: 8, priority: 'P1', followUpCount: 0 } } });
@@ -201,7 +201,7 @@ async function login(email, password, ip = newIp(), ua = UA) {
   ok((await call('/', { ip: wafIp })).status === 200, 'Unblocked IP gets through again');
 
   console.log('\n--- 10. IRS ledger and Sunday board ---');
-  const carlos = await login('carlos@lumohq.com', pw.carlos);
+  const carlos = await login('carlos@lumohp.com', pw.carlos);
   const L = '/api/admin/ledger';
   ok((await call(L)).status === 401 || (await call(L)).status === 403, 'Ledger without a session: refused');
   ok((await call(L, { cookie: barb2.cookie })).status === 403, 'Ledger for sales: 403');

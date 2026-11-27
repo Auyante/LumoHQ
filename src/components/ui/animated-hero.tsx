@@ -18,7 +18,8 @@ import { cn } from "@/lib/utils";
 type Cta = { label: string; href: string; icon?: React.ReactNode };
 
 export interface AnimatedHeroProps {
-  badge?: Cta;
+  /** null hides the pill. */
+  badge?: Cta | null;
   prefix?: string;
   words?: string[];
   description?: string;

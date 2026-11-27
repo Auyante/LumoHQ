@@ -4,7 +4,7 @@ import path from 'path';
 import esMessages from '../src/messages/es.json';
 import enMessages from '../src/messages/en.json';
 
-describe('SPRINT 1 GATE VERIFICATION — LUMO HQ', () => {
+describe('SPRINT 1 GATE VERIFICATION — LUMO HP', () => {
   describe('[AGENTE 2: UI/UX & MOBILE-FIRST] Local Fonts & Asset Integrity', () => {
     it('should have all 5 WOFF2 local font files in public/fonts', () => {
       const fontsDir = path.resolve(__dirname, '../public/fonts');

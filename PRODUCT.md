@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js 15 (App Router), React 19, Tailwind 3, lucide-react icons, Prisma. Repo by Carlos Gómez (github.com/Auyante/LumoHQ); this copy is a sandbox for the v2 redesign. 3D allowed via three / @react-three/fiber, only on the hero phone and the live phone simulator, with a static fallback.
+Next.js 15 (App Router), React 19, Tailwind 3, lucide-react icons, Prisma. Repo by Carlos Gómez (github.com/Auyante/LumoHP); this copy is a sandbox for the v2 redesign. 3D allowed via three / @react-three/fiber, only on the hero phone and the live phone simulator, with a static fallback.
 
 ## Users
 
@@ -18,7 +18,7 @@ Next.js 15 (App Router), React 19, Tailwind 3, lucide-react icons, Prisma. Repo 
 
 ## Product Purpose
 
-Lumo HQ makes local Latino businesses visible on Google and easy to contact: a complete Google Business Profile, a one-page bilingual (EN/ES) website, one-tap contact (call + text always, plus one extra channel: online booking, Instagram/Facebook auto-replies, or WhatsApp Business), and a review system (counter QR + message to ask real customers). Success for the site: owners request the free one-page diagnosis.
+Lumo HP makes local Latino businesses visible on Google and easy to contact: a complete Google Business Profile, a one-page bilingual (EN/ES) website, one-tap contact (call + text always, plus one extra channel: online booking, Instagram/Facebook auto-replies, or WhatsApp Business), and a review system (counter QR + message to ask real customers). Success for the site: owners request the free one-page diagnosis.
 
 ## Positioning
 
@@ -42,8 +42,8 @@ Bilingual by default, built for and sold by people from the same community, deli
 
 ## Brand Commitments
 
-- Name: **Lumo HQ** ("lumo." in documents). Tagline: "Negocios locales, visibles" / "Local businesses, visible".
-- Logo: "lum" in Noche + amber ring-with-dot "o" + "HQ" superscript. Source: `public/` brand SVGs.
+- Name: **Lumo HP** ("lumo." in documents). Tagline: "Negocios locales, visibles" / "Local businesses, visible".
+- Logo: "lum" in Noche + amber ring-with-dot "o" + "HP" superscript. Source: `public/` brand SVGs.
 - Palette: Noche #1B2130, Ámbar Lumo #F2A33A, Brillo #FFD27A, Arena #FFF7EC, Pizarra #5B6375, Niebla #E6E8EE.
 - Type: Bricolage Grotesque (titles), Figtree (text).
 - Fully bilingual EN/ES. Spanish voice uses "tú" on the site; warm, plain, no hype.
